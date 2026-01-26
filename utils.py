@@ -1,4 +1,4 @@
-from datasets import load_dataset #using huggingface's API
+from datasets import load_dataset,Audio #using huggingface's API
 from pathlib import Path
 import os
 import urllib
@@ -10,10 +10,12 @@ def get_curr_folder():
 
 def load_datasets():
     # Load each dataset (would be normally under ~/.cache/huggingface/datasets)
+    num_threads = num_threads = min(32, (os.cpu_count() or 1) + 4)
     cache_dir= os.path.join(get_curr_folder(),'.cache/huggingface/datasets')
     Path(cache_dir).mkdir(parents=True, exist_ok=True)
     data = {}
     data['train'] = load_dataset("SoufianeDahimi/Tamazight-ASR-Dataset-v2",cache_dir=cache_dir)
+    
     #todo, normalize these
     data['val'] = load_dataset("TutlaytAI/moroccan_amazigh_asr",cache_dir=cache_dir)
     data['test']= load_dataset("fsicoli/common_voice_22_0", "zgh",      trust_remote_code=True, cache_dir=cache_dir)
@@ -21,7 +23,7 @@ def load_datasets():
 
 
 def gen_project_folders():
-    for folder in ['dicts','tmp/tg_files','output']:
+    for folder in ['dicts','corpus','output']:
         cache_dir= os.path.join(get_curr_folder(),folder)
         Path(cache_dir).mkdir(parents=True, exist_ok=True)
 

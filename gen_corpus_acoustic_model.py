@@ -1,6 +1,7 @@
 import utils
 import os 
 from pathlib import Path
+import soundfile as sf
 
 
 data = {}
@@ -18,7 +19,7 @@ xmin = 0
 xmax =  {xmax}
 intervals: size = {interval_size}"""
  
-def gen_textgrid(name,wave,sr,transcript):
+def gen_textgrid(wave,sr,transcript):
     #per-file textgrid generation
     t = len(wave)/sr
     #intervals at the phone level
@@ -28,7 +29,6 @@ def gen_textgrid(name,wave,sr,transcript):
     phon_start = 0
     interval_counter = 1
     for phon in transcript:
-        # DO SOMETHING SMARTER
         tg_entry = f'intervals [{interval_counter}]:\nxmin = {phon_start}\nxmax = {phon_start+time_per_phon}\ntext = "{phon}"'
         phon_start += time_per_phon
         interval_counter +=1
@@ -43,18 +43,25 @@ def main():
     cur =  data['train']['train']
     #{path:,array:,sampling_rate:}
     cur = cur.take(2)
+    #from datasets import Audio 
+    #cur = cur.cast_column("audio", Audio(decode=False))
     cur_path = utils.get_curr_folder()
     #print(cur['audio'])
     print(f'{"-"*10}Generating textgrid files...{"-"*10}')
     for row in cur :
-        filename= row['audio']['path']
         #print(row)
+        audio= row['audio']
+        #print(audio.keys())
+        waveform = audio['array']
+        filename= audio['path']
         #print(cur_path)
         #print(filename)
-        raw_tg = gen_textgrid(filename, row['audio']['array'],row['audio']['sampling_rate'],row['text'])
-        Path(os.path.join(cur_path, 'tg_files')).mkdir(parents=True, exist_ok=True)
+        ### EXTRACT WAV ###
+        sf.write(os.path.join(cur_path,'corpus',filename),audio['array'],audio['sampling_rate'])
+        ### GEN TEXTGRID ###
+        raw_tg = gen_textgrid(audio['array'],audio['sampling_rate'],row['text'])
         # write .TextGrid in target directory
-        tg = open(os.path.join( cur_path,'tg_files',filename.replace('wav', 'TextGrid')), 'w')
+        tg = open(os.path.join( cur_path,'corpus',filename.replace('wav', 'TextGrid')), 'w')
         tg.write(raw_tg)
         tg.close()
     
