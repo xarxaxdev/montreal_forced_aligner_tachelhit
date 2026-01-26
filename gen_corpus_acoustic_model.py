@@ -41,12 +41,9 @@ def main():
     utils.prepare_project_structure()
     data = utils.load_datasets()
     cur =  data['train']['train']
-    #{path:,array:,sampling_rate:}
     cur = cur.take(2)
-    #from datasets import Audio 
-    #cur = cur.cast_column("audio", Audio(decode=False))
+    
     cur_path = utils.get_curr_folder()
-    #print(cur['audio'])
     print(f'{"-"*10}Generating textgrid files...{"-"*10}')
     for row in cur :
         #print(row)
@@ -54,8 +51,6 @@ def main():
         #print(audio.keys())
         waveform = audio['array']
         filename= audio['path']
-        #print(cur_path)
-        #print(filename)
         ### EXTRACT WAV ###
         sf.write(os.path.join(cur_path,'corpus',filename),audio['array'],audio['sampling_rate'])
         ### GEN TEXTGRID ###
