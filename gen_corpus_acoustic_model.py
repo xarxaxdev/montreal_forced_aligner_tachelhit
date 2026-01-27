@@ -53,13 +53,16 @@ def main():
     utils.prepare_project_structure()
     data = utils.load_datasets()
     cur =  data['train']['train']
-    cur = cur.take(5) # only 5 rows for debugging
+    cur = cur.take(2) # only 5 rows for debugging
     cur_path = utils.get_curr_folder()
+    utt=1
     print(f'{"-"*10}Generating textgrid/wav files...{"-"*10}')
     for row in cur :
         #print(row)
         audio= row['audio']
         filename = audio['path']
+        filename = filename.replace('.wav',f'_{utt}.wav')
+        utt+=1
         filename = os.path.join(cur_path,'corpus',filename)
         waveform = audio['array']
         sr = audio['sampling_rate']

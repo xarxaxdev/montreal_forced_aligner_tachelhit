@@ -18,6 +18,11 @@ pip install soundfile==0.13.1
 # Run to run the aligner
 
 ```
+conda activate aligner
+# Generate TextGrid/wav files 
+python gen_corpus_acoustic_model.py 
+# mfa validate DICTIONARY_PATH CORPUS_DIRECTORY 
+mfa validate ./corpus ./dicts/arabic_ipa.dict
 
 
 ```
