@@ -10,3 +10,4 @@ python gen_corpus_acoustic_model.py
 mfa validate ./corpus ./dicts/arabic_ipa.dict
 
 #mfa train CORPUS_DIRECTORY DICTIONARY_PATH OUTPUT_MODEL_PATH
+mfa train --clean --use_mp -j 12  ./corpus ./dicts/arabic_ipa.dict ./output/model.zip ./output/corpus_aligned 

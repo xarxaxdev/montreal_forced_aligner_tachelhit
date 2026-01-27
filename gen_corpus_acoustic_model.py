@@ -16,7 +16,7 @@ item [1]:
 class = "IntervalTier"
 name = "{name}"
 xmin = 0
-xmax =  {xmax}
+xmax = {xmax}
 intervals: size = {interval_size}"""
  
 
@@ -53,19 +53,21 @@ def main():
     utils.prepare_project_structure()
     data = utils.load_datasets()
     cur =  data['train']['train']
-    cur = cur.take(2) # only 5 rows for debugging
+    cur = cur.take(500) # only 5 rows for debugging
     cur_path = utils.get_curr_folder()
     utt=1
     print(f'{"-"*10}Generating textgrid/wav files...{"-"*10}')
     for row in cur :
         #print(row)
         audio= row['audio']
+        waveform = audio['array']
+        sr = audio['sampling_rate']
+        if len(waveform)/sr < 0.25:# remove short audios
+            continue
         filename = audio['path']
         filename = filename.replace('.wav',f'_{utt}.wav')
         utt+=1
         filename = os.path.join(cur_path,'corpus',filename)
-        waveform = audio['array']
-        sr = audio['sampling_rate']
         ### EXTRACT WAV ###
         wavfile.write(filename,sr,waveform)
         ### GEN TEXTGRID ###
