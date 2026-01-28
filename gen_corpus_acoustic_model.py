@@ -2,6 +2,8 @@ import utils
 import os 
 from pathlib import Path
 from scipy.io import wavfile
+from librosa import resample
+import numpy as np
 
 data = {}
 tg_header = """File type = "ooTextFile"
@@ -64,12 +66,15 @@ def main():
         sr = audio['sampling_rate']
         if len(waveform)/sr < 0.25:# remove short audios
             continue
+
+        waveform = resample(waveform,orig_sr=sr,target_sr=16000)
+        sr = 16000
         filename = audio['path']
         filename = filename.replace('.wav',f'_{utt}.wav')
         utt+=1
         filename = os.path.join(cur_path,'corpus',filename)
         ### EXTRACT WAV ###
-        wavfile.write(filename,sr,waveform)
+        wavfile.write(filename,sr,waveform.astype(np.int16))
         ### GEN TEXTGRID ###
         raw_tg = gen_naive_textgrid(waveform,sr,row['text'])
         tg = open(filename.replace('.wav', '.TextGrid'), 'w')
