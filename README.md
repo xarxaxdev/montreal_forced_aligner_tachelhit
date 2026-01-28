@@ -24,5 +24,6 @@ python gen_corpus_acoustic_model.py
 # mfa validate DICTIONARY_PATH CORPUS_DIRECTORY 
 mfa validate ./corpus ./dicts/arabic_ipa.dict
 # mfa train [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH OUTPUT_MODEL_PATH 
-mfa train --clean ./corpus ./dicts/arabic_ipa.dict ./output/model.zip ./output/corpus_aligned  --use_mllt false
+# 1 job = 1 core, I am using 14 here
+mfa train --clean  -j 14 ./corpus ./dicts/arabic_ipa.dict ./output/model.zip ./output/corpus_aligned
 ```

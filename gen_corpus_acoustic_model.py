@@ -53,7 +53,7 @@ def main():
     utils.prepare_project_structure()
     data = utils.load_datasets()
     cur =  data['train']['train']
-    cur = cur.take(500) # only 5 rows for debugging
+    #cur = cur.take(500) # only 5 rows for debugging
     cur_path = utils.get_curr_folder()
     utt=1
     print(f'{"-"*10}Generating textgrid/wav files...{"-"*10}')
