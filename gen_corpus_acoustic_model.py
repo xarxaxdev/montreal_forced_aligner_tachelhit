@@ -75,6 +75,7 @@ def main():
         filename = os.path.join(cur_path,'corpus',filename)
         ### EXTRACT WAV ###
         wavfile.write(filename,sr,waveform.astype(np.int16))
+        #wavfile.write(filename,sr,waveform)
         ### GEN TEXTGRID ###
         raw_tg = gen_naive_textgrid(waveform,sr,row['text'])
         tg = open(filename.replace('.wav', '.TextGrid'), 'w')
