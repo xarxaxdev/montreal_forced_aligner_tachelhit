@@ -36,7 +36,7 @@ def download_dicts():
 
 def prepare_project_structure():
     gen_project_folders()
-    download_dicts()
+    #download_dicts()
 
 def load_dicts():
     dicts = {}
