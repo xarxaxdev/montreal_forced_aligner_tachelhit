@@ -12,10 +12,10 @@ conda activate aligner
 
 # All these are run withing the new environment
 
-conda config --set default_threads 15 # change for whatever you like
-conda env config vars set OMP_NUM_THREADS=15
-conda env config vars set OPENBLAS_NUM_THREADS=15
-conda env config vars set MKL_NUM_THREADS=15
+conda config --set default_threads 14 # change for whatever you like
+conda env config vars set OMP_NUM_THREADS=14
+conda env config vars set OPENBLAS_NUM_THREADS=14
+conda env config vars set MKL_NUM_THREADS=14
 
 
 pip install datasets==3.6.0
@@ -33,7 +33,7 @@ python gen_corpus_acoustic_model.py
 # mfa validate DICTIONARY_PATH CORPUS_DIRECTORY 
 mfa validate ./corpus ./dicts/arabic_ipa.dict
 # mfa train [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH OUTPUT_MODEL_PATH 
-# 1 job = 1 core, I am using 15 here
+# 1 job = 1 core, I am using 14 here
 # --single_speaker is required to parallelize
-mfa train --clean --single_speaker  -j 15 ./corpus ./dicts/arabic_ipa.dict ./output/model.zip ./output/corpus_aligned
+mfa train --clean --single_speaker  -j 14 ./corpus ./dicts/arabic_ipa.dict ./output/model.zip ./output/corpus_aligned
 ```

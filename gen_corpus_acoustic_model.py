@@ -2,7 +2,6 @@ import utils
 import os 
 from pathlib import Path
 from scipy.io import wavfile
-from librosa import resample
 import numpy as np
 
 data = {}
@@ -23,24 +22,6 @@ intervals: size = {interval_size}"""
  
 
 
-# One annotation = one phone
-def gen_textgrid(wave,sr,transcript):
-    #per-file textgrid generation
-    t = len(wave)/sr
-    #intervals at the phone level
-    tg_main =  tg_header.format(xmax=round(t,6),name='phon',interval_size=len(transcript))
-
-    time_per_phon = round(t, 6) / len(transcript)
-    phon_start = 0
-    interval_counter = 1
-    for phon in transcript:
-        tg_entry = f'intervals [{interval_counter}]:\nxmin = {phon_start}\nxmax = {phon_start+time_per_phon}\ntext = "{phon}"'
-        phon_start += time_per_phon
-        interval_counter +=1
-        tg_main += '\n' + tg_entry
-
-    return tg_main
-
 # One annotation = one utterance
 def gen_naive_textgrid(wave,sr,transcript):
     t = len(wave)/sr
@@ -50,31 +31,25 @@ def gen_naive_textgrid(wave,sr,transcript):
     return tg_main
 
 
-
 def main():
     utils.prepare_project_structure()
     data = utils.load_datasets()
-    cur =  data['train']['train']
+    cur =  data['tamasightASRDatasetV2']
     #cur = cur.take(500) # only 5 rows for debugging
     cur_path = utils.get_curr_folder()
     utt=1
     print(f'{"-"*10}Generating textgrid/wav files...{"-"*10}')
     for row in cur :
-        #print(row)
-        audio= row['audio']
-        waveform = audio['array']
-        sr = audio['sampling_rate']
-        if len(waveform)/sr < 0.25:# remove short audios
-            continue
-
-        waveform = resample(waveform,orig_sr=sr,target_sr=16000)
-        sr = 16000
-        filename = audio['path']
+        waveform = row['waveform']
+        sr = row['sr']
+        filename = row['filename']
         filename = filename.replace('.wav',f'_{utt}.wav')
         utt+=1
         filename = os.path.join(cur_path,'corpus',filename)
         ### EXTRACT WAV ###
         #wavfile.write(filename,sr,waveform.astype(np.int16))
+
+        waveform = np.asarray(waveform, dtype=np.float32)
         wavfile.write(filename,sr,waveform)
         ### GEN TEXTGRID ###
         raw_tg = gen_naive_textgrid(waveform,sr,row['text'])
