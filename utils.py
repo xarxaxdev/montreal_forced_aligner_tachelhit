@@ -12,13 +12,22 @@ DATASETS = {
 
 }
 DATASET_DICTS = {
-    'tamasightASRDatasetV2':'arabic_ipa',
+    'tamasightASRDatasetV2':'arabic_ipa', #unlikely to be useful
+    'moroccan_amazigh_asr':'tzm_tfng2ipa',
+    'common_voice_22_0':'tzm_tfng2ipa',
 }
+
+# Name format is {language}_{script_before}2{script_after}.dict
+DICT_FILES = {
+        'arabic_arabic2ipa.dict':'https://raw.githubusercontent.com/MontrealCorpusTools/mfa-models/763256cb0c04e9dbf0730b032d78ec9470e54188/dictionary/arabic/mfa/arabic_mfa.dict' , 
+        'tzm_tfng2ipa.dict':'https://raw.githubusercontent.com/CUNY-CL/wikipron/refs/heads/master/data/scrape/tsv/tzm_tfng_broad.tsv' ,
+    }
+    
 
 def get_curr_folder():
     return os.path.join(os.path.split(os.path.realpath(__file__))[0])
 
-def reshape_tamasightASRDatasetV2(row):
+def reshape_audio(row):
     audio = row["audio"]
     waveform = np.asarray(audio["array"], dtype=np.float32)
     waveform = resample(waveform,orig_sr=int(audio["sampling_rate"]),target_sr=16000)
@@ -40,9 +49,9 @@ def load_datasets():
     Path(cache_dir).mkdir(parents=True, exist_ok=True)
     data = {}
     dataset = load_dataset("SoufianeDahimi/Tamazight-ASR-Dataset-v2",cache_dir=cache_dir)
-    dataset = dataset['train']
+    dataset = dataset['train'].take(3)
     #dataset = concatenate_datasets(dataset['train'],dataset['test'])# TODO LATER
-    dataset = dataset.map(reshape_tamasightASRDatasetV2,remove_columns=[c for c in dataset.column_names if c != 'text'])
+    dataset = dataset.map(reshape_audio,remove_columns=[c for c in dataset.column_names if c != 'text'])
                                                                          
     #dataset = dataset.filter(lambda r: len(r['waveform'])/r['sr']<THRESHOLD_MIN_SECONDS)
     data['tamasightASRDatasetV2'] = dataset
@@ -50,10 +59,22 @@ def load_datasets():
     #todo, normalize these
 
     ### LATINSCRIPT DATASET
-    #data['val'] = load_dataset("TutlaytAI/moroccan_amazigh_asr",cache_dir=cache_dir)
+    dataset = load_dataset("TutlaytAI/moroccan_amazigh_asr",cache_dir=cache_dir)
+    dataset = dataset['train']
+    dataset = dataset.rename_column("transcription","text")
+    dataset = dataset.map(reshape_audio,remove_columns=[c for c in dataset.column_names if c != 'text'])
+    data['moroccan_amazigh_asr'] = dataset
 
     ### AMAZIGHSCRIPT DATASET 
-    #data['test']= load_dataset("fsicoli/common_voice_22_0", "zgh",      trust_remote_code=True, cache_dir=cache_dir)
+    dataset = load_dataset("fsicoli/common_voice_22_0", "zgh",      trust_remote_code=True, cache_dir=cache_dir)
+    dataset = dataset['train']
+    dataset = dataset.rename_column("sentence","text")
+    dataset = dataset.map(reshape_audio,remove_columns=[c for c in dataset.column_names if c != 'text'])
+
+    #print(dataset)
+
+    data['common_voice_22_0'] = dataset
+    #assert(False)
 
     return data
 
@@ -71,12 +92,8 @@ def clean_project_folders():
 
 
 def download_dicts():
-    dict_files= {
-        'arabic_ipa.dict':'https://raw.githubusercontent.com/MontrealCorpusTools/mfa-models/763256cb0c04e9dbf0730b032d78ec9470e54188/dictionary/arabic/mfa/arabic_mfa.dict' , # ar -> IPA
-    }
-    
-    for filename in dict_files:
-        page = urllib.request.urlretrieve(dict_files[filename], f'dicts/{filename}')
+    for filename in DICT_FILES:
+        page = urllib.request.urlretrieve(DICT_FILES[filename], f'dicts/{filename}')
 
 def prepare_project_structure():
     gen_project_folders()

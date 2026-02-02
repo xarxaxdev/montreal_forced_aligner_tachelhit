@@ -34,7 +34,7 @@ def gen_naive_textgrid(wave,sr,transcript):
 def main():
     utils.prepare_project_structure()
     data = utils.load_datasets()
-    cur =  data['tamasightASRDatasetV2']
+    cur =  data['common_voice_22_0']
     #cur = cur.take(500) # only 5 rows for debugging
     cur_path = utils.get_curr_folder()
     utt=1
@@ -48,7 +48,6 @@ def main():
         filename = os.path.join(cur_path,'corpus',filename)
         ### EXTRACT WAV ###
         #wavfile.write(filename,sr,waveform.astype(np.int16))
-
         waveform = np.asarray(waveform, dtype=np.float32)
         wavfile.write(filename,sr,waveform)
         ### GEN TEXTGRID ###
