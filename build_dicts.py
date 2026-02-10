@@ -114,6 +114,7 @@ def main():
     # ipa2tifinagh: to take note of homophones
     # ambigous pronunciation(IRCAM extended only):    
     #'ⵁ', 'ⵀ':'h' #AMBIGUOUS IN IPA
+    # 'ⵓ' , 'ⵡ' : 'w' #AMBIGUOUS IN IPA
     # 'ⵜ', 'ⵝ':'t'  
     # 'ⴽ', 'ⴿ': 'k'
     # 'ⴱ', 'ⴲ' : 'b'
