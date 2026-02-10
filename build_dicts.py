@@ -1,5 +1,7 @@
 import utils
 import re
+import os 
+from pathlib import Path
  
 
 """
@@ -104,7 +106,6 @@ def main():
     utils.prepare_project_structure()
     data = utils.load_datasets()
     cur =  data['common_voice_22_0']
-    cur_path = utils.get_curr_folder()
     # we want the dictionary in both directions:
     # tifinagh2ipa: to transcribe our datasets
     # ipa2tifinagh: to take note of homophones
@@ -123,10 +124,11 @@ def main():
     for row in cur:
         print('-' *15)
         print(row['text'])
-        words = re.sub(r"[?.,!\":;\']",'', row['text']).split(' ')
+        words = re.sub(r"[?.,!\":;\'\t]",'', row['text']).split(' ')
         print(words)
         for w in words:
             w_trans = tifinagh2ipa(w)
+            vocab.add(w_trans)
             dicts['tifinagh2ipa'][w]= w_trans
             if not w_trans in dicts['ipa2tifinagh']:
                 dicts['ipa2tifinagh'][w_trans] = [w]
@@ -134,11 +136,25 @@ def main():
             elif not (w in dicts['ipa2tifinagh'][w_trans]):
                 dicts['ipa2tifinagh'][w_trans].append(w)
 
-
-
-    pass
-
-
+    print('-' *15)
+    print('SAVING DICTS')
+    print('-' *15)
+    cur_path = utils.get_curr_folder()
+    vocab.remove('')
+    # Write ipa-to-else dicts
+    for d in dicts:
+        filename = os.path.join(cur_path,'dicts',d+'.dict')
+        with open(filename,'w') as f:
+            f.write('<unk>\tspn\n')
+            for key in dicts[d]:
+                f.write(f'{key}\t{dicts[d][key]}\n')
+            f.close()
+    # Write ipa-to-ipa dict
+    with open(os.path.join(cur_path,'dicts','vocab.dict'),'w') as f:
+        f.write('<unk>\tspn\n')
+        for w in vocab:
+            f.write(f'{w}\t{w}\n')
+        f.close()
 
 
 if __name__ == "__main__":
