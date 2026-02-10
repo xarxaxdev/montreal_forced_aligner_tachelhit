@@ -90,8 +90,11 @@ def tifinagh2ipa(text):
     while i< len(text):
         if text[i] in ['ⴽ','ⴳ']:#check 2-character phones
             if i+1 < len(text) and text[i+1] == 'ⵯ':
-                trans.extend([text[i],text[i+1]])
+                k = ''.join([text[i],text[i+1]])
+                trans.append(tifinagh2ipa_dict[k])
                 i += 1
+            else :
+                trans.append(tifinagh2ipa_dict[text[i]])
         else :
             trans.append(tifinagh2ipa_dict[text[i]])
         i += 1
@@ -127,6 +130,9 @@ def main():
         words = re.sub(r"[?.,!\":;\'\t]",'', row['text']).split(' ')
         print(words)
         for w in words:
+            print('-' *15)
+            print(w)
+            print('-' *15)
             w_trans = tifinagh2ipa(w)
             vocab.add(w_trans)
             dicts['tifinagh2ipa'][w]= w_trans
