@@ -81,6 +81,7 @@ ipa2tifinagh_dict = {} #the inverse dictionary
 for k in tifinagh2ipa_dict:
     ipa2tifinagh_dict[tifinagh2ipa_dict[k]] = k
 
+# https://en.wikivoyage.org/wiki/Tashelhit_phrasebook#Pronunciation_guide
 latin2ipadict = {
 }
 
