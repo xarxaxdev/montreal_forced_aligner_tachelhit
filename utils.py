@@ -2,7 +2,7 @@ from datasets import Dataset,load_dataset,Audio,concatenate_datasets #using hugg
 import numpy as np
 from librosa import resample
 from pathlib import Path
-import os
+import os,sys
 import urllib
 from tqdm import tqdm
 
@@ -22,6 +22,8 @@ DICT_FILES = {
         'arabic_arabic2ipa.dict':'https://raw.githubusercontent.com/MontrealCorpusTools/mfa-models/763256cb0c04e9dbf0730b032d78ec9470e54188/dictionary/arabic/mfa/arabic_mfa.dict' , 
         'tzm_tfng2ipa.dict':'https://raw.githubusercontent.com/CUNY-CL/wikipron/refs/heads/master/data/scrape/tsv/tzm_tfng_broad.tsv' ,
     }
+
+DICTS = {}
     
 
 def get_curr_folder():
@@ -101,9 +103,15 @@ def prepare_project_structure():
     download_dicts()
 
 def load_dicts():
-    dicts = {}
-    #load
-       
-    return dicts
+    path = os.path.join(get_curr_folder(),'dicts')
+    for f in os.listdir(path):
+        d_name = f.split('.')[0]
+        print(d_name)
+        DICTS[d_name] = {}
+        with open(os.path.join(path,f)) as d:
+            for line in  d:
+                [left,right] = line.split('\t')
+                DICTS[d_name][left]=right
+    return DICTS
 
 

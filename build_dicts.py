@@ -22,8 +22,22 @@ Tachelhit is #1 choice so far
 For common voice:
 https://huggingface.co/datasets/fsicoli/common_voice_22_0/raw/main/transcript/zgh/validated.tsv
 
+
+
+https://universeofmemory.com/tashelhit-language-resources/
+
+# Possible extension dictionaries
+https://en.wiktionary.org/w/index.php?title=Category:Tashelhit_lemmas&pageuntil=IGIDR%0Aigidr#mw-pages
+https://www.livelingua.com/peace-corps/Tashelhit/tashelhit-dictionary-2011.pdf
+https://friendsofmorocco.org/Docs/Tashlheet/tashlheettextbook2011.pdf
 """
 
+
+
+
+# REVISE
+#https://en.wiktionary.org/wiki/Module:Tfng-translit
+#
 # technically neo-tifinagh
 # Which is the correct writing according to: https://en.wikipedia.org/wiki/Shilha_language#Writing_systems
 # From: https://en.wikipedia.org/wiki/Tifinagh#Neo-Tifinagh_letters
@@ -86,7 +100,8 @@ latin2ipadict = {
 }
 
 def tifinagh2ipa(text):
-    trans=[]
+    orig = []
+    trans = []
     i = 0
     while i< len(text):
         if text[i] in ['ⴽ','ⴳ']:#check 2-character phones
@@ -99,11 +114,8 @@ def tifinagh2ipa(text):
         else :
             trans.append(tifinagh2ipa_dict[text[i]])
         i += 1
-    return ''.join(trans)
+    return [orig,trans]
 
-def latin2ipa(text):
-    trans=''
-    return trans
 
 
 def main():
@@ -125,19 +137,23 @@ def main():
     dicts['ipa2tifinagh'] = {}
 
     # We want to collect the totality of words that exist in Tashelhit
-    vocab = set() 
+    vocab = {}# a set is more fitting, but lists do not have a builtin way to get hashed for sets.
     for row in cur:
-        print('-' *15)
-        print(row['text'])
+        #print('-' *15)
+        #print(row['text'])
         words = re.sub(r"[?.,!\":;\'\t]",'', row['text']).split(' ')
-        print(words)
+        #print(words)
         for w in words:
-            print('-' *15)
-            print(w)
-            print('-' *15)
-            w_trans = tifinagh2ipa(w)
-            vocab.add(w_trans)
-            dicts['tifinagh2ipa'][w]= w_trans
+            #print('-' *15)
+            #print(w)
+            #print('-' *15)
+            #function returns them as array of symbols
+            orig,trans = tifinagh2ipa(w)
+            w_trans = ''.join(trans)
+            # Standard Pronunciation dictionary format
+            vocab[w_trans] = ' '.join(trans)
+            dicts['tifinagh2ipa'][w]= ' '.join(w_trans)
+            # We keep this as a safety check, so the format is designed for that
             if not w_trans in dicts['ipa2tifinagh']:
                 dicts['ipa2tifinagh'][w_trans] = [w]
             # homophone check
@@ -148,7 +164,7 @@ def main():
     print('SAVING DICTS')
     print('-' *15)
     cur_path = utils.get_curr_folder()
-    vocab.remove('')
+    #del vocab['']
     # Write ipa-to-else dicts
     for d in dicts:
         filename = os.path.join(cur_path,'dicts',d+'.dict')
@@ -161,7 +177,7 @@ def main():
     with open(os.path.join(cur_path,'dicts','vocab.dict'),'w') as f:
         f.write('<unk>\tspn\n')
         for w in vocab:
-            f.write(f'{w}\t{w}\n')
+            f.write(f'{w}\t{vocab[w]}\n')
         f.close()
 
 
