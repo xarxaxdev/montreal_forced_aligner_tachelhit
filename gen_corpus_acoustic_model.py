@@ -1,6 +1,6 @@
 import utils
 import re
-import os 
+import os,sys,subprocess
 from pathlib import Path
 from scipy.io import wavfile
 import numpy as np
@@ -41,6 +41,9 @@ def gen_naive_textgrid(wave,sr,transcript):
     return tg_main
 
 
+
+file_extensions = ['.flac', '.mp3', '.wav', '.aiff']
+
 def main():
     cur_path = utils.get_curr_folder()# must be run before huggingface
     data = utils.load_datasets()
@@ -55,23 +58,26 @@ def main():
         print(f'row {utt}: text is "{row["text"]}"')
         waveform = row['waveform']
         sr = row['sr']
-        filename = row['filename']
-        filename = filename.replace('.mp3',f'_{utt}.mp3')
-        filename = os.path.split(filename)[-1]
+        old_path = row['filename']
+        #filename = filename.replace('.mp3',f'_{utt}.mp3')
+        filename = os.path.split(old_path)[-1]
         utt+=1
-        filename = os.path.join(cur_path,'corpus',filename)
+        new_path = os.path.join(cur_path,'corpus',filename)
         ### EXTRACT WAV ###
         #wavfile.write(filename,sr,waveform.astype(np.int16))
-        print(filename)
-        waveform = np.asarray(waveform, dtype=np.float32)
-        wavfile.write(filename,sr,waveform)
-        print(f'row {utt}: written wavfile in "{filename}"')
+        # Downsample and reduce precision to 16 bit
+        command = ['sox', old_path, '-t', 'wav', '-r', '16000', '-b', '16', new_path]
+        subprocess.check_call(command)
+
+        #waveform = np.asarray(waveform, dtype=np.float32)
+        #wavfile.write(filename,sr,waveform)
+        print(f'row {utt}: written wavfile in "{new_path}"')
         ### GEN TEXTGRID ###
         raw_tg = gen_naive_textgrid(waveform,sr,row['text'])
-        tg = open(filename.replace('.mp3', '.TextGrid'), 'w')
+        tg = open(new_path.replace('.mp3', '.TextGrid'), 'w')
         tg.write(raw_tg)
         tg.close()
-        print(f'row {utt}: written TG in "{filename}"')
+        print(f'row {utt}: written TG in "{new_path}"')
 
 
 
