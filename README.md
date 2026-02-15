@@ -28,12 +28,19 @@ pip install soundfile==0.13.1
 
 ```
 conda activate aligner
+
+# Generate unified vocabulary and all pronunciation dictionaries
+python gen_corpus_acoustic_model.py 
+
 # Generate TextGrid/wav files 
 python gen_corpus_acoustic_model.py 
+
 # mfa validate DICTIONARY_PATH CORPUS_DIRECTORY 
-mfa validate ./corpus ./dicts/arabic_ipa.dict
+mfa validate ./corpus ./dicts/vocab.dict
+
 # mfa train [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH OUTPUT_MODEL_PATH 
 # 1 job = 1 core, I am using 14 here
 # --single_speaker is required to parallelize
-mfa train --clean --single_speaker  -j 14 ./corpus ./dicts/arabic_ipa.dict ./output/model.zip ./output/corpus_aligned
+mfa train --clean --single_speaker  -j 12 ./corpus ./dicts/vocab.dict ./output/model.zip ./output/corpus_aligned
 ```
+
