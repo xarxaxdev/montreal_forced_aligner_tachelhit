@@ -106,7 +106,6 @@ def load_dicts():
     path = os.path.join(get_curr_folder(),'dicts')
     for f in os.listdir(path):
         d_name = f.split('.')[0]
-        print(d_name)
         DICTS[d_name] = {}
         with open(os.path.join(path,f)) as d:
             for line in  d:

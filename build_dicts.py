@@ -95,25 +95,51 @@ ipa2tifinagh_dict = {} #the inverse dictionary
 for k in tifinagh2ipa_dict:
     ipa2tifinagh_dict[tifinagh2ipa_dict[k]] = k
 
-# https://en.wikivoyage.org/wiki/Tashelhit_phrasebook#Pronunciation_guide
-latin2ipadict = {
-}
 
 def tifinagh2ipa(text):
     orig = []
     trans = []
     i = 0
     while i< len(text):
-        if text[i] in ['ⴽ','ⴳ']:#check 2-character phones
-            if i+1 < len(text) and text[i+1] == 'ⵯ':
-                k = ''.join([text[i],text[i+1]])
-                trans.append(tifinagh2ipa_dict[k])
-                i += 1
-            else :
-                trans.append(tifinagh2ipa_dict[text[i]])
+        #check for multi-character phones
+        if text[i] in ['ⴽ','ⴳ'] and i+1 < len(text) and text[i+1] =='ⵯ':
+            k = ''.join([text[i],text[i+1]])
+            trans.append(tifinagh2ipa_dict[k])
+            i += 1
         else :
             trans.append(tifinagh2ipa_dict[text[i]])
         i += 1
+    return [orig,trans]
+
+# https://en.wikivoyage.org/wiki/Tashelhit_phrasebook#Pronunciation_guide
+# Letters not in here are directly transcribed to IPA
+latin2ipadict = {
+    'ḍ':'dˤ',
+    'ḥ':'hˤ',
+    'ʕ': 'ʕ',
+    'ṛ':'rˤ',
+    'ṣ':'sˤ',
+    'ṭ':'tˤ',
+    'ẓ':'zˤ',
+    'e':'ə',
+    #using writing from "Syllables in Tashlhiyt Berber and in Moroccan Arabic"
+    # by FRANÇOIS DELL, MOHAMED ELMEDLAOUI
+    'š':'ʃ',
+    'ž':'ʒ',
+    # Other uncommon symbols from IPA seem to already be ok in the datasets I have seen so far  
+    # Ambiguity between the book and IPA for symbols that appear in both IPA and latinscript berber:
+    # x,ɣ Should be IPA χ and ʁ 
+    # y should be IPA j 
+    # r should be IPA ɾ or r depending on context
+    # ! could mean next consonant is emphasized
+
+
+def latins2ipa(text)
+    orig = []
+    trans = []
+    i = 0
+    while i< len(text):
+        if text[i]
     return [orig,trans]
 
 

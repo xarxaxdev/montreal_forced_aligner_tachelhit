@@ -5,7 +5,6 @@ from pathlib import Path
 from scipy.io import wavfile
 import numpy as np
 
-cur_path = utils.get_curr_folder()# must be run before huggingface
 data = {}
 DICTS = {}
 tg_header = """File type = "ooTextFile"
@@ -69,12 +68,11 @@ def main():
         command = ['sox', old_path, '-t', 'wav', '-r', '16000', '-b', '16', new_path]
         subprocess.check_call(command)
 
-        #waveform = np.asarray(waveform, dtype=np.float32)
-        #wavfile.write(filename,sr,waveform)
         print(f'row {utt}: written wavfile in "{new_path}"')
         ### GEN TEXTGRID ###
         raw_tg = gen_naive_textgrid(waveform,sr,row['text'])
-        tg = open(new_path.replace('.mp3', '.TextGrid'), 'w')
+        ext = filename.split('.')[-1]
+        tg = open(new_path.replace(ext, '.TextGrid'), 'w')
         tg.write(raw_tg)
         tg.close()
         print(f'row {utt}: written TG in "{new_path}"')
