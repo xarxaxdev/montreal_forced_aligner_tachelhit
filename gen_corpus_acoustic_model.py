@@ -61,11 +61,11 @@ def main():
         filename = os.path.split(old_path)[-1]
         ext = filename.split('.')[-1]
         utt+=1
-        new_path = os.path.join(cur_path,'corpus',filename.replace(ext,'wav'))
+        new_path = os.path.join(cur_path,'corpus',filename)
         ### EXTRACT WAV ###
         #wavfile.write(filename,sr,waveform.astype(np.int16))
         # Downsample and reduce precision to 16 bit
-        command = ['sox', old_path, '-t', 'wav', '-r', '16000', '-b', '16', new_path]
+        command = ['sox', old_path, '-t', 'wav', '-r', '16000', '-b', '16', new_path.replace(ext,'wav')]
         subprocess.check_call(command)
 
         print(f'row {utt}: written wavfile in "{new_path}"')
