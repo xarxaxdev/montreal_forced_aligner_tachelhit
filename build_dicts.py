@@ -132,14 +132,17 @@ latin2ipadict = {
     # y should be IPA j 
     # r should be IPA ɾ or r depending on context
     # ! could mean next consonant is emphasized
+}
 
 
-def latins2ipa(text)
+def latins2ipa(text):
+    # TO DO 
     orig = []
     trans = []
     i = 0
     while i< len(text):
-        if text[i]
+        if text[i] :
+            pass
     return [orig,trans]
 
 

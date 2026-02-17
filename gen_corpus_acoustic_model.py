@@ -41,7 +41,6 @@ def gen_naive_textgrid(wave,sr,transcript):
 
 
 
-file_extensions = ['.flac', '.mp3', '.wav', '.aiff']
 
 def main():
     cur_path = utils.get_curr_folder()# must be run before huggingface
@@ -72,7 +71,7 @@ def main():
         ### GEN TEXTGRID ###
         raw_tg = gen_naive_textgrid(waveform,sr,row['text'])
         ext = filename.split('.')[-1]
-        tg = open(new_path.replace(ext, '.TextGrid'), 'w')
+        tg = open(new_path.replace(ext, 'TextGrid'), 'w')
         tg.write(raw_tg)
         tg.close()
         print(f'row {utt}: written TG in "{new_path}"')
