@@ -82,12 +82,12 @@ def load_datasets():
 
 
 def gen_project_folders():
-    for folder in ['dicts','corpus','output']:
+    for folder in ['dicts','corpus','output','output/corpus_aligned']:
         cache_dir= os.path.join(get_curr_folder(),folder)
         Path(cache_dir).mkdir(parents=True, exist_ok=True)
 
 def clean_project_folders():
-    for folder in ['dicts','corpus','output']:
+    for folder in ['dicts','corpus','output','output/corpus_aligned']:
         path = os.path.join(get_curr_folder(),folder)
         for f in os.listdir(path):
             os.remove(os.path.join(path, f))
