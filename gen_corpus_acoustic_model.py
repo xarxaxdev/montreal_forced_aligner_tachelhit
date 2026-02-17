@@ -59,8 +59,9 @@ def main():
         old_path = row['filename']
         #filename = filename.replace('.mp3',f'_{utt}.mp3')
         filename = os.path.split(old_path)[-1]
+        ext = filename.split('.')[-1]
         utt+=1
-        new_path = os.path.join(cur_path,'corpus',filename)
+        new_path = os.path.join(cur_path,'corpus',filename.replace(ext,'wav'))
         ### EXTRACT WAV ###
         #wavfile.write(filename,sr,waveform.astype(np.int16))
         # Downsample and reduce precision to 16 bit
@@ -70,7 +71,6 @@ def main():
         print(f'row {utt}: written wavfile in "{new_path}"')
         ### GEN TEXTGRID ###
         raw_tg = gen_naive_textgrid(waveform,sr,row['text'])
-        ext = filename.split('.')[-1]
         tg = open(new_path.replace(ext, 'TextGrid'), 'w')
         tg.write(raw_tg)
         tg.close()
