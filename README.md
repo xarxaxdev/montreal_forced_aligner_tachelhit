@@ -41,6 +41,10 @@ mfa validate ./corpus ./dicts/vocab.dict
 # mfa train [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH OUTPUT_MODEL_PATH 
 # 1 job = 1 core, I am using 14 here
 # --single_speaker is required to parallelize
-mfa train --clean --single_speaker  -j 12 ./corpus ./dicts/vocab.dict ./output/model.zip ./output/corpus_aligned
+# and just splits by utterance
+# From the MFA documentation
+# "Single speaker mode creates multiprocessing splits based on utterances rather than speakers. This mode also disables speaker adaptation equivalent to --uses_speaker_adaptation false."
+
+mfa train --clean --single_speaker  -j 12 ./corpus ./dicts/vocab.dict ./output/model.zip --output_directory ./output/corpus_aligned
 ```
 

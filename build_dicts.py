@@ -30,6 +30,17 @@ https://universeofmemory.com/tashelhit-language-resources/
 https://en.wiktionary.org/w/index.php?title=Category:Tashelhit_lemmas&pageuntil=IGIDR%0Aigidr#mw-pages
 https://www.livelingua.com/peace-corps/Tashelhit/tashelhit-dictionary-2011.pdf
 https://friendsofmorocco.org/Docs/Tashlheet/tashlheettextbook2011.pdf
+
+
+# 4000 WORDS
+https://friendsofmorocco.org/Docs/Dict/Tamazizght%20T-E.htm
+# 22k SENTENCES
+https://tatoeba.org/en/downloads
+https://downloads.tatoeba.org/exports/per_language/shi/shi_sentences.tsv.bz2
+# Wikipedia - Nuclear option; 14k pages however major cleanup needed
+https://shi.wikipedia.org/wiki/Tasna_Tamzwarut
+https://dumps.wikimedia.org/other/mediawiki_content_current/shiwiki/2026-02-01/xml/bzip2/
+https://medium.com/@evan.frank/accessing-and-cleaning-bulk-wikipedia-text-data-bfde3b550474
 """
 
 
@@ -42,22 +53,56 @@ https://friendsofmorocco.org/Docs/Tashlheet/tashlheettextbook2011.pdf
 # Which is the correct writing according to: https://en.wikipedia.org/wiki/Shilha_language#Writing_systems
 # From: https://en.wikipedia.org/wiki/Tifinagh#Neo-Tifinagh_letters
 tifinagh2ipa_dict = {
+    # Vowels and glides
     'ⴰ':'æ',
+    'ⴻ':'ə',
+    'ⵉ':'i',
+    'ⵡ':'w',#VTV= voiced transitional vocoids
+
+    # Bilabials
     'ⴱ':'b',
+    'ⵒ':'p', # IRCAM EXTENDED
+
+    # Labiodental
+    'ⴼ':'f',
+    'ⵠ':'v', # IRCAM EXTENDED
+
+    # Dental
+    'ⵝ':'θ',#fricative
+
+    # Alveolar
+    'ⵜ':'t',
+    'ⵟ':'tˤ',
+    'ⴷ':'d', # I worry about aproximant ð
+    'ⴹ':'dˤ',
+
+    # Post Alveolar
+
+    # Retro flex 
+
+    # Palatal 
+
+    # Velar 
+    
+    # Uvular
+
+    # Pharyngeal
+
+    # Glottal 
+
+
     'ⴳ':'g',
     'ⴳⵯ':'ɡʷ',
-    'ⴷ':'d',
-    'ⴹ':'dˤ',
-    'ⴻ':'ə',
-    'ⴼ':'f',
     'ⴽ':'k',
     'ⴽⵯ':'kʷ',
+    # according to "Syllables in Tashlhiyt Berber and in Moroccan Arabic"
+    # by FRANÇOIS DELL, MOHAMED ELMEDLAOUI
+    # only voiced h "murmured glottal fricative (‘voiced h’)."
     'ⵀ':'h',
     'ⵃ':'ħ',
     'ⵄ':'ʕ',
     'ⵅ':'χ',
     'ⵇ':'q',
-    'ⵉ':'i',
     'ⵊ':'ʒ',
     'ⵍ':'l',
     'ⵎ':'m',
@@ -69,9 +114,6 @@ tifinagh2ipa_dict = {
     'ⵙ':'s',
     'ⵚ':'sˤ',
     'ⵛ':'ʃ',
-    'ⵜ':'t',
-    'ⵟ':'tˤ',
-    'ⵡ':'w',
     'ⵢ':'j',
     'ⵣ':'z',
     'ⵥ':'zˤ',
@@ -82,9 +124,6 @@ tifinagh2ipa_dict = {
     'ⴿ':'x',#fricative
     #'ⵧ':['o','ɔ'], #this is proper, but let me worry about it later
     'ⵧ':'o',
-    'ⵒ':'p',
-    'ⵝ':'θ',#fricative
-    'ⵠ':'v',
     'ⴵ':'d͡ʒ',
     'ⵁ':'h',
     'ⵞ':'t͡ʃ',
@@ -111,32 +150,81 @@ def tifinagh2ipa(text):
         i += 1
     return [orig,trans]
 
-# https://en.wikivoyage.org/wiki/Tashelhit_phrasebook#Pronunciation_guide
-# Letters not in here are directly transcribed to IPA
+# https://huggingface.co/datasets/TutlaytAI/tamazight_asr/viewer/default/train?p=1
 latin2ipadict = {
+    # Vowels and glides
+    'a':'a',
+    'i':'i',
+    'u':'u',
+    'e':'ə',#VTV= voiced transitional vocoids
+
+    # Bilabials
+    'b':'b',
+    'p':'p',
+
+    # Labiodental
+    'f':'f',
+    'v':'v',
+
+    # Dental
+    't':'θ',#fricative
+
+
+    # Alveolar
+    'ṭ':'t',
+    's':'s',
+    'tt':'ts',
+    'z':'z',
+    'ṭṭ':'tˤ',
+    'd':'d',# Can also be approximated ð
     'ḍ':'dˤ',
+    'ẓ':'z',
+
+    # Post Alveolar
+    'c':'ʃ',
+    'čč':'',
+
+    # Retro flex 
+
+    # Palatal 
+    'y':'j',
+
+    # Velar 
+    
+    # Uvular
+    'x':'χ',
+
+    # Pharyngeal
+
+    # Glottal 
+
+
+
     'ḥ':'hˤ',
-    'ʕ': 'ʕ',
+    'ʕ':'ʕ',
     'ṛ':'rˤ',
     'ṣ':'sˤ',
-    'ṭ':'tˤ',
     'ẓ':'zˤ',
-    'e':'ə',
     #using writing from "Syllables in Tashlhiyt Berber and in Moroccan Arabic"
     # by FRANÇOIS DELL, MOHAMED ELMEDLAOUI
     'š':'ʃ',
     'ž':'ʒ',
     # Other uncommon symbols from IPA seem to already be ok in the datasets I have seen so far  
     # Ambiguity between the book and IPA for symbols that appear in both IPA and latinscript berber:
-    # x,ɣ Should be IPA χ and ʁ 
+    # x,ɣ  has the IPA realizations χ and ʁ 
+    # Neotifinagh has 'ⵅ':'χ' ,'ⵖ':'ɣ',
     # y should be IPA j 
+    'y':'j',
+    'w':'w',
     # r should be IPA ɾ or r depending on context
     # ! could mean next consonant is emphasized
+    # w and j are glides
 }
 
 
 def latins2ipa(text):
     # TO DO 
+    # Consider GEMMINATES: jj 
     orig = []
     trans = []
     i = 0
@@ -145,6 +233,62 @@ def latins2ipa(text):
             pass
     return [orig,trans]
 
+# https://www.livelingua.com/peace-corps/Tamazight/Tamazight%20Textbook%202007.pdf
+# This needs heavy reviewing
+# This is probably a better source: 
+# https://en.wikipedia.org/wiki/Help:IPA/Arabic
+arabic2ipa= {
+    #sometimes /a/ sometimes /æ/
+    'ة':'a',
+    'ى':'a',
+    '_َ':'a',
+    'ا':'a',
+    #
+    'ب':'b',
+    'د':'d',
+    '_َ':'e',
+    'ا':'e',
+    #      
+    'ف':'f',
+    'گ':'g',
+    'ه':'h',
+    '_':'i',#_ِ
+    'ي':'i',
+           ,
+    'ج':'j',
+    'ك':'k',
+    'ل':'l',
+    'م':'m',
+    'ن':'n',
+    'و':'o',
+    'پ':'p',
+    'ر':'r',
+    'س':'s',
+    'ت':'t',
+    'و':'u',
+    'ڤ':'v',
+    'و':'w',
+    'ي':'y',
+    'ز':'z',
+    'ش':''#,Sh as in she
+    'ي ـ':',ay'# as in say
+    'و ـ':',ow' # as in cow
+    '"#ـ':'iu',#as in see you
+    'ض':'d',#emphatic
+    'ص':'s',#emphatic
+    'ط':'t',#emphatic
+    'ق':'q',# k back further
+    'خ':'x',# Like ch in "Ach So!"
+    'غ':'g',#french r
+    'ح':'н',# voiced 'h'??
+    'ع':'ع',# open e
+
+}
+
+def arabic2ipa():
+    # a little 'w' doubles the top makes it gemminate
+    #"ـّ%
+    return ''
 
 
 def main():
@@ -168,14 +312,8 @@ def main():
     # We want to collect the totality of words that exist in Tashelhit
     vocab = {}# a set is more fitting, but lists do not have a builtin way to get hashed for sets.
     for row in cur:
-        #print('-' *15)
-        #print(row['text'])
         words = re.sub(r"[?.,!\":;\'\t]",'', row['text']).split(' ')
-        #print(words)
         for w in words:
-            #print('-' *15)
-            #print(w)
-            #print('-' *15)
             #function returns them as array of symbols
             orig,trans = tifinagh2ipa(w)
             w_trans = ''.join(trans)
