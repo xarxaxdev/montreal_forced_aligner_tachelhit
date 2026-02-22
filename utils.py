@@ -7,23 +7,8 @@ import urllib
 from tqdm import tqdm
 
 THRESHOLD_MIN_SECONDS = 0.25
-DATASETS = {
-    'tamasightASRDatasetV2':'https://huggingface.co/datasets/SoufianeDahimi/Tamazight-ASR-Dataset-v2',
 
-}
-DATASET_DICTS = {
-    'tamasightASRDatasetV2':'arabic_ipa', #unlikely to be useful
-    'moroccan_amazigh_asr':'tzm_tfng2ipa',
-    'common_voice_22_0':'tzm_tfng2ipa',
-}
 
-# Name format is {language}_{script_before}2{script_after}.dict
-DICT_FILES = {
-        'arabic_arabic2ipa.dict':'https://raw.githubusercontent.com/MontrealCorpusTools/mfa-models/763256cb0c04e9dbf0730b032d78ec9470e54188/dictionary/arabic/mfa/arabic_mfa.dict' , 
-        'tzm_tfng2ipa.dict':'https://raw.githubusercontent.com/CUNY-CL/wikipron/refs/heads/master/data/scrape/tsv/tzm_tfng_broad.tsv' ,
-    }
-
-DICTS = {}
     
 
 def get_curr_folder():
@@ -46,17 +31,6 @@ def reshape_audio(row):
 def load_datasets():
     # Load each dataset (would be normally under ~/.cache/huggingface/datasets)
 
-    ### ARABSCRIPT DATASET
-    cache_dir= os.path.join(get_curr_folder(),'.cache/huggingface/datasets')
-    Path(cache_dir).mkdir(parents=True, exist_ok=True)
-    data = {}
-    dataset = load_dataset("SoufianeDahimi/Tamazight-ASR-Dataset-v2",cache_dir=cache_dir)
-    dataset = dataset['train'].take(3)
-    #dataset = concatenate_datasets(dataset['train'],dataset['test'])# TODO LATER
-    dataset = dataset.map(reshape_audio,remove_columns=[c for c in dataset.column_names if c != 'text'])
-                                                                         
-    #dataset = dataset.filter(lambda r: len(r['waveform'])/r['sr']<THRESHOLD_MIN_SECONDS)
-    data['tamasightASRDatasetV2'] = dataset
 
     #todo, normalize these
 
@@ -93,10 +67,6 @@ def clean_project_folders():
             os.remove(os.path.join(path, f))
 
 
-def download_dicts():
-    for filename in DICT_FILES:
-        page = urllib.request.urlretrieve(DICT_FILES[filename], f'dicts/{filename}')
-
 def prepare_project_structure():
     gen_project_folders()
     clean_project_folders() #in case they existed
@@ -112,5 +82,4 @@ def load_dicts():
                 [left,right] = line.split('\t')
                 DICTS[d_name][left]=right
     return DICTS
-
 

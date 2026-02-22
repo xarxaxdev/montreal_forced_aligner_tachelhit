@@ -237,59 +237,6 @@ def latins2ipa(text):
 # This needs heavy reviewing
 # This is probably a better source: 
 # https://en.wikipedia.org/wiki/Help:IPA/Arabic
-arabic2ipa= {
-    #sometimes /a/ sometimes /æ/
-    'ة':'a',
-    'ى':'a',
-    '_َ':'a',
-    'ا':'a',
-    #
-    'ب':'b',
-    'د':'d',
-    '_َ':'e',
-    'ا':'e',
-    #      
-    'ف':'f',
-    'گ':'g',
-    'ه':'h',
-    '_':'i',#_ِ
-    'ي':'i',
-           ,
-    'ج':'j',
-    'ك':'k',
-    'ل':'l',
-    'م':'m',
-    'ن':'n',
-    'و':'o',
-    'پ':'p',
-    'ر':'r',
-    'س':'s',
-    'ت':'t',
-    'و':'u',
-    'ڤ':'v',
-    'و':'w',
-    'ي':'y',
-    'ز':'z',
-    'ش':''#,Sh as in she
-    'ي ـ':',ay'# as in say
-    'و ـ':',ow' # as in cow
-    '"#ـ':'iu',#as in see you
-    'ض':'d',#emphatic
-    'ص':'s',#emphatic
-    'ط':'t',#emphatic
-    'ق':'q',# k back further
-    'خ':'x',# Like ch in "Ach So!"
-    'غ':'g',#french r
-    'ح':'н',# voiced 'h'??
-    'ع':'ع',# open e
-
-}
-
-def arabic2ipa():
-    # a little 'w' doubles the top makes it gemminate
-    #"ـّ%
-    return ''
-
 
 def main():
     utils.prepare_project_structure()
@@ -312,7 +259,7 @@ def main():
     # We want to collect the totality of words that exist in Tashelhit
     vocab = {}# a set is more fitting, but lists do not have a builtin way to get hashed for sets.
     for row in cur:
-        words = re.sub(r"[?.,!\":;\'\t]",'', row['text']).split(' ')
+        words = re.sub(r"[?.,!\":;\'\t\*]",'', row['text']).split(' ')
         for w in words:
             #function returns them as array of symbols
             orig,trans = tifinagh2ipa(w)
