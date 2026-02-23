@@ -112,8 +112,8 @@ tifinagh2ipa_dict = {
     'ⵕ':'rˤ',# CONSENSUS 1,2,3
 
     # Post Alveolar
-    'ⵛ':'ʃ',# SRC 1 CONFLICT!
-    'ⵛ':'c',# SRC 2,3 (I don't trust this) CONFLICT!
+    'ⵛ':'ʃ',# SRC 1,2 CONFLICT!
+    'ⵛ':'c',# SRC 3 (I don't trust this) CONFLICT!
     'ⴵ':'d͡ʒ',# SRC 1,2
     'ⴶ':'dʒ',# SRC 2
     'ⵞ':'t͡ʃ',# SRC 1,2 
