@@ -67,12 +67,12 @@ tifinagh2ipa_dict = {
     'ⵉ':'i',# CONSENSUS SRC 1,2,3
     #'ⵄ':'ʕ',# SRC 1
     'ⵄ':'ɛ',# SRC 2,3
-    'ⵓ':'w', #SRC 1
-    'ⵓ':'u', #SRC 2,3
+    'ⵓ':'u', #SRC 2,3  CONFLICT!
+    'ⵓ':'w', #SRC 1   CONFLICT!
     'ⵡ':'w',# SRC 1,2,3
     'ⵢ':'j',# SRC 1,3
-    'ⵊ':'ʒ',# SRC 1
-    'ⵊ':'j',# SRC 2,3
+    'ⵊ':'ʒ',# SRC 1 CONFLICT!
+    'ⵊ':'j',# SRC 2,3 CONFLICT!
     'ⵋ':'j',# SRC 2
     'ⵌ':'j',# SRC 2
     'ⵘ':'j',# SRC 2
@@ -112,8 +112,8 @@ tifinagh2ipa_dict = {
     'ⵕ':'rˤ',# CONSENSUS 1,2,3
 
     # Post Alveolar
-    'ⵛ':'ʃ',# SRC 1
-    'ⵛ':'c',# SRC 2,3 (I don't trust this)
+    'ⵛ':'ʃ',# SRC 1 CONFLICT!
+    'ⵛ':'c',# SRC 2,3 (I don't trust this) CONFLICT!
     'ⴵ':'d͡ʒ',# SRC 1,2
     'ⴶ':'dʒ',# SRC 2
     'ⵞ':'t͡ʃ',# SRC 1,2 
@@ -123,17 +123,16 @@ tifinagh2ipa_dict = {
     # Palatal 
 
     # Velar 		
-    "ⵅ": "x",# SRC 2,3
     "ⵆ": "x",# SRC 2
     'ⴿ':'x',# IRCAM EXTENDED fricative; SRC 1 
-    'ⵅ':'χ',# SRC 1 
-    'ⵅ':'x',# SRC 2
+    'ⵅ':'χ',# SRC 1 CONFLICT!
+    'ⵅ':'x',# SRC 2,3 CONFLICT!
     'ⵖ':'ɣ',# SRC 1,2,3
     'ⵗ':'ɣ',# SRC 2
 
     'ⴳ':'g',# SRC 1,2,3
-    'ⴴ':'g',# SRC 2
-    'ⴴ':'ʝ',#IRCAM EXTENDED fricative
+    'ⴴ':'g',# SRC 2   CONFLICT!
+    'ⴴ':'ʝ',#IRCAM EXTENDED fricative;SRC 1 CONFLICT!
     'ⴳⵯ':'ɡʷ',# SRC 1,3
     'ⴽ':'k',# SRC 1,2,3
     'ⴾ':'k',# SRC 2
