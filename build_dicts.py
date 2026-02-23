@@ -62,13 +62,13 @@ tifinagh2ipa_dict = {
     ### VOWELS AND GLIDES
     #'ⴰ':'æ',# SRC 1
     'ⴰ':'a',# SRC 2,3
-    #'ⴻ':'ə',# SRC 1
-    'ⴻ':'e',# SRC 2,3
+    #'ⴻ':'ə',# SRC 1  CONFLICT!
+    'ⴻ':'e',# SRC 2,3  CONFLICT!
     'ⵉ':'i',# CONSENSUS SRC 1,2,3
-    #'ⵄ':'ʕ',# SRC 1
-    'ⵄ':'ɛ',# SRC 2,3
+    #'ⵄ':'ʕ',# SRC 1  CONFLICT!
+    'ⵄ':'ɛ',# SRC 2,3  CONFLICT!
     'ⵓ':'u', #SRC 2,3  CONFLICT!
-    'ⵓ':'w', #SRC 1   CONFLICT!
+    #'ⵓ':'w', #SRC 1   CONFLICT!
     'ⵡ':'w',# SRC 1,2,3
     'ⵢ':'j',# SRC 1,3
     'ⵊ':'ʒ',# SRC 1 CONFLICT!
@@ -125,14 +125,14 @@ tifinagh2ipa_dict = {
     # Velar 		
     'ⵆ':'x',# SRC 2
     'ⴿ':'x',# IRCAM EXTENDED fricative; SRC 1 
-    'ⵅ':'χ',# SRC 1 CONFLICT!
+    #'ⵅ':'χ',# SRC 1 CONFLICT!
     'ⵅ':'x',# SRC 2,3 CONFLICT!
     'ⵖ':'ɣ',# SRC 1,2,3
     'ⵗ':'ɣ',# SRC 2
 
     'ⴳ':'g',# SRC 1,2,3
     'ⴴ':'g',# SRC 2   CONFLICT!
-    'ⴴ':'ʝ',#IRCAM EXTENDED fricative;SRC 1 CONFLICT!
+    #'ⴴ':'ʝ',# IRCAM EXTENDED fricative;SRC 1 CONFLICT!
     'ⴳⵯ':'ɡʷ',# SRC 1,3
     'ⴽ':'k',# SRC 1,2,3
     'ⴾ':'k',# SRC 2
