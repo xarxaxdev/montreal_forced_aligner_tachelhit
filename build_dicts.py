@@ -47,87 +47,114 @@ https://medium.com/@evan.frank/accessing-and-cleaning-bulk-wikipedia-text-data-b
 
 
 # REVISE
-#https://en.wiktionary.org/wiki/Module:Tfng-translit
+# according to "Syllables in Tashlhiyt Berber and in Moroccan Arabic"
+# by FRANÇOIS DELL, MOHAMED ELMEDLAOUI
+# only voiced h "murmured glottal fricative (‘voiced h’)."
 #
-# technically neo-tifinagh
+# SOURCE 1
 # Which is the correct writing according to: https://en.wikipedia.org/wiki/Shilha_language#Writing_systems
 # From: https://en.wikipedia.org/wiki/Tifinagh#Neo-Tifinagh_letters
+# SOURCE 2
+# https://en.wiktionary.org/wiki/Module:Tfng-translit
+# SOURCE 3
+# https://www.mdpi.com/2078-2489/16/7/600
 tifinagh2ipa_dict = {
-    # Vowels and glides
-    'ⴰ':'æ',
-    'ⴻ':'ə',
-    'ⵉ':'i',
-    'ⵡ':'w',#VTV= voiced transitional vocoids
+    ### VOWELS AND GLIDES
+    #'ⴰ':'æ',# SRC 1
+    'ⴰ':'a',# SRC 2,3
+    #'ⴻ':'ə',# SRC 1
+    'ⴻ':'e',# SRC 2,3
+    'ⵉ':'i',# CONSENSUS SRC 1,2,3
+    #'ⵄ':'ʕ',# SRC 1
+    'ⵄ':'ɛ',# SRC 2,3
+    'ⵓ':'w', #SRC 1
+    'ⵓ':'u', #SRC 2,3
+    'ⵡ':'w',# SRC 1,2,3
+    'ⵢ':'j',# SRC 1,3
+    'ⵊ':'ʒ',# SRC 1
+    'ⵊ':'j',# SRC 2,3
+    'ⵋ':'j',# SRC 2
+    'ⵌ':'j',# SRC 2
+    'ⵘ':'j',# SRC 2
+
+    'ⵧ':'o', # SRC 1,2
+
 
     # Bilabials
-    'ⴱ':'b',
-    'ⵒ':'p', # IRCAM EXTENDED
+    'ⴱ':'b',# CONSENSUS 1,2,3
+    'ⴲ':'β',# IRCAM EXTENDED fricative; SRC 1,2
+    'ⵒ':'p', # IRCAM EXTENDED; SRC 1,2
+    'ⵎ':'m',# CONSENSUS 1,2,3
 
     # Labiodental
-    'ⴼ':'f',
+    'ⴼ':'f',# CONSENSUS 1,2,3
     'ⵠ':'v', # IRCAM EXTENDED
 
     # Dental
-    'ⵝ':'θ',#fricative
+    'ⵝ':'θ',# IRCAM EXTENDED fricative; SRC 1,2
+    'ⴺ':'ðˤ',# IRCAM EXTENDED fricative; SRC 1,2 
+    'ⴸ':'ð',# SRC 2
 
+ 
     # Alveolar
-    'ⵜ':'t',
-    'ⵟ':'tˤ',
-    'ⴷ':'d', # I worry about aproximant ð
-    'ⴹ':'dˤ',
+    'ⵏ':'n',# SRC 1
+    'ⵙ':'s',# CONSENSUS 1,2,3
+    'ⵚ':'sˤ',# CONSENSUS 1,2,3
+    'ⵣ':'z',# CONSENSUS 1,2,3
+    'ⵥ':'zˤ',# CONSENSUS 1,2,3
+    'ⵜ':'t',# CONSENSUS 1,2,3
+    'ⵟ':'tˤ',# CONSENSUS 1,2,3
+    #I worry about aproximant ð for the aligner
+    'ⴷ':'d', # CONSENSUS 1,2,3 
+    'ⴹ':'dˤ',# CONSENSUS 1,2,3
+    'ⵍ':'l', # SRC 1,3 
+    'ⵔ':'r', # CONSENSUS 1,2,3
+    'ⵕ':'rˤ',# CONSENSUS 1,2,3
 
     # Post Alveolar
+    'ⵛ':'ʃ',# SRC 1
+    'ⵛ':'c',# SRC 2,3 (I don't trust this)
+    'ⴵ':'d͡ʒ',# SRC 1,2
+    'ⴶ':'dʒ',# SRC 2
+    'ⵞ':'t͡ʃ',# SRC 1,2 
 
     # Retro flex 
 
     # Palatal 
 
-    # Velar 
+    # Velar 		
+    "ⵅ": "x",# SRC 2,3
+    "ⵆ": "x",# SRC 2
+    'ⴿ':'x',# IRCAM EXTENDED fricative; SRC 1 
+    'ⵅ':'χ',# SRC 1 
+    'ⵅ':'x',# SRC 2
+    'ⵖ':'ɣ',# SRC 1,2,3
+    'ⵗ':'ɣ',# SRC 2
+
+    'ⴳ':'g',# SRC 1,2,3
+    'ⴴ':'g',# SRC 2
+    'ⴴ':'ʝ',#IRCAM EXTENDED fricative
+    'ⴳⵯ':'ɡʷ',# SRC 1,3
+    'ⴽ':'k',# SRC 1,2,3
+    'ⴾ':'k',# SRC 2
+    'ⴿ':'k',# SRC 2 
+    'ⴽⵯ':'kʷ',# SRC 1,3 
     
     # Uvular
+    'ⵇ' : 'q',# SRC 1,2,3
+    'ⵈ' : 'q',# SRC 2
 
     # Pharyngeal
+    'ⵃ':'ħ',# CONSENSUS 1,2,3
 
     # Glottal 
-
-
-    'ⴳ':'g',
-    'ⴳⵯ':'ɡʷ',
-    'ⴽ':'k',
-    'ⴽⵯ':'kʷ',
-    # according to "Syllables in Tashlhiyt Berber and in Moroccan Arabic"
-    # by FRANÇOIS DELL, MOHAMED ELMEDLAOUI
-    # only voiced h "murmured glottal fricative (‘voiced h’)."
-    'ⵀ':'h',
-    'ⵃ':'ħ',
-    'ⵄ':'ʕ',
-    'ⵅ':'χ',
-    'ⵇ':'q',
-    'ⵊ':'ʒ',
-    'ⵍ':'l',
-    'ⵎ':'m',
-    'ⵏ':'n',
-    'ⵓ':'w',
-    'ⵔ':'r',
-    'ⵕ':'rˤ',
-    'ⵖ':'ɣ',
-    'ⵙ':'s',
-    'ⵚ':'sˤ',
-    'ⵛ':'ʃ',
-    'ⵢ':'j',
-    'ⵣ':'z',
-    'ⵥ':'zˤ',
-    #IRCAM extended
-    'ⴲ':'β',#fricative
-    'ⴴ':'ʝ',#fricative
-    'ⴺ':'ðˤ',#fricative
-    'ⴿ':'x',#fricative
-    #'ⵧ':['o','ɔ'], #this is proper, but let me worry about it later
-    'ⵧ':'o',
-    'ⴵ':'d͡ʒ',
-    'ⵁ':'h',
-    'ⵞ':'t͡ʃ',
-    ' ':' '#spacing exists
+    'ⵀ':'h',# SRC 1,2; SRC 2 does not mention if for shi
+    'ⵂ':'h',# SRC 2
+    'ⵁ':'h',# IRCAM EXTENDED; SRC 1,2
+    
+    # multi-letter
+    'ⵑ':'ng',# SRC 2
+    'ⵐ':'ny',# SRC 2
 }
 
 ipa2tifinagh_dict = {} #the inverse dictionary
