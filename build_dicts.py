@@ -58,21 +58,25 @@ https://medium.com/@evan.frank/accessing-and-cleaning-bulk-wikipedia-text-data-b
 # https://en.wiktionary.org/wiki/Module:Tfng-translit
 # SOURCE 3
 # https://www.mdpi.com/2078-2489/16/7/600
+# SOURCE 4
+# https://ieeexplore.ieee.org/abstract/document/8284715
+# SOURCE 5
+# https://commons.wikimedia.org/wiki/Tifinagh
 tifinagh2ipa_dict = {
     ### VOWELS AND GLIDES
     #'ⴰ':'æ',# SRC 1
-    'ⴰ':'a',# SRC 2,3
+    'ⴰ':'a',# SRC 2,3,4
     #'ⴻ':'ə',# SRC 1  CONFLICT!
-    'ⴻ':'e',# SRC 2,3  CONFLICT!
-    'ⵉ':'i',# CONSENSUS SRC 1,2,3
+    'ⴻ':'e',# SRC 2,3,4  CONFLICT!
+    'ⵉ':'i',# CONSENSUS SRC 1,2,3,4
     #'ⵄ':'ʕ',# SRC 1  CONFLICT!
-    'ⵄ':'ɛ',# SRC 2,3  CONFLICT!
-    'ⵓ':'u', #SRC 2,3  CONFLICT!
+    'ⵄ':'ɛ',# SRC 2,3,4  CONFLICT!
+    'ⵓ':'u', #SRC 2,3,4  CONFLICT!
     #'ⵓ':'w', #SRC 1   CONFLICT!
-    'ⵡ':'w',# SRC 1,2,3
-    'ⵢ':'j',# SRC 1,3
-    'ⵊ':'ʒ',# SRC 1 CONFLICT!
-    'ⵊ':'j',# SRC 2,3 CONFLICT!
+    'ⵡ':'w',# CONSENSUS 1,2,3,4
+    'ⵢ':'j',# SRC 1,3,4
+    #'ⵊ':'ʒ',# SRC 1 CONFLICT!
+    'ⵊ':'j',# SRC 2,3,4 CONFLICT!
     'ⵋ':'j',# SRC 2
     'ⵌ':'j',# SRC 2
     'ⵘ':'j',# SRC 2
@@ -81,13 +85,13 @@ tifinagh2ipa_dict = {
 
 
     # Bilabials
-    'ⴱ':'b',# CONSENSUS 1,2,3
+    'ⴱ':'b',# CONSENSUS 1,2,3,4
     'ⴲ':'β',# IRCAM EXTENDED fricative; SRC 1,2
     'ⵒ':'p', # IRCAM EXTENDED; SRC 1,2
-    'ⵎ':'m',# CONSENSUS 1,2,3
+    'ⵎ':'m',# CONSENSUS 1,2,3,4
 
     # Labiodental
-    'ⴼ':'f',# CONSENSUS 1,2,3
+    'ⴼ':'f',# CONSENSUS 1,2,3,4
     'ⵠ':'v', # IRCAM EXTENDED
 
     # Dental
@@ -97,23 +101,22 @@ tifinagh2ipa_dict = {
 
  
     # Alveolar
-    'ⵏ':'n',# SRC 1
-    'ⵙ':'s',# CONSENSUS 1,2,3
-    'ⵚ':'sˤ',# CONSENSUS 1,2,3
-    'ⵣ':'z',# CONSENSUS 1,2,3
-    'ⵥ':'zˤ',# CONSENSUS 1,2,3
-    'ⵜ':'t',# CONSENSUS 1,2,3
-    'ⵟ':'tˤ',# CONSENSUS 1,2,3
+    'ⵏ':'n',# CONSENSUS 1,2,3,4
+    'ⵙ':'s',# CONSENSUS 1,2,3,4
+    'ⵚ':'sˤ',# CONSENSUS 1,2,3,4
+    'ⵣ':'z',# CONSENSUS 1,2,3,4
+    'ⵥ':'zˤ',# CONSENSUS 1,2,3,4
+    'ⵜ':'t',# CONSENSUS 1,2,3,4
+    'ⵟ':'tˤ',# CONSENSUS 1,2,3,4
     #I worry about aproximant ð for the aligner
-    'ⴷ':'d', # CONSENSUS 1,2,3 
-    'ⴹ':'dˤ',# CONSENSUS 1,2,3
-    'ⵍ':'l', # SRC 1,3 
-    'ⵔ':'r', # CONSENSUS 1,2,3
-    'ⵕ':'rˤ',# CONSENSUS 1,2,3
+    'ⴷ':'d', # CONSENSUS 1,2,3,4
+    'ⴹ':'dˤ',# CONSENSUS 1,2,3,4
+    'ⵍ':'l', # CONSENSUS 1,2,3,4
+    'ⵔ':'r', # CONSENSUS 1,2,3,4
+    'ⵕ':'rˤ',# CONSENSUS 1,2,3,4
 
     # Post Alveolar
-    'ⵛ':'ʃ',# SRC 1,2 CONFLICT!
-    #'ⵛ':'c',# SRC 3 (I don't trust this) CONFLICT!
+    'ⵛ':'ʃ',# CONSENSUS 1,2,3,4 
     'ⴵ':'d͡ʒ',# SRC 1,2
     'ⴶ':'d͡ʒ',# SRC 2
     'ⵞ':'t͡ʃ',# SRC 1,2 
@@ -126,28 +129,28 @@ tifinagh2ipa_dict = {
     'ⵆ':'x',# SRC 2
     'ⴿ':'x',# IRCAM EXTENDED fricative; SRC 1 
     #'ⵅ':'χ',# SRC 1 CONFLICT!
-    'ⵅ':'x',# SRC 2,3 CONFLICT!
-    'ⵖ':'ɣ',# SRC 1,2,3
+    'ⵅ':'x',# SRC 2,3,4 CONFLICT!
+    'ⵖ':'ɣ',# CONSENSUS 1,2,3,4
     'ⵗ':'ɣ',# SRC 2
 
-    'ⴳ':'g',# SRC 1,2,3
-    'ⴴ':'g',# SRC 2   CONFLICT!
+    'ⴳ':'g',# CONSENSUS 1,2,3,4
+    'ⴴ':'g',# SRC 2 (SRC 5 points to this being aproximant);   CONFLICT!
     #'ⴴ':'ʝ',# IRCAM EXTENDED fricative;SRC 1 CONFLICT!
-    'ⴳⵯ':'ɡʷ',# SRC 1,3
-    'ⴽ':'k',# SRC 1,2,3
+    'ⴳⵯ':'ɡʷ',# CONSENSUS 1,2,3,4
+    'ⴽ':'k',# CONSENSUS 1,2,3,4
     'ⴾ':'k',# SRC 2
     'ⴿ':'k',# SRC 2 
-    'ⴽⵯ':'kʷ',# SRC 1,3 
-    
+    'ⴽⵯ':'kʷ',# CONSENSUS 1,2,3,4
+
     # Uvular
-    'ⵇ':'q',# SRC 1,2,3
+    'ⵇ':'q',# CONSENSUS 1,2,3,4
     'ⵈ':'q',# SRC 2
 
     # Pharyngeal
     'ⵃ':'ħ',# CONSENSUS 1,2,3
 
     # Glottal 
-    'ⵀ':'h',# SRC 1,2; SRC 2 does not mention if for shi
+    'ⵀ':'h',# CONSENSUS 1,2,3,4; SRC 2 does not mention if for shi
     'ⵂ':'h',# SRC 2
     'ⵁ':'h',# IRCAM EXTENDED; SRC 1,2
     
