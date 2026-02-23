@@ -113,17 +113,17 @@ tifinagh2ipa_dict = {
 
     # Post Alveolar
     'ⵛ':'ʃ',# SRC 1,2 CONFLICT!
-    'ⵛ':'c',# SRC 3 (I don't trust this) CONFLICT!
+    #'ⵛ':'c',# SRC 3 (I don't trust this) CONFLICT!
     'ⴵ':'d͡ʒ',# SRC 1,2
-    'ⴶ':'dʒ',# SRC 2
+    'ⴶ':'d͡ʒ',# SRC 2
     'ⵞ':'t͡ʃ',# SRC 1,2 
 
-    # Retro flex 
-
     # Palatal 
+    'ⵐ':'ny',# SRC 2
+
 
     # Velar 		
-    "ⵆ": "x",# SRC 2
+    'ⵆ':'x',# SRC 2
     'ⴿ':'x',# IRCAM EXTENDED fricative; SRC 1 
     'ⵅ':'χ',# SRC 1 CONFLICT!
     'ⵅ':'x',# SRC 2,3 CONFLICT!
@@ -140,8 +140,8 @@ tifinagh2ipa_dict = {
     'ⴽⵯ':'kʷ',# SRC 1,3 
     
     # Uvular
-    'ⵇ' : 'q',# SRC 1,2,3
-    'ⵈ' : 'q',# SRC 2
+    'ⵇ':'q',# SRC 1,2,3
+    'ⵈ':'q',# SRC 2
 
     # Pharyngeal
     'ⵃ':'ħ',# CONSENSUS 1,2,3
