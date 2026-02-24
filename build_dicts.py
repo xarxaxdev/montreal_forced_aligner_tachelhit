@@ -178,9 +178,14 @@ for k in tifinagh2ipa_dict:
 
 
 def tifinagh2ipa(text):
+    # TODO
     # Consider supporting diphtongs 
     # /ts/ and /dz/
     # /d͡ʒ/ and /t͡ʃ/
+    # Manually implement: 
+    # https://en.wikipedia.org/wiki/Shilha_language#Phonology
+    # and also exceptions according to 
+    #"Syllables in Tashlhiyt Berber and in Moroccan Arabic"
     orig = []
     trans = []
     i = 0
@@ -328,11 +333,9 @@ arabic2ipadict = {
     # Bilabials
     'م':'m',
     'ب':'b',# or 'β'
-    #'p':'p',
 
     # Labiodental
     'ف':'f',
-    #'v':'v',
 
     # Dental
 
@@ -386,10 +389,8 @@ arabic2ipadict = {
 
 }
 
-
+#TODO
 def arabic2ipa(text):
-    # TO DO 
-    # Consider GEMMINATES: jj 
     orig = []
     trans = []
     i = 0
