@@ -85,9 +85,7 @@ tifinagh2ipa_dict = {
     'ⵋ':'j',# SRC 2
     'ⵌ':'j',# SRC 2
     'ⵘ':'j',# SRC 2
-
     'ⵧ':'o', # SRC 1,2
-
 
     # Bilabials
     'ⴱ':'b',# CONSENSUS 1,2,3,4
