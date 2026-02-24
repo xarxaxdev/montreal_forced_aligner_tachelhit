@@ -72,11 +72,12 @@ tifinagh2ipa_dict = {
     #'ⵄ':'ʕ',# SRC 1  CONFLICT!
     'ⵄ':'ɛ',# SRC 2,3,4  CONFLICT!
     'ⵓ':'u', #SRC 2,3,4  CONFLICT!
+    #'ⵓ':'ʊ', in latin alphabet
     #'ⵓ':'w', #SRC 1   CONFLICT!
     'ⵡ':'w',# CONSENSUS 1,2,3,4
     'ⵢ':'j',# SRC 1,3,4
-    #'ⵊ':'ʒ',# SRC 1 CONFLICT!
-    'ⵊ':'j',# SRC 2,3,4 CONFLICT!
+    'ⵊ':'ʒ',# SRC 1 CONFLICT!
+    #'ⵊ':'j',# SRC 2,3,4 CONFLICT!
     'ⵋ':'j',# SRC 2
     'ⵌ':'j',# SRC 2
     'ⵘ':'j',# SRC 2
@@ -180,71 +181,112 @@ def tifinagh2ipa(text):
     return [orig,trans]
 
 # https://huggingface.co/datasets/TutlaytAI/tamazight_asr/viewer/default/train?p=1
+# https://en.wikipedia.org/wiki/Berber_Latin_alphabet
 latin2ipadict = {
-    # Vowels and glides
-    'a':'a',
+    ### VOWELS AND GLIDES
+    'a':'a',# or 'æ' depending on context
     'i':'i',
-    'u':'u',
-    'e':'ə',#VTV= voiced transitional vocoids
+    'u':'u',# according to wiki is 'ʊ'
+    'e':'e',# according to wiki is 'ə'
+    'ɛ':'ɛ',#according to wiki 'ʕ',
+    'w':'w',
+    'y':'j', # and 'j':'ʒ'
 
     # Bilabials
-    'b':'b',
-    'p':'p',
+    'm':'m',
+    'b':'b',# or 'β'
+    #'p':'p',
 
     # Labiodental
     'f':'f',
     'v':'v',
 
     # Dental
-    't':'θ',#fricative
 
-
+ 
     # Alveolar
-    'ṭ':'t',
+    'n':'n',
+
     's':'s',
-    'tt':'ts',
+    'ṣ':'sˤ',
     'z':'z',
-    'ṭṭ':'tˤ',
-    'd':'d',# Can also be approximated ð
-    'ḍ':'dˤ',
-    'ẓ':'z',
+    'ẓ':'zˤ',
+
+    't':'t',# or 'θ' 
+    'ṭ':'tˤ',
+    'd':'d',# or 'ð' 
+    'ḍ':'ðˤ',
+
+    'l':'l', # or 'ɫ'
+    'r':'r', # or 'rˤ'
+    'ṛ':'rˤ',# 
+    'ř':'ɺ',# 
 
     # Post Alveolar
     'c':'ʃ',
-    'čč':'',
-
-    # Retro flex 
+    'č':'t͡ʃ',
+    'j':'ʒ',# and 'y':'j' #CONFLICT WITH TIFINAGH2IPA
+    'ǧ':'d͡ʒ',
 
     # Palatal 
-    'y':'j',
+    'ⵐ':'ny',# SRC 2
 
-    # Velar 
-    
+
+    # Velar 		
+    'x':'x',# or 'χ' 
+    'ɣ':'ɣ',# or 'ʁ'
+    'g':'g',
+    'ɡʷ':'ɡʷ',# not in wiki
+    'k':'k',
+    'kʷ':'kʷ',# not in wiki
+
     # Uvular
-    'x':'χ',
-
+    'q':'q',# or 'qʷ' or 'ɢ'
+ 
     # Pharyngeal
+    'ḥ':'ħ',# CONSENSUS 1,2,3
 
     # Glottal 
-
-
-
-    'ḥ':'hˤ',
-    'ʕ':'ʕ',
-    'ṛ':'rˤ',
-    'ṣ':'sˤ',
-    'ẓ':'zˤ',
+    'h':'h',
+    
+    # My annotations with 
+    # https://huggingface.co/datasets/TutlaytAI/tamazight_asr
+    # Dental
+    # 't':'θ',
+    # Alveolar
+    #'ṭ':'t',
+    #'s':'s',
+    #'tt':'ts',
+    #'z':'z',
+    #'ṭṭ':'tˤ',
+    #'d':'d',# Can also be approximated ð
+    #'ḍ':'dˤ',
+    #'ẓ':'z',
+    # Post Alveolar
+    #'c':'ʃ',
+    #'čč':'',
+    # Palatal 
+    #'y':'j',
+    # Uvular
+    #'x':'χ',
+    # Pharyngeal
+    # Glottal 
+    #'ḥ':'hˤ',
+    #'ʕ':'ʕ',
+    #'ṛ':'rˤ',
+    #'ṣ':'sˤ',
+    #'ẓ':'zˤ',
     #using writing from "Syllables in Tashlhiyt Berber and in Moroccan Arabic"
     # by FRANÇOIS DELL, MOHAMED ELMEDLAOUI
-    'š':'ʃ',
-    'ž':'ʒ',
+    #'š':'ʃ',
+    #'ž':'ʒ',
     # Other uncommon symbols from IPA seem to already be ok in the datasets I have seen so far  
     # Ambiguity between the book and IPA for symbols that appear in both IPA and latinscript berber:
     # x,ɣ  has the IPA realizations χ and ʁ 
     # Neotifinagh has 'ⵅ':'χ' ,'ⵖ':'ɣ',
     # y should be IPA j 
-    'y':'j',
-    'w':'w',
+    #'y':'j',
+    #'w':'w',
     # r should be IPA ɾ or r depending on context
     # ! could mean next consonant is emphasized
     # w and j are glides
