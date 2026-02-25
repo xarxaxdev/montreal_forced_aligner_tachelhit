@@ -73,8 +73,6 @@ tifinagh2ipa_dict = {
     'ⴻ':'e',# SRC 2,3,4; in normal Berber is 'ə' but not in Tachelhit
     #https://en.wikipedia.org/wiki/Berber_Latin_alphabet#Souss-Berber_local_usage
     'ⵉ':'i',# CONSENSUS SRC 1,2,3,4
-    #'ⵄ':'ʕ',# SRC 1  CONFLICT!
-    'ⵄ':'ɛ',# SRC 2,3,4  CONFLICT!
     'ⵓ':'u', #SRC 2,3,4  CONFLICT!
     #'ⵓ':'ʊ', in latin alphabet
     #'ⵓ':'w', #SRC 1   CONFLICT!
@@ -159,6 +157,8 @@ tifinagh2ipa_dict = {
 
     # Pharyngeal
     'ⵃ':'ħ',# CONSENSUS 1,2,3
+    'ⵄ':'ʕ',# SRC 1  CONFLICT!
+    #'ⵄ':'ɛ',# SRC 2,3,4  CONFLICT!
 
     # Glottal 
     'ⵀ':'h',# CONSENSUS 1,2,3,4; SRC 2 does not mention if for shi
@@ -198,6 +198,9 @@ def tifinagh2ipa(text):
         i += 1
     return [orig,trans]
 
+
+
+
 # https://en.wikipedia.org/wiki/Berber_Latin_alphabet
 # and IRCAM Tifinagh~latin~arabic alphabet equivalence   
 latin2ipadict = { 
@@ -208,18 +211,16 @@ latin2ipadict = {
     'u':'u',# according to wiki is 'ʊ'
     'e':'e',# in normal Berber is 'ə' but not in Tachelhit
     #https://en.wikipedia.org/wiki/Berber_Latin_alphabet#Souss-Berber_local_usage
-    'ɛ':'ɛ',#according to wiki 'ʕ',
-    'â':'ɛ',#according to wiki 'ʕ',
     'w':'w',
     'y':'j', # and 'j':'ʒ'
 
     # Bilabials
     'm':'m',
     'mʷ':'mʷ',
-    'mᵒ':'mᵒ',
+    'mᵒ':'mʷ',
     'b':'b',# or 'β'
     'bʷ':'bʷ',
-    'bᵒ':'bᵒ',
+    'bᵒ':'bʷ',
 
     # Labiodental
     'f':'f',
@@ -252,7 +253,7 @@ latin2ipadict = {
     # Post Alveolar
     'c':'ʃ',
     'č':'t͡ʃ',
-    'j':'ʒ',# and 'y':'j' #CONFLICT WITH TIFINAGH2IPA
+    'j':'ʒ',# and 'y':'j' 
     'dj':'d͡ʒ',
     #'ll':'d͡ʒ',# Rif-BERBER Only
     'ǧ':'d͡ʒ',
@@ -263,24 +264,26 @@ latin2ipadict = {
     # Velar 		
     'x':'x',# or 'χ' 
     'xʷ':'xʷ',
-    'xᵒ':'xᵒ',
+    'xᵒ':'xʷ',
     'ɣ':'ɣ',# or 'ʁ'
     'ɣʷ':'ɣʷ',
-    'ɣᵒ':'ɣᵒ',
+    'ɣᵒ':'ɣʷ',
     'g':'g',
     'ɡʷ':'ɡʷ',
-    'ɡᵒ':'ɡᵒ',
+    'ɡᵒ':'ɡʷ',
     'k':'k',
     'kʷ':'kʷ',
-    'kᵒ':'kᵒ',
+    'kᵒ':'kʷ',
 
     # Uvular
     'q':'q',# or 'qʷ' or 'ɢ'
     'qʷ':'qʷ',
-    'qᵒ':'qᵒ',
+    'qᵒ':'qʷ',
  
     # Pharyngeal
     'ḥ':'ħ',# CONSENSUS 1,2,3
+    'ɛ':'ʕ',
+    'â':'ʕ',
 
     # Glottal 
     'h':'h',
@@ -316,15 +319,15 @@ def latins2ipa(text):
 arabic2ipadict = {
     ### VOWELS AND GLIDES
     'ا':'a',# according to wiki is 'æ'
-    'أ':'a',# according to wiki is 'æ'
-    ' َ':'a',# according to wiki is 'æ'
+    'أ':'a',
+    ' َ':'a',
     'ي':'i',
     ' ِ':'i',
-    'و':'u',# according to wiki is 'ʊ'
-    ' ُ':'u',# according to wiki is 'ʊ'
-    'ۍ':'e',# according to wiki is 'ə'
-    'ـ':'e',# according to wiki is 'ə'
-    'ع':'ɛ',# according to wiki 'ʕ',
+    'و':'u',
+    ' ُ':'u',
+    'ۍ':'e',
+    'ـ':'e',
+    'ع':'ɛ',
     'و':'w',
     'ي':'j', # and 'j':'ʒ'
 
