@@ -46,5 +46,7 @@ mfa validate ./corpus ./dicts/vocab.dict
 # "Single speaker mode creates multiprocessing splits based on utterances rather than speakers. This mode also disables speaker adaptation equivalent to --uses_speaker_adaptation false."
 
 mfa train --clean --single_speaker  -j 12 ./corpus ./dicts/vocab.dict ./output/model.zip --output_directory ./output/corpus_aligned
+# --phone_groups_path phone_groups/IPA_only.yaml
+
 ```
 
