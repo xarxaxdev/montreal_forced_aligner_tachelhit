@@ -3,6 +3,10 @@ import re
 import os 
 from pathlib import Path
  
+# pronunciation dictionary?
+# https://huggingface.co/datasets/prothmane/amawal-dataset
+# https://huggingface.co/datasets/omarkamali/wikipedia-monthly
+# https://huggingface.co/datasets/Tamazight-NLP/IRCAM-CORPUS
 
 """
 Based on:

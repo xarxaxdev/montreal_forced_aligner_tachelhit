@@ -20,6 +20,7 @@ conda env config vars set MKL_NUM_THREADS=14
 
 pip install datasets==3.6.0
 pip install soundfile==0.13.1
+pip install torch==2.10.0 
 
 ```
 
@@ -47,6 +48,9 @@ mfa validate ./corpus ./dicts/vocab.dict
 
 mfa train --clean --single_speaker  -j 12 ./corpus ./dicts/vocab.dict ./output/model.zip --output_directory ./output/corpus_aligned
 # --phone_groups_path phone_groups/IPA_only.yaml
+# --phone_groups_path
+
+# --rules_path
 
 ```
 
