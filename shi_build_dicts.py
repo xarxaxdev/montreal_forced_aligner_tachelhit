@@ -397,7 +397,6 @@ def arabic2ipa(text):
 
 
 def main():
-    utils.prepare_project_structure()
     data = utils.load_datasets()
     cur =  data['common_voice_22_0']
     # we want the dictionary in both directions:

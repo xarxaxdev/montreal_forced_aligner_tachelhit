@@ -1,0 +1,108 @@
+from datasets import Audio,concatenate_datasets #using huggingface's API
+import utils
+import re
+import os,sys,subprocess
+from pathlib import Path
+from scipy.io import wavfile
+import numpy as np
+import torchaudio
+import torch
+
+
+data = {}
+DICTS = {}
+tg_header = """File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0
+xmax = {xmax}
+tiers? <exists>
+size = 1
+item []:
+item [1]:
+class = "IntervalTier"
+name = "{name}"
+xmin = 0
+xmax = {xmax}
+intervals: size = {interval_size}"""
+
+dataset_name={
+    'common_voice_22_0':'cv22',
+    'kabyle_asr':'tfnlab',
+}
+ 
+# All kabyle data is in latinscript 
+def latin2ipa(text):
+    transcript= []
+    for w in text.split(' '):
+        try:
+            transcript.append(DICTS['latin2ipa_kab'][w].replace(' ',''))
+        except:
+            print(f'word "{w}" not found in dictionary "latin2ipa_kab"')
+            transcript.append(w)
+    return ' '.join(transcript)
+
+# One annotation = one utterance
+def gen_naive_textgrid(wave,sr,transcript):
+    transcript= latin2ipa(transcript)
+    t = len(wave)/sr
+    #intervals at the utterance level
+    tg_main =  tg_header.format(xmax=round(t,6),name='utt',interval_size=1)
+    tg_main += f'\nintervals [1]:\nxmin = 0\nxmax = {t}\ntext = "{transcript}"'
+    return tg_main
+
+
+def transform_row(origin, waveform, sr, old_path,text):
+    #print(f'row {utt}: text is "{row["text"]}"')
+    cur_path = utils.get_curr_folder()# must be run before huggingface
+    filename = os.path.split(old_path)[-1]
+    ext = filename.split('.')[-1]
+    filename = f'{origin}_{filename}'
+    new_path = os.path.join(cur_path,'corpus','kab',filename)
+
+    ### EXTRACT WAV ###
+    waveform = torch.tensor(waveform).unsqueeze(0)  # (1, samples)
+    # Downsample and reduce precision to 16 bit
+    resampler = torchaudio.transforms.Resample(orig_freq=sr, new_freq=16000)
+    waveform = resampler(waveform)
+    torchaudio.save(new_path.replace(ext,'wav'), waveform, 16000, encoding="PCM_F", bits_per_sample=16)
+
+    ### GEN TEXTGRID ###
+    raw_tg = gen_naive_textgrid(waveform,sr,text)
+    tg = open(new_path.replace(ext, 'TextGrid'), 'w')
+    tg.write(raw_tg)
+    tg.close()
+    #print(f'row {utt}: written TG in "{new_path}"')
+
+def main():
+    data = utils.load_datasets_kabyle()
+    global DICTS
+    DICTS = utils.load_dicts()
+    print(len(DICTS))
+    cur =  concatenate_datasets([data['common_voice_22_0'],data['kabyle_asr']])
+
+    utt=0 #kabyle_asr has no metadata, therefore I must come up with my own ids
+
+    print(f'{"-"*10}Generating textgrid/wav files...{"-"*10}')
+    for row in cur:
+        text = row['text'].lower()
+        words = re.sub(r"[?.,!\":«»;\'\t\*]",'', text).split(' ')
+        text = ' '.join(words)
+        if bool(re.search(r'(\d+|%|p|o|_|v|\(|\)|σ)',text)):
+            #skip rows with invalid symbols
+            continue
+        #text = text.replace('-','-')
+        #text = text.replace('‑','-')
+
+        audio = row['audio']
+        audio['path'] = f'{utt}.wav'
+
+        transform_row(origin=row['origin'], waveform = audio['array'],sr = audio['sampling_rate'], old_path = audio['path'], text = text)
+
+        utt+=1
+
+
+
+
+if __name__ == "__main__":
+    main()

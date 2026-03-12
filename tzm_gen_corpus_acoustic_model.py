@@ -23,13 +23,11 @@ xmax = {xmax}
 intervals: size = {interval_size}"""
  
 
-def latin2ipa(pron_dict,text):
-    words = re.sub(r"[?.,!\":«»;\'\t\*]",'', row['text']).split(' ')
-    for w in words:
-        if bool(re.search(r'(\d+|%|p|o|_|v|\(|\)|σ)',w.lower())):
+def tifinagh2ipa(pron_dict,text):
+    words = re.sub(r"[?.,!\":;\'\t]",'', text).split(' ')
     transcript= []
     for w in words:
-        transcript.append(DICTS['latin2ipa'][w].replace(' ',''))
+        transcript.append(DICTS['tifinagh2ipa'][w].replace(' ',''))
     return ' '.join(transcript)
 
 # One annotation = one utterance
@@ -47,7 +45,7 @@ def transform_row(pron_dict,waveform, sr, old_path,text):
     cur_path = utils.get_curr_folder()# must be run before huggingface
     filename = os.path.split(old_path)[-1]
     ext = filename.split('.')[-1]
-    new_path = os.path.join(cur_path,'corpus_kabyle',filename)
+    new_path = os.path.join(cur_path,'corpus',filename)
     ### EXTRACT WAV ###
     # Downsample and reduce precision to 16 bit
     command = ['sox', old_path, '-t', 'wav', '-r', '16000', '-b', '16', new_path.replace(ext,'wav')]
@@ -62,21 +60,18 @@ def transform_row(pron_dict,waveform, sr, old_path,text):
     #print(f'row {utt}: written TG in "{new_path}"')
 
 def main():
-    data = utils.load_datasets_kabyle()
+    data = utils.load_datasets()
     global DICTS
     DICTS = utils.load_dicts()
     print(len(DICTS))
-    cur =  concatenate_datasets([data['common_voice_22_0'],data['kabyle_asr']])
+    cur =  data['common_voice_22_0']
+    cur = cur.take(20) # debugging
     utt=1
     print(f'{"-"*10}Generating textgrid/wav files...{"-"*10}')
     for row in cur :
-        words = re.sub(r"[?.,!\":«»;\'\t\*]",'', row['text']).split(' ')
-        text = ' '.join(words.lower())
-        if bool(re.search(r'(\d+|%|p|o|_|v|\(|\)|σ)')):
-            #skip rows with invalid symbols
-            continue
+        #TODO ADD A CSV WITH ORIGINAL UTTERANCE, TRANSLATED UTTERANCE, ORIGINAL DATASET, FILENAME
+        transform_row(pron_dict = 'tifinagh2ipa',waveform = row['waveform'],sr =row['sr'],old_path=row['filename'], text =row['text'])
 
-        transform_row(pron_dict = 'latin2ipa_kab',waveform = row['waveform'],sr =row['sr'],old_path=row['filename'], text=text)
         utt+=1
 
 

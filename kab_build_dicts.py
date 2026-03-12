@@ -1,4 +1,4 @@
-from datasets import Dataset,load_dataset,Audio,concatenate_datasets #using huggingface's API
+from datasets import concatenate_datasets #using huggingface's API
 import utils
 import re
 import os 
@@ -219,8 +219,8 @@ def arabic2ipa(text):
 def main():
     utils.prepare_project_structure()
     data = utils.load_datasets_kabyle()
-    for i in data:
-        print(f'i:{i}, data[i]:{data[i]}')
+    #for i in data:
+        #print(f'i:{i}, data[i]:{data[i]}')
     cur =  concatenate_datasets([data['common_voice_22_0'],data['kabyle_asr']])
     # we want the dictionary in both directions:
     # tifinagh2ipa: to transcribe our datasets
@@ -238,10 +238,10 @@ def main():
         #if i_row < 20000:
             #pass
             #continue
-        words = re.sub(r"[?.,!\":«»;\'\t\*]",'', row['text']).split(' ')
-        #print(row['text'])
+        text = row['text'].lower()
+        words = re.sub(r"[?.,!\":«»;\'\t\*]",'', text).split(' ')
         for w in words:
-            if bool(re.search(r'(\d+|%|p|o|_|v|\(|\)|σ)',w.lower())):
+            if bool(re.search(r'(\d+|%|p|o|_|v|\(|\)|σ)',w)):
                 continue
             orig,trans = latin2ipa(w)
             w_trans = ''.join(trans)

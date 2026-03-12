@@ -1,4 +1,4 @@
-from datasets import Dataset,load_dataset,Audio,concatenate_datasets #using huggingface's API
+from datasets import Dataset,load_dataset,concatenate_datasets #using huggingface's API
 from torch.utils.data.sampler import BatchSampler, RandomSampler
 import torch
 import numpy as np
@@ -12,7 +12,8 @@ import unicodedata
 import re 
 
 THRESHOLD_MIN_SECONDS = 0.25
-SEED=42
+SEED = 42
+DICTS = {}
 random.seed(SEED)
 np.random.seed(SEED)
 torch.manual_seed(SEED)
@@ -22,25 +23,11 @@ def get_curr_folder():
 
 CACHE_DIR=os.path.join(get_curr_folder(),'.cache/huggingface/datasets')
 
-    
+regex = re.compile(r'[^\x00-\x7F]+')
+def cleanup_text(row):
+    return {"text":regex.sub('',unicodedata.normalize("NFC",row['text']))}
 
-
-def reshape_audio(row):
-    audio = row["audio"]
-    waveform = np.asarray(audio["array"], dtype=np.float32)
-    waveform = resample(waveform,orig_sr=int(audio["sampling_rate"]),target_sr=16000)
-    waveform = np.asarray(audio["array"], dtype=np.float32)
-    text = row['text']
-    regex = re.compile(r'[^\x00-\x7F]+')
-
-    return {
-        "waveform": waveform,
-        "sr": 16000,
-        "filename": str(audio["path"]),
-        "origin": "tamasightASRDatasetV2",
-        "text":regex.sub('',unicodedata.normalize("NFC",text)),
-    }
-
+columns_relevant= ['text','audio']
 
 def load_datasets_kabyle():
     # Load each dataset (would be normally under ~/.cache/huggingface/datasets)
@@ -48,21 +35,25 @@ def load_datasets_kabyle():
     dataset = load_dataset("TutlaytAI/kabyle_asr",cache_dir=CACHE_DIR,streaming=True)
     dataset = concatenate_datasets([dataset['train'],dataset['test']])
     dataset = dataset.rename_column("Text","text")
-    dataset = dataset.map(reshape_audio,remove_columns=[c for c in dataset.column_names if c != 'text'])
+    dataset = dataset.map(cleanup_text)
+    #dataset = dataset.select_columns(columns_relevant)
+    dataset = dataset.map(lambda x: {"origin":"kabyle_asr"})
     data['kabyle_asr'] = dataset
 
+    # Don't want 500+ hours of data downloading
     dataset = load_dataset("fsicoli/common_voice_22_0", "kab", trust_remote_code=True, cache_dir=CACHE_DIR, streaming=True)
     # average sentence duration is 3.341
     # I want 15 hours, so 20k random samples should suffice
     dataset = dataset['train']
-    dataset = dataset.shuffle(seed =SEED).take(20000)
+    dataset = dataset.shuffle(seed =SEED,buffer_size=100).take(20000)
     #dataset = dataset.shuffle(seed =SEED).take(1)
     dataset = dataset.rename_column("sentence","text")
-    dataset = dataset.map(reshape_audio,remove_columns=[c for c in dataset.column_names if c != 'text'])
+    dataset = dataset.map(cleanup_text)
+    #dataset = dataset.select_columns(columns_relevant)
     #print(dataset.take(1))
     #assert(False)
+    dataset = dataset.map(lambda x: {"origin":"common_voice_22_0"})
     data['common_voice_22_0'] = dataset
-    #data['common_voice_22_0'] = Dataset.from_generator(lambda:dataset)
 
     return data
 
@@ -78,13 +69,16 @@ def load_datasets():
     dataset = load_dataset("TutlaytAI/moroccan_amazigh_asr",cache_dir=CACHE_DIR)
     dataset = dataset['train']
     dataset = dataset.rename_column("transcription","text")
-    dataset = dataset.map(reshape_audio,remove_columns=[c for c in dataset.column_names if c != 'text'])
+    dataset = dataset.map(cleanup_text)
+    dataset = dataset.select_columns(columns_relevant)
     data['moroccan_amazigh_asr'] = dataset
 
-    ### AMAZIGHSCRIPT DATASET 
+    ### TIFINAGH DATASET 
     dataset = load_dataset("fsicoli/common_voice_22_0", "zgh",      trust_remote_code=True, cache_dir=CACHE_DIR)
     dataset = dataset['train']
     dataset = dataset.rename_column("sentence","text")
+    dataset = dataset.map(cleanup_text)
+    dataset = dataset.select_columns(columns_relevant)
     dataset = dataset.map(reshape_audio,remove_columns=[c for c in dataset.column_names if c != 'text'])
     data['common_voice_22_0'] = dataset
 
@@ -92,13 +86,12 @@ def load_datasets():
 
 
 def gen_project_folders():
-    for folder in ['dicts','corpus','corpus_kabyl','output','output/corpus_aligned']:
+    for folder in ['dicts','corpus','corpus/kab','corpus/shi','output','output/corpus_kab','output/corpus_shi']:
         cache_dir= os.path.join(get_curr_folder(),folder)
         Path(cache_dir).mkdir(parents=True, exist_ok=True)
 
 def clean_project_folders():
     for folder in ['dicts']:
-
         path = os.path.join(get_curr_folder(),folder)
         for f in os.listdir(path):
             os.remove(os.path.join(path, f))

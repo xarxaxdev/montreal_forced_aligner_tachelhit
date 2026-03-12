@@ -21,7 +21,8 @@ conda env config vars set MKL_NUM_THREADS=14
 pip install datasets==3.6.0
 pip install soundfile==0.13.1
 pip install torch==2.10.0 
-
+pip install torchaudio==2.10
+pip install torchcodec==0.10
 ```
 
 
