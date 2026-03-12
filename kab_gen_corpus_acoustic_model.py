@@ -6,6 +6,8 @@ from pathlib import Path
 from scipy.io import wavfile
 import numpy as np
 import torchaudio
+import torchaudio.functional as F
+import torchaudio.transforms as T
 import torch
 
 
@@ -61,14 +63,15 @@ def transform_row(origin, waveform, sr, old_path,text):
     new_path = os.path.join(cur_path,'corpus','kab',filename)
 
     ### EXTRACT WAV ###
-    waveform = torch.tensor(waveform).unsqueeze(0)  # (1, samples)
+    waveform = torch.tensor(waveform)
+    new_sr=16000
     # Downsample and reduce precision to 16 bit
-    resampler = torchaudio.transforms.Resample(orig_freq=sr, new_freq=16000)
+    resampler = T.Resample(orig_freq=sr, new_freq=new_sr)
     waveform = resampler(waveform)
-    torchaudio.save(new_path.replace(ext,'wav'), waveform, 16000, encoding="PCM_F", bits_per_sample=16)
+    torchaudio.save(new_path.replace(ext,'wav'), waveform, new_sr, encoding="PCM_F", bits_per_sample=16)
 
     ### GEN TEXTGRID ###
-    raw_tg = gen_naive_textgrid(waveform,sr,text)
+    raw_tg = gen_naive_textgrid(waveform,new_sr,text)
     tg = open(new_path.replace(ext, 'TextGrid'), 'w')
     tg.write(raw_tg)
     tg.close()
