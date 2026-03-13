@@ -9,6 +9,11 @@ import torchaudio
 import torchaudio.functional as F
 import torchaudio.transforms as T
 import torch
+from tqdm import tqdm
+
+
+# TODO make filenames shorter
+from utils import dataset_alias as dataset_alias
 
 
 data = {}
@@ -28,17 +33,13 @@ xmin = 0
 xmax = {xmax}
 intervals: size = {interval_size}"""
 
-dataset_name={
-    'common_voice_22_0':'cv22',
-    'kabyle_asr':'tfnlab',
-}
  
 # All kabyle data is in latinscript 
 def latin2ipa(text):
     transcript= []
     for w in text.split(' '):
         try:
-            transcript.append(DICTS['latin2ipa_kab'][w].replace(' ',''))
+            transcript.append(DICTS['kab_latin2ipa'][w].replace(' ',''))
         except:
             print(f'word "{w}" not found in dictionary "latin2ipa_kab"')
             transcript.append(w)
@@ -87,7 +88,7 @@ def main():
     utt=0 #kabyle_asr has no metadata, therefore I must come up with my own ids
 
     print(f'{"-"*10}Generating textgrid/wav files...{"-"*10}')
-    for row in cur:
+    for row in tqdm(cur):
         text = row['text'].lower()
         words = re.sub(r"[?.,!\":«»;\'\t\*]",'', text).split(' ')
         text = ' '.join(words)

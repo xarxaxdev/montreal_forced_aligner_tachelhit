@@ -1,7 +1,9 @@
+from datasets import Audio, concatenate_datasets #using huggingface's API
 import utils
 import re
 import os 
 from pathlib import Path
+
  
 # pronunciation dictionary?
 # https://huggingface.co/datasets/prothmane/amawal-dataset
@@ -172,6 +174,9 @@ tifinagh2ipa_dict = {
     # multi-letter
     'ⵑ':'ng',# SRC 2
     'ⵐ':'ny',# SRC 2
+
+    #clitics
+    '-':'-',
 }
 
 ipa2tifinagh_dict = {} #the inverse dictionary
@@ -300,7 +305,7 @@ latin2ipadict = {
 }
 
 
-def latins2ipa(text):
+def latin2ipa(text):
     orig = []
     trans = []
     i = 0
@@ -383,6 +388,7 @@ arabic2ipadict = {
     # Glottal 
     'ه':'h',
 
+
 }
 
 #TODO
@@ -397,21 +403,17 @@ def arabic2ipa(text):
 
 
 def main():
-    data = utils.load_datasets()
-    cur =  data['common_voice_22_0']
+    data = utils.load_datasets_zgh()
+    #print(data['common_voice_22_0'].features)
+    #print(data['moroccan_amazigh_asr'].features)
+    cur =  concatenate_datasets([data['common_voice_22_0'],data['moroccan_amazigh_asr']])
     # we want the dictionary in both directions:
     # tifinagh2ipa: to transcribe our datasets
     # ipa2tifinagh: to take note of homophones
-    # ambigous pronunciation(IRCAM extended only):    
-    #'ⵁ', 'ⵀ':'h' #AMBIGUOUS IN IPA
-    # 'ⵓ' , 'ⵡ' : 'w' #AMBIGUOUS IN IPA
-    # 'ⵜ', 'ⵝ':'t'  
-    # 'ⴽ', 'ⴿ': 'k'
-    # 'ⴱ', 'ⴲ' : 'b'
-    # 'ⴳ','ⴴ' :'g'
+
     dicts = {}
-    dicts['tifinagh2ipa'] = {}
-    dicts['ipa2tifinagh'] = {}
+    dicts['all2ipa'] = {}
+    dicts['ipa2all'] = {}
 
     # We want to collect the totality of words that exist in Tashelhit
     vocab = {}# a set is more fitting, but lists do not have a builtin way to get hashed for sets.
@@ -419,17 +421,20 @@ def main():
         words = re.sub(r"[?.,!\":;\'\t\*]",'', row['text']).split(' ')
         for w in words:
             #function returns them as array of symbols
-            orig,trans = tifinagh2ipa(w)
+            if 'common_voice_22_0' == row['origin']:
+                orig,trans = tifinagh2ipa(w)
+            else:
+                orig,trans = latin2ipa(w)
             w_trans = ''.join(trans)
             # Standard Pronunciation dictionary format
             vocab[w_trans] = ' '.join(trans)
-            dicts['tifinagh2ipa'][w]= ' '.join(w_trans)
+            dicts['all2ipa'][w]= ' '.join(w_trans)
             # We keep this as a safety check, so the format is designed for that
-            if not w_trans in dicts['ipa2tifinagh']:
-                dicts['ipa2tifinagh'][w_trans] = [w]
+            if not w_trans in dicts['ipa2all']:
+                dicts['ipa2all'][w_trans] = [w]
             # homophone check
-            elif not (w in dicts['ipa2tifinagh'][w_trans]):
-                dicts['ipa2tifinagh'][w_trans].append(w)
+            elif not (w in dicts['ipa2all'][w_trans]):
+                dicts['ipa2all'][w_trans].append(w)
 
     print('-' *15)
     print('SAVING DICTS')
@@ -438,14 +443,14 @@ def main():
     #del vocab['']
     # Write ipa-to-else dicts
     for d in dicts:
-        filename = os.path.join(cur_path,'dicts',d+'.dict')
+        filename = os.path.join(cur_path,'dicts',f'shi_{d}.dict')
         with open(filename,'w') as f:
             f.write('<unk>\tspn\n')
             for key in dicts[d]:
                 f.write(f'{key}\t{dicts[d][key]}\n')
             f.close()
     # Write ipa-to-ipa dict
-    with open(os.path.join(cur_path,'dicts','vocab.dict'),'w') as f:
+    with open(os.path.join(cur_path,'dicts','shi_vocab.dict'),'w') as f:
         f.write('<unk>\tspn\n')
         for w in vocab:
             f.write(f'{w}\t{vocab[w]}\n')

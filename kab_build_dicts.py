@@ -262,14 +262,14 @@ def main():
     #del vocab['']
     # Write ipa-to-else dicts
     for d in dicts:
-        filename = os.path.join(cur_path,'dicts',d+'_kab.dict')
+        filename = os.path.join(cur_path,'dicts',f'kab_{d}.dict')
         with open(filename,'w') as f:
             f.write('<unk>\tspn\n')
             for key in dicts[d]:
                 f.write(f'{key}\t{dicts[d][key]}\n')
             f.close()
     # Write ipa-to-ipa dict
-    with open(os.path.join(cur_path,'dicts','vocab_kab.dict'),'w') as f:
+    with open(os.path.join(cur_path,'dicts','kab_vocab.dict'),'w') as f:
         f.write('<unk>\tspn\n')
         for w in vocab:
             f.write(f'{w}\t{vocab[w]}\n')
