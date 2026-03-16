@@ -71,6 +71,14 @@ def load_datasets_kab():
     dataset = dataset.map(cleanup_text)
     dataset = dataset.map(lambda x : {"text_len":len(x['text'])})
     dataset =  dataset.sort(['text_len','text'],reverse=True) #text added as a column for determinism order
+    dataset = dataset.map(lambda x, i: {"id": i + offset}, with_indices=True)
+    dataset = dataset.select_columns(columns_relevant)
+    new_features = Features({
+        "audio": Audio(sampling_rate=None),
+        "text": Value("string"),
+        "id":Value("int64"),
+    })
+    dataset = dataset.cast(new_features)
     dataset = dataset.map(lambda x: {"origin":"common_voice_22_0"})
     data['common_voice_22_0'] = dataset
     print('Loaded common_voice_22_0/kab dataset...')

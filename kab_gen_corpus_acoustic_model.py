@@ -86,6 +86,7 @@ def process_row(row):
 
     audio['path'] = f'{utt}.wav'
 
+    transform_row(origin=row['origin'], waveform = audio['array'],sr = audio['sampling_rate'], old_path = audio['path'], text = text)
 
 
 def main():
@@ -94,19 +95,11 @@ def main():
     DICTS = utils.load_dicts()
     print(len(DICTS))
     cur =  concatenate_datasets([data['common_voice_22_0'],data['kabyle_asr']])
-
-    utt=0 #kabyle_asr has no metadata, therefore I must come up with my own ids
-
+    # Remove rows with annoying cases
+    cur = cur.filter(lambda x: not bool(re.search(r'(\d+|%|p|P|o|O|_|v|V|\(|\)|σ)',x['text'])))
     print(f'{"-"*10}Generating textgrid/wav files...{"-"*10}')
-    for row in cur:
-        if bool(re.search(r'(\d+|%|p|o|_|v|\(|\)|σ)',text)):
-            #skip rows with invalid symbols
-            continue
 
 
-        transform_row(origin=row['origin'], waveform = audio['array'],sr = audio['sampling_rate'], old_path = audio['path'], text = text)
-
-        utt+=1
 
 
 
