@@ -3,6 +3,9 @@ import utils
 import re
 import os 
 from pathlib import Path
+import sys
+# Recursion makes transliteration simpler
+sys.setrecursionlimit(10000)  
 
  
 # pronunciation dictionary?
@@ -71,7 +74,7 @@ https://medium.com/@evan.frank/accessing-and-cleaning-bulk-wikipedia-text-data-b
 
 # SOURCE 6 (for specific berber variants)
 #https://en.wikipedia.org/wiki/Berber_Latin_alphabet
-tifinagh2ipa_dict = {
+tifinagh2ipa = {
     ### VOWELS AND GLIDES
     #'ⴰ':'æ',# SRC 1
     'ⴰ':'a',# SRC 2,3,4
@@ -163,8 +166,8 @@ tifinagh2ipa_dict = {
 
     # Pharyngeal
     'ⵃ':'ħ',# CONSENSUS 1,2,3
-    'ⵄ':'ʕ',# SRC 1  CONFLICT!
-    #'ⵄ':'ɛ',# SRC 2,3,4  CONFLICT!
+    'ⵄ':'ʕ',# SRC 1  CONFLICT! #Tinifagh
+    #'ⵄ':'ɛ',# SRC 2,3,4  CONFLICT! #Latin, more common
 
     # Glottal 
     'ⵀ':'h',# CONSENSUS 1,2,3,4; SRC 2 does not mention if for shi
@@ -173,46 +176,97 @@ tifinagh2ipa_dict = {
     
     # multi-letter
     'ⵑ':'ng',# SRC 2
-    'ⵐ':'ny',# SRC 2
 
     #clitics
     '-':'-',
 }
 
-ipa2tifinagh_dict = {} #the inverse dictionary
-for k in tifinagh2ipa_dict:
-    ipa2tifinagh_dict[tifinagh2ipa_dict[k]] = k
+
+ipa2tifinagh = {
+    ### VOWELS AND GLIDES
+    'a':'ⴰ',
+    'e':['ⴻ',''],
+    'i':'ⵉ',
+    'u':'ⵓ',
+    'o':['ⵧ',''],
+
+    'w':'ⵡ',
+    'j':'ⵢ',
+
+    # Bilabials
+    'b':'ⴱ',
+    'bʷ':'ⴱⵯ',
+    'β':'ⴲ',
+    'p':'ⵒ',
+    'm':'ⵎ',
+    'mʷ':'ⵎⵯ',
+
+    # Labiodental
+    'f':'ⴼ',
+    'v':'ⵠ',
+
+    # Dental
+    'θ':'ⵝ',
+    'ðˤ':'ⴺ',
+    'ð':'ⴸ',
+ 
+    # Alveolar
+    'n':'ⵏ',
+    
+    's':'ⵙ',
+    'sˤ':'ⵚ',
+    'z':'ⵣ',
+    'zˤ':'ⵥ',
+    
+    't':'ⵜ',
+    'tˤ':'ⵟ',
+    'd':'ⴷ',
+    'dˤ':'ⴹ',
+    
+    'l':'ⵍ',
+    'r':'ⵔ', 
+    'rˤ':'ⵕ',
+
+    # Post Alveolar
+    'ʃ':'ⵛ',
+    'ʒ':'ⵊ',
+    'd͡ʒ':'ⴵ',
+    't͡ʃ':'ⵞ',
+
+    # Velar 		
+    'x':'ⵅ',
+    'xʷ':'ⵅⵯ',
+    'ⴿ':'x',
+    'ɣ':'ⵖ',
+    'ɣʷ':'ⵖⵯ',
+
+    'g':'ⴳ',
+    'ɡʷ':'ⴳⵯ',
+    'k':'ⴽ',
+    'kʷ':'ⴽⵯ',
+
+    # Uvular
+    'q':'ⵇ',
+    'qʷ':'ⵇⵯ',
+
+    # Pharyngeal
+    'ħ':'ⵃ',
+    'ʕ':['ⵄ','ɛ'],
 
 
-def tifinagh2ipa(text):
-    # TODO
-    # Consider supporting diphtongs 
-    # /ts/ and /dz/
-    # /d͡ʒ/ and /t͡ʃ/
-    # Manually implement: 
-    # https://en.wikipedia.org/wiki/Shilha_language#Phonology
-    # and also exceptions according to 
-    #"Syllables in Tashlhiyt Berber and in Moroccan Arabic"
-    orig = []
-    trans = []
-    i = 0
-    while i< len(text):
-        #check for multi-character phones
-        if text[i] in ['ⴽ','ⴳ'] and i+1 < len(text) and text[i+1] =='ⵯ':
-            k = ''.join([text[i],text[i+1]])
-            trans.append(tifinagh2ipa_dict[k])
-            i += 1
-        else :
-            trans.append(tifinagh2ipa_dict[text[i]])
-        i += 1
-    return [orig,trans]
+    # Glottal 
+    'h':['ⵀ','ⵁ'],
 
+    #clitics
+    '-':'-',
+    '-':'-',
+}
 
 
 
 # https://en.wikipedia.org/wiki/Berber_Latin_alphabet
 # and IRCAM Tifinagh~latin~arabic alphabet equivalence   
-latin2ipadict = { 
+latin2ipa = { 
     ### VOWELS AND GLIDES
     # https://en.wikipedia.org/wiki/Shilha_language#Vowels
     'a':'a',# according to wiki is 'æ'
@@ -247,10 +301,6 @@ latin2ipadict = {
     't':'t',# or 'θ' 
     'ṭ':'tˤ',
     'ţ':'t͡s',
-    # My annotations with 
-    # https://huggingface.co/datasets/TutlaytAI/tamazight_asr
-    #'tt':'ts',
-    #'ṭṭ':'tˤ',
     'd':'d',# or 'ð' 
     'ḍ':'ðˤ',
     'z̧':'d͡z',
@@ -302,21 +352,95 @@ latin2ipadict = {
     # Glottal 
     'h':'h',
     
+    #clitics
+    '-':'-',
+}
+
+ipa2latin = { 
+    ### VOWELS AND GLIDES
+    # https://en.wikipedia.org/wiki/Shilha_language#Vowels
+    'a':'a',# according to wiki is 'æ'
+    'e':['e',''],
+    'i':'i',
+    'u':'u',# according to wiki is 'ʊ'
+
+    'w':'w',
+    'j':'y', # and 'j':'ʒ'
+
+    # Bilabials
+    'b':'b',# or 'β'
+    'bʷ':'bʷ',
+    'm':'m',
+    'mʷ':'mʷ',
+
+    # Labiodental
+    'f':'f',
+
+    # Alveolar
+    'n':'n',
+
+    's':'s',
+    'sˤ':'ṣ',
+    'z':'z',
+    'zˤ':'ẓ',
+
+    't':'t',
+    'θ':'t',
+    'tˤ':'ṭ',
+    't͡s':'ţ',
+    'd':'d',
+    'ð':'d',
+    'ðˤ':'ḍ',
+    'd͡z':'z̧',
+
+    'l':'l', # or 'ɫ'
+    'r':'r', # or 'rˤ'
+    'rˤ':'ṛ',# 
+    'ɺ':'ř',# between r and l, Rif Berber
+    # according to "Syllables in Tashlhiyt Berber and in Moroccan Arabic"
+    # by FRANÇOIS DELL, MOHAMED ELMEDLAOUI
+    # r should be IPA ɾ or r depending on context
+
+    # Post Alveolar
+    'ʃ':'c',
+    't͡ʃ':'č',
+    'ʒ':'j',# and 'y':'j' 
+    'd͡ʒ':'dj',
+    'd͡ʒ':'ǧ',
+    'd͡ʒ':'ǧǧ',
+
+    # Palatal 
+
+    # Velar 		
+    'x':'x',# or 'χ' 
+    'xʷ':'xʷ',
+    'ɣ':'ɣ',# or 'ʁ'
+    'ɣʷ':'ɣʷ',
+
+    'g':'g',
+    'ɡʷ':'ɡʷ',
+    'k':'k',
+    'kʷ':'kʷ',
+
+    # Uvular
+    'q':'q',# or 'qʷ' or 'ɢ'
+    'qʷ':'qʷ',
+ 
+    # Pharyngeal
+    'ħ':'ḥ',# CONSENSUS 1,2,3
+    'ʕ':'ɛ',
+
+    # Glottal 
+    'h':'h',
+    
+    #clitics
+    '-':'-',
 }
 
 
-def latin2ipa(text):
-    orig = []
-    trans = []
-    i = 0
-    while i< len(text):
-        if text[i] :
-            pass
-    return [orig,trans]
-
 # According to:
 # https://en.wikipedia.org/wiki/Berber_Latin_alphabet
-arabic2ipadict = {
+arabic2ipa = {
     ### VOWELS AND GLIDES
     'ا':'a',# according to wiki is 'æ'
     'أ':'a',
@@ -387,54 +511,157 @@ arabic2ipadict = {
 
     # Glottal 
     'ه':'h',
-
-
 }
 
-#TODO
-def arabic2ipa(text):
-    orig = []
-    trans = []
+ipa2arabic = {
+    ### VOWELS AND GLIDES
+    'a':'ا',# according to wiki is 'æ'
+    'a':'أ',
+    'a':' َ',
+    'i':'ي',
+    'i':' ِ',
+    'u':'و',
+    'u':' ُ',
+    'e':'ۍ',
+    'e':'ـ',
+    'w':'و',
+    'j':'ي', # and 'j':'ʒ'
+
+    # Bilabials
+    'm':'م',
+    'b':'ب',# or 'β'
+
+    # Labiodental
+    'f':'ف',
+
+    # Dental
+
+    # Alveolar
+    'n':'ن',
+
+    's':'س',
+    'sˤ':'ص',
+    'z':'ز',
+    'zˤ':'ژ',
+
+    't':'ث',# or 'θ' 
+    't':'ت',# or 'θ' 
+    'tˤ':'ط',
+    'd':'ذ',# or 'ð' 
+    'd':'د',# or 'ð' 
+    'ðˤ':'ظ',
+    'ðˤ':'ض',
+
+    'l':'ل', # or 'ɫ'
+    'r':'ر', # or 'rˤ'
+    'ɺ':'ر',# 
+    'rˤ':'ڕ',# 
+
+    # Post Alveolar
+    'ʃ':'ش',
+    't͡ʃ':'ت',
+    't͡ʃ':'چ',
+    'ʒ':'ج',
+    #'ج':'d͡ʒ', #ambiguity here.
+
+    # Palatal 
+
+    # Velar 		
+    'x':'خ',# or 'χ' 
+    'ɣ':'غ',# or 'ʁ'
+    'g':'گ',
+    'g':'ݣ',
+    #'ɡʷ':'ɡʷ',# North-berber, no proper writing in arabic
+    'k':'ک',
+    #'kʷ':'kʷ',#  North-berber, no proper writing in arabic
+
+    # Uvular
+    'q':'ق',# or 'qʷ' or 'ɢ'
+ 
+    # Pharyngeal
+    'ħ':'ح',# CONSENSUS 1,2,3
+    'ع':'ɛ',
+
+    # Glottal 
+    'h':'ه',
+}
+
+
+
+# Any->IPA == always unambiguous transliteration
+# IPA->Any == may have multiple transliterations
+def transliterate(text,my_dict):
+    trans = [[]] # list will all possible transliterations
     i = 0
     while i< len(text):
-        if text[i] :
-            pass
-    return [orig,trans]
+        # Find out character-matching in our dicts
+        k = text[i] 
+        ## check for 2-character phones
+        if i+1 < len(text) and ''.join([text[i],text[i+1]]) in my_dict:
+            k = ''.join([text[i],text[i+1]])
+            i += 1
+
+        # Update our transliterations
+        if type(my_dict[k]) == type(['a','b']):
+            # a fork in transliteration
+            new_trans = [] 
+            for t in trans:
+                for val in my_dict[k]:
+                    print(t)
+                    print(val)
+                    new_trans.append(t + [val])
+            trans = new_trans
+            print(trans)
+        else:
+            trans = [t+[my_dict[k]] for t in trans]
+
+        i += 1
+    return trans
 
 
 def main():
     data = utils.load_datasets_zgh()
-    #print(data['common_voice_22_0'].features)
-    #print(data['moroccan_amazigh_asr'].features)
     cur =  concatenate_datasets([data['common_voice_22_0'],data['moroccan_amazigh_asr']])
-    # we want the dictionary in both directions:
-    # tifinagh2ipa: to transcribe our datasets
-    # ipa2tifinagh: to take note of homophones
 
     dicts = {}
     dicts['all2ipa'] = {}
-    dicts['ipa2all'] = {}
+    # We want to collect the totality of words that exist, 
+    # and do so to create an IPA->IPA pronunciation dictionary
+    vocab = {}
 
-    # We want to collect the totality of words that exist in Tashelhit
-    vocab = {}# a set is more fitting, but lists do not have a builtin way to get hashed for sets.
     for row in cur:
-        words = re.sub(r"[?.,!\":;\'\t\*]",'', row['text']).split(' ')
+        row['text']= row['text'].replace('[]-','')
+        words = re.sub(r"[?.,!\":;\'\t\*\n]",'', row['text']).lower().split(' ')
         for w in words:
-            #function returns them as array of symbols
+            #print('-'*10)
+            #print(w)
+            #print(len(w))
+            if re.search(r'[\d%po_v()\[\]{}|σ]', w) or len(w) == 0 or w=='-':
+            #if bool(re.search(r'(\d+|%|p|o|_|v|\(|\)|σ|\[|\])',w)):
+                continue
+                #assert(False)
             if 'common_voice_22_0' == row['origin']:
-                orig,trans = tifinagh2ipa(w)
+                trans = transliterate(w,tifinagh2ipa)
             else:
-                orig,trans = latin2ipa(w)
-            w_trans = ''.join(trans)
-            # Standard Pronunciation dictionary format
-            vocab[w_trans] = ' '.join(trans)
-            dicts['all2ipa'][w]= ' '.join(w_trans)
-            # We keep this as a safety check, so the format is designed for that
-            if not w_trans in dicts['ipa2all']:
-                dicts['ipa2all'][w_trans] = [w]
-            # homophone check
-            elif not (w in dicts['ipa2all'][w_trans]):
-                dicts['ipa2all'][w_trans].append(w)
+                trans = transliterate(w,latin2ipa)
+            for t in trans:
+                #if 'nekkni' in w:
+                #    print(w)
+                #    print(t)
+                w_trans = ''.join(t)
+                vocab[w_trans] = ' '.join(t)
+                dicts['all2ipa'][w]= ' '.join(w_trans)
+
+
+    for w in vocab:
+        print('-'*10)
+        print(f'w:{w};')
+        #for d in [ipa2latin,ipa2tifinagh,ipa2arabic]:
+        for d in [ipa2latin,ipa2tifinagh]:
+            trans = transliterate(w,d)
+            for t in trans:
+                dicts['all2ipa'][''.join(t)] = w
+            
 
     print('-' *15)
     print('SAVING DICTS')
@@ -443,14 +670,14 @@ def main():
     #del vocab['']
     # Write ipa-to-else dicts
     for d in dicts:
-        filename = os.path.join(cur_path,'dicts',f'shi_{d}.dict')
+        filename = os.path.join(cur_path,'dicts',f'zgh_{d}.dict')
         with open(filename,'w') as f:
             f.write('<unk>\tspn\n')
             for key in dicts[d]:
                 f.write(f'{key}\t{dicts[d][key]}\n')
             f.close()
     # Write ipa-to-ipa dict
-    with open(os.path.join(cur_path,'dicts','shi_vocab.dict'),'w') as f:
+    with open(os.path.join(cur_path,'dicts','zgh_vocab.dict'),'w') as f:
         f.write('<unk>\tspn\n')
         for w in vocab:
             f.write(f'{w}\t{vocab[w]}\n')
