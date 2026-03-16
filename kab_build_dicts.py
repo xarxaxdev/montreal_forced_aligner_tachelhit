@@ -218,7 +218,7 @@ def arabic2ipa(text):
 
 def main():
     utils.prepare_project_structure()
-    data = utils.load_datasets_kabyle()
+    data = utils.load_datasets_kab()
     #for i in data:
         #print(f'i:{i}, data[i]:{data[i]}')
     cur =  concatenate_datasets([data['common_voice_22_0'],data['kabyle_asr']])

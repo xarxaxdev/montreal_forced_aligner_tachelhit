@@ -33,33 +33,47 @@ regex = re.compile(r'[^\x00-\x7F]+')
 def cleanup_text(row):
     return {"text":regex.sub('',unicodedata.normalize("NFC",row['text']))}
 
-columns_relevant= ['text','audio']
+columns_relevant= ['text','audio','id']
 
-def load_datasets_kabyle():
+def load_datasets_kab():
+    print('Loading kabyle_asr dataset...')
     # Load each dataset (would be normally under ~/.cache/huggingface/datasets)
     data = {}
-    dataset = load_dataset("TutlaytAI/kabyle_asr",cache_dir=CACHE_DIR,streaming=True)
+    dataset = load_dataset("TutlaytAI/kabyle_asr",cache_dir=CACHE_DIR)
+    print(type(dataset['train']), type(dataset['test']))
+
     dataset = concatenate_datasets([dataset['train'],dataset['test']])
     dataset = dataset.rename_column("Text","text")
     dataset = dataset.map(cleanup_text)
+    # Adding an id that depends on text length 
+    #dataset = dataset.cast_column("audio", Audio(decode=False)) # We dont want to decode 10k+ audios while non-streaming
+    dataset = dataset.map(lambda x : {"text_len":len(x['text'])})
+    dataset =  dataset.sort(['text_len','text'],reverse=True) #text added as a column for determinism order
+    dataset = dataset.map(lambda x, i: {"id": i}, with_indices=True)
+    offset = len(dataset) #so we know which id to begin on next dataset
     #dataset = dataset.select_columns(columns_relevant)
     dataset = dataset.map(lambda x: {"origin":"kabyle_asr"})
     data['kabyle_asr'] = dataset
+    print('Loaded kabyle_asr dataset...')
+
+
+    print('Loading common_voice_22_0/kab dataset...')
 
     # Don't want 500+ hours of data downloading
     dataset = load_dataset("fsicoli/common_voice_22_0", "kab", trust_remote_code=True, cache_dir=CACHE_DIR, streaming=True)
     # average sentence duration is 3.341
     # I want 15 hours, so 20k random samples should suffice
-    dataset = dataset['train']
-    dataset = dataset.shuffle(seed =SEED,buffer_size=100).take(20000)
-    #dataset = dataset.shuffle(seed =SEED).take(1)
+    subset_dataset = dataset['train'].shuffle(seed =SEED,buffer_size=100).take(20000).remove_columns(["up_votes", "down_votes"])
+    f = subset_dataset.features
+    #print(f)
+    dataset = Dataset.from_generator(lambda: (row for row in subset_dataset),features=f)
     dataset = dataset.rename_column("sentence","text")
     dataset = dataset.map(cleanup_text)
-    #dataset = dataset.select_columns(columns_relevant)
-    #print(dataset.take(1))
-    #assert(False)
+    dataset = dataset.map(lambda x : {"text_len":len(x['text'])})
+    dataset =  dataset.sort(['text_len','text'],reverse=True) #text added as a column for determinism order
     dataset = dataset.map(lambda x: {"origin":"common_voice_22_0"})
     data['common_voice_22_0'] = dataset
+    print('Loaded common_voice_22_0/kab dataset...')
 
     return data
 
@@ -73,18 +87,67 @@ def load_datasets_zgh():
     # https://aclanthology.org/2025.icnlsp-1.37.pdf#:~:text=We%20have%20also%20applied%20and%20validated%20the,of%20the%20utilized%20dataset%20for%20benchmarking%20and
     dataset = load_dataset("TutlaytAI/moroccan_amazigh_asr",cache_dir=CACHE_DIR)
     dataset = concatenate_datasets([dataset['train'],dataset['test']])
-    # TODO: Why does the testing split not always have a sampling rate? look into whether this is fixable
-    #dataset = dataset['train']
-    #dataset = dataset.filter(lambda x: x["audio"]["sampling_rate"] is not None)
- 
-    print(dataset.features)
     dataset = dataset.rename_column("transcription","text")
     dataset = dataset.map(cleanup_text)
+    # Adding an id that depends on text length 
+    dataset = dataset.map(lambda x : {"duration": len(x['audio']['array'])/x['audio']['sampling_rate'],"text_len":len(x['text'])})
+    dataset =  dataset.sort(['text_len','duration'],reverse=True)
+    dataset = dataset.map(lambda x, i: {"id": i}, with_indices=True)
+    offset = len(dataset) #so we know which id to begin on next dataset
     #dataset = dataset.select_columns(columns_relevant)
     dataset = dataset.map(lambda x: {"origin":"moroccan_amazigh_asr"})
     data['moroccan_amazigh_asr'] = dataset
 
     ### TIFINAGH DATASET 
+    dataset = load_dataset("fsicoli/common_voice_22_0", "zgh",      trust_remote_code=True, cache_dir=CACHE_DIR)
+    dataset = concatenate_datasets([dataset['train'],dataset['validation'],dataset['test']])
+    dataset = dataset.rename_column("sentence","text")
+    print(dataset[0]['text'])
+    #dataset = dataset.map(cleanup_text)
+    print(dataset[0]['text'])
+    # assign ids based on same criteria without restarting
+    dataset = dataset.map(lambda x : {"duration": len(x['audio']['array'])/x['audio']['sampling_rate'],"text_len":len(x['text'])})
+    dataset =  dataset.sort(['text_len','duration'],reverse=True)
+    dataset = dataset.map(lambda x, i: {"id": i + offset}, with_indices=True)
+    dataset = dataset.select_columns(columns_relevant)
+    # Use the Audio's sampling rate rather than the
+    # Dataset's schema for future concatenate_datasets()
+    new_features = Features({
+        "audio": Audio(sampling_rate=None),
+        "text": Value("string"),
+        "id":Value("int64"),
+    })
+    dataset = dataset.cast(new_features)
+    dataset = dataset.map(lambda x: {"origin":"common_voice_22_0"})
+    data['common_voice_22_0'] = dataset
+
+    return data
+
+
+# TODO:
+# have to filter according to https://huggingface.co/datasets/fsicoli/common_voice_22_0/raw/main/transcript/zgh/validated.tsv
+
+def load_datasets_shi():
+    # Load each dataset (would be normally under ~/.cache/huggingface/datasets)
+    data ={}
+
+    dataset = load_dataset("fsicoli/common_voice_22_0", "zgh",      trust_remote_code=True, cache_dir=CACHE_DIR)
+    dataset = concatenate_datasets([dataset['train'],dataset['validation'],dataset['test']])
+
+    dataset = dataset.rename_column("sentence","text")
+    dataset = dataset.map(cleanup_text)
+    dataset = dataset.select_columns(columns_relevant + ['variant'])
+    print(dataset)
+    dataset = dataset.cast(new_features)
+    dataset = dataset.map(lambda x: {"origin":"common_voice_22_0"})
+    data['common_voice_22_0'] = dataset
+
+    return data
+
+def load_datasets_tzm():
+    # Load each dataset (would be normally under ~/.cache/huggingface/datasets)
+    data ={}
+
     dataset = load_dataset("fsicoli/common_voice_22_0", "zgh",      trust_remote_code=True, cache_dir=CACHE_DIR)
     dataset = concatenate_datasets([dataset['train'],dataset['validation'],dataset['test']])
 
@@ -96,12 +159,15 @@ def load_datasets_zgh():
     new_features = Features({
         "audio": Audio(sampling_rate=None),
         "text": Value("string"),
+        "id":Value("string"),
     })
     dataset = dataset.cast(new_features)
     dataset = dataset.map(lambda x: {"origin":"common_voice_22_0"})
     data['common_voice_22_0'] = dataset
 
     return data
+
+
 
 
 def gen_project_folders():

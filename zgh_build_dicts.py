@@ -4,8 +4,6 @@ import re
 import os 
 from pathlib import Path
 import sys
-# Recursion makes transliteration simpler
-sys.setrecursionlimit(10000)  
 
  
 # pronunciation dictionary?
@@ -302,7 +300,7 @@ latin2ipa = {
     'ṭ':'tˤ',
     'ţ':'t͡s',
     'd':'d',# or 'ð' 
-    'ḍ':'ðˤ',
+    'ḍ':'ðˤ',# or 'dˤ'
     'z̧':'d͡z',
 
     'l':'l', # or 'ɫ'
@@ -389,6 +387,7 @@ ipa2latin = {
     'tˤ':'ṭ',
     't͡s':'ţ',
     'd':'d',
+    'dˤ':'ḍ',#had to add manually
     'ð':'d',
     'ðˤ':'ḍ',
     'd͡z':'z̧',
@@ -435,6 +434,8 @@ ipa2latin = {
     
     #clitics
     '-':'-',
+
+    'p':'p',#talpidzat
 }
 
 
@@ -594,6 +595,10 @@ def transliterate(text,my_dict):
     trans = [[]] # list will all possible transliterations
     i = 0
     while i< len(text):
+        print('----')
+        print(text[i])
+        if i+1< len(text):
+            print(text[i+1])
         # Find out character-matching in our dicts
         k = text[i] 
         ## check for 2-character phones
@@ -622,6 +627,7 @@ def transliterate(text,my_dict):
 def main():
     data = utils.load_datasets_zgh()
     cur =  concatenate_datasets([data['common_voice_22_0'],data['moroccan_amazigh_asr']])
+    #cur =  data['common_voice_22_0']
 
     dicts = {}
     dicts['all2ipa'] = {}
@@ -636,10 +642,13 @@ def main():
             #print('-'*10)
             #print(w)
             #print(len(w))
-            if re.search(r'[\d%po_v()\[\]{}|σ]', w) or len(w) == 0 or w=='-':
-            #if bool(re.search(r'(\d+|%|p|o|_|v|\(|\)|σ|\[|\])',w)):
+            #if re.search(r'[\d%po_v()\[\]{}|σ]', w) or len(w) == 0 or w=='-':
+            if bool(re.search(r'(\d+|%|p|o|_|v|\(|\)|σ|\[|\])',w)) or len(w)== 0 or w=='-':
                 continue
                 #assert(False)
+            if 'talpidzat' in w:
+                print(f' adding {w}')
+                assert(False)
             if 'common_voice_22_0' == row['origin']:
                 trans = transliterate(w,tifinagh2ipa)
             else:

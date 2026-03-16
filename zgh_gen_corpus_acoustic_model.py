@@ -33,15 +33,16 @@ xmin = 0
 xmax = {xmax}
 intervals: size = {interval_size}"""
 
- 
+DICT = "zgh_all2ipa" 
 # All kabyle data is in latinscript 
 def latin2ipa(text):
     transcript= []
     for w in text.split(' '):
+        #print(f'w:{w}')
         try:
-            transcript.append(DICTS['kab_latin2ipa'][w].replace(' ',''))
+            transcript.append(DICTS[DICT][w].replace(' ',''))
         except:
-            print(f'word "{w}" not found in dictionary "latin2ipa_kab"')
+            print(f'word "{w}" not found in dictionary "{DICT}"')
             transcript.append(w)
     return ' '.join(transcript)
 
@@ -55,19 +56,18 @@ def gen_naive_textgrid(wave,sr,transcript):
     return tg_main
 
 
-def transform_row(origin, waveform, sr, old_path,text):
-    #print(f'row {utt}: text is "{row["text"]}"')
+def transform_row(origin, waveform, sr, text, row_id):
     cur_path = utils.get_curr_folder()# must be run before huggingface
-    filename = os.path.split(old_path)[-1]
-    ext = filename.split('.')[-1]
-    filename = f'{origin}_{filename}'
-    new_path = os.path.join(cur_path,'corpus','kab',filename)
+    ext = 'wav'
+    filename = f'{origin}_{row_id}.{ext}'
+    new_path = os.path.join(cur_path,'corpus','zgh',filename)
 
     ### EXTRACT WAV ###
-    waveform = torch.tensor(waveform)
     new_sr=16000
+    precision = torch.float16
+    waveform = torch.tensor(waveform).to(precision)
     # Downsample and reduce precision to 16 bit
-    resampler = T.Resample(orig_freq=sr, new_freq=new_sr)
+    resampler = T.Resample(orig_freq=sr, new_freq=new_sr,dtype=precision)
     waveform = resampler(waveform)
     torchaudio.save(new_path.replace(ext,'wav'), waveform, new_sr, encoding="PCM_F", bits_per_sample=16)
 
@@ -76,37 +76,32 @@ def transform_row(origin, waveform, sr, old_path,text):
     tg = open(new_path.replace(ext, 'TextGrid'), 'w')
     tg.write(raw_tg)
     tg.close()
-    #print(f'row {utt}: written TG in "{new_path}"')
-
-def process_row(row):
-    text = row['text'].lower()
-    text = re.sub(r"[?.,!\":«»;\'\t\*]",'', text)
-
-    audio = row['audio']
-
-    audio['path'] = f'{utt}.wav'
-
-
 
 def main():
-    data = utils.load_datasets_kab()
+    print('Loading datasets and assigning ids...')
+    data = utils.load_datasets_zgh()
+    print('Loaded.')
     global DICTS
     DICTS = utils.load_dicts()
     print(len(DICTS))
-    cur =  concatenate_datasets([data['common_voice_22_0'],data['kabyle_asr']])
-
-    utt=0 #kabyle_asr has no metadata, therefore I must come up with my own ids
-
+    cur =  concatenate_datasets([data['common_voice_22_0'],data['moroccan_amazigh_asr']])
     print(f'{"-"*10}Generating textgrid/wav files...{"-"*10}')
     for row in cur:
+        row['text']= row['text'].replace('[]-','')
+        words = re.sub(r"[?.,!\":;\'\t\*\n]",'', row['text']).lower().split(' ')
+        text = " ".join(words)
+
+
+        words = re.sub(r"[?.,!\":«»;\'\t\*]",'', text).split(' ')
+        text = ' '.join(words)
         if bool(re.search(r'(\d+|%|p|o|_|v|\(|\)|σ)',text)):
             #skip rows with invalid symbols
             continue
 
+        audio = row['audio']
 
-        transform_row(origin=row['origin'], waveform = audio['array'],sr = audio['sampling_rate'], old_path = audio['path'], text = text)
+        transform_row(origin=row['origin'], waveform = audio['array'],sr = audio['sampling_rate'], text = text, row_id=row["id"])
 
-        utt+=1
 
 
 
