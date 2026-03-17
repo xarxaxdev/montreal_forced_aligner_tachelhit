@@ -68,12 +68,17 @@ mfa train --clean --single_speaker  -j 12 ./corpus/kab ./dicts/kab_vocab.dict ./
 # mfa adapt [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH ACOUSTIC_MODEL_PATH  OUTPUT_MODEL_PATH
 mfa adapt --clean --single_speaker  -j 12 ./corpus/zgh ./dicts/zgh_vocab.dict ./output/kab_model.zip ./output/zgh_model.zip --output_directory ./output/zgh_corpus
 
+# train shi model based on zgh model
+# mfa adapt [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH ACOUSTIC_MODEL_PATH  OUTPUT_MODEL_PATH
+mfa adapt --clean --single_speaker  -j 12 ./corpus/shi ./dicts/zgh_vocab.dict ./output/zgh_model.zip ./output/shi_model.zip --output_directory ./output/shi_corpus
 
-mfa train --clean --single_speaker  -j 12 ./corpus ./dicts/vocab.dict ./output/model.zip --output_directory ./output/corpus_aligned
-# --phone_groups_path phone_groups/IPA_only.yaml
-# --phone_groups_path
+# train tzm model based on zgh model
+# mfa adapt [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH ACOUSTIC_MODEL_PATH  OUTPUT_MODEL_PATH
+mfa adapt --clean --single_speaker  -j 12 ./corpus/tzm ./dicts/zgh_vocab.dict ./output/zgh_model.zip ./output/tzm_model.zip --output_directory ./output/tzm_corpus
 
 # --rules_path
+# --phone_groups_path
+# --phone_groups_path phone_groups/IPA_only.yaml
 
 ```
 
