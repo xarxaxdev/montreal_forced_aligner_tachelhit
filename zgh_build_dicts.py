@@ -663,8 +663,8 @@ def main():
 
 
     for w in vocab:
-        print('-'*10)
-        print(f'w:{w};')
+        #print('-'*10)
+        #print(f'w:{w};')
         #for d in [ipa2latin,ipa2tifinagh,ipa2arabic]:
         for d in [ipa2latin,ipa2tifinagh]:
             trans = transliterate(w,d)

@@ -139,16 +139,29 @@ def load_datasets_shi():
     # Load each dataset (would be normally under ~/.cache/huggingface/datasets)
     data ={}
 
+    ### TIFINAGH DATASET 
     dataset = load_dataset("fsicoli/common_voice_22_0", "zgh",      trust_remote_code=True, cache_dir=CACHE_DIR)
     dataset = concatenate_datasets([dataset['train'],dataset['validation'],dataset['test']])
-
     dataset = dataset.rename_column("sentence","text")
-    dataset = dataset.map(cleanup_text)
-    dataset = dataset.select_columns(columns_relevant + ['variant'])
-    print(dataset)
+    print(len(dataset))
+    dataset = dataset.filter(lambda r: 'Tachelhit' in r['variant'])
+    print(len(dataset))
+    
+    dataset = dataset.map(lambda x : {"duration": len(x['audio']['array'])/x['audio']['sampling_rate'],"text_len":len(x['text'])})
+    dataset =  dataset.sort(['text_len','duration'],reverse=True)
+    dataset = dataset.map(lambda x, i: {"id": i + offset}, with_indices=True)
+    dataset = dataset.select_columns(columns_relevant)
+    # Use the Audio's sampling rate rather than the
+    # Dataset's schema for future concatenate_datasets()
+    new_features = Features({
+        "audio": Audio(sampling_rate=None),
+        "text": Value("string"),
+        "id":Value("int64"),
+    })
     dataset = dataset.cast(new_features)
     dataset = dataset.map(lambda x: {"origin":"common_voice_22_0"})
     data['common_voice_22_0'] = dataset
+
 
     return data
 
@@ -160,6 +173,12 @@ def load_datasets_tzm():
     dataset = concatenate_datasets([dataset['train'],dataset['validation'],dataset['test']])
 
     dataset = dataset.rename_column("sentence","text")
+    print(len(dataset))
+    dataset = dataset.filter(lambda r: 'Central Atlas Tamazight' in r['variant'])
+    print(len(dataset))
+    assert(False)
+
+
     dataset = dataset.map(cleanup_text)
     dataset = dataset.select_columns(columns_relevant)
     # Use the Audio's sampling rate rather than the

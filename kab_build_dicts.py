@@ -232,6 +232,8 @@ def main():
 
     vocab = {}# a set is more fitting, but lists do not have a builtin way to get hashed for sets.
     i_row=0
+    #TODO:
+    # Make this parallel (not high priority, still takes under a min)
     for row in cur:
         #print(f'row={i_row}' )
         i_row+=1

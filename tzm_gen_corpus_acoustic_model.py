@@ -1,9 +1,20 @@
+from datasets import Audio,concatenate_datasets #using huggingface's API
 import utils
 import re
 import os,sys,subprocess
 from pathlib import Path
 from scipy.io import wavfile
 import numpy as np
+import torchaudio
+import torchaudio.functional as F
+import torchaudio.transforms as T
+import torch
+from tqdm import tqdm
+
+
+# TODO make filenames shorter
+from utils import dataset_alias as dataset_alias
+
 
 data = {}
 DICTS = {}
@@ -21,18 +32,23 @@ name = "{name}"
 xmin = 0
 xmax = {xmax}
 intervals: size = {interval_size}"""
- 
 
-def tifinagh2ipa(pron_dict,text):
-    words = re.sub(r"[?.,!\":;\'\t]",'', text).split(' ')
+DICT = "zgh_all2ipa" 
+# All kabyle data is in latinscript 
+def latin2ipa(text):
     transcript= []
-    for w in words:
-        transcript.append(DICTS['tifinagh2ipa'][w].replace(' ',''))
+    for w in text.split(' '):
+        #print(f'w:{w}')
+        try:
+            transcript.append(DICTS[DICT][w].replace(' ',''))
+        except:
+            print(f'word "{w}" not found in dictionary "{DICT}"')
+            transcript.append(w)
     return ' '.join(transcript)
 
 # One annotation = one utterance
-def gen_naive_textgrid(pron_dict,wave,sr,transcript):
-    transcript= tifinagh2ipa(pron_dict,transcript)
+def gen_naive_textgrid(wave,sr,transcript):
+    transcript= latin2ipa(transcript)
     t = len(wave)/sr
     #intervals at the utterance level
     tg_main =  tg_header.format(xmax=round(t,6),name='utt',interval_size=1)
@@ -40,39 +56,51 @@ def gen_naive_textgrid(pron_dict,wave,sr,transcript):
     return tg_main
 
 
-def transform_row(pron_dict,waveform, sr, old_path,text):
-    #print(f'row {utt}: text is "{row["text"]}"')
+def transform_row(origin, waveform, sr, text, row_id):
     cur_path = utils.get_curr_folder()# must be run before huggingface
-    filename = os.path.split(old_path)[-1]
-    ext = filename.split('.')[-1]
-    new_path = os.path.join(cur_path,'corpus',filename)
-    ### EXTRACT WAV ###
-    # Downsample and reduce precision to 16 bit
-    command = ['sox', old_path, '-t', 'wav', '-r', '16000', '-b', '16', new_path.replace(ext,'wav')]
-    subprocess.check_call(command)
+    ext = 'wav'
+    filename = f'{origin}_{row_id}.{ext}'
+    new_path = os.path.join(cur_path,'corpus','tzm',filename)
 
-    #print(f'row {utt}: written wavfile in "{new_path}"')
+    ### EXTRACT WAV ###
+    new_sr=16000
+    precision = torch.float16
+    waveform = torch.tensor(waveform).to(precision)
+    # Downsample and reduce precision to 16 bit
+    resampler = T.Resample(orig_freq=sr, new_freq=new_sr,dtype=precision)
+    waveform = resampler(waveform)
+    torchaudio.save(new_path.replace(ext,'wav'), waveform, new_sr, encoding="PCM_F", bits_per_sample=16)
+
     ### GEN TEXTGRID ###
-    raw_tg = gen_naive_textgrid(pron_dict,waveform,sr,text)
+    raw_tg = gen_naive_textgrid(waveform,new_sr,text)
     tg = open(new_path.replace(ext, 'TextGrid'), 'w')
     tg.write(raw_tg)
     tg.close()
-    #print(f'row {utt}: written TG in "{new_path}"')
 
 def main():
-    data = utils.load_datasets()
+    print('Loading datasets and assigning ids...')
+    data = utils.load_datasets_tzm()
+    print('Loaded.')
     global DICTS
     DICTS = utils.load_dicts()
-    print(len(DICTS))
-    cur =  data['common_voice_22_0']
-    cur = cur.take(20) # debugging
-    utt=1
+    cur =  concatenate_datasets([data['common_voice_22_0'],data['moroccan_amazigh_asr']])
     print(f'{"-"*10}Generating textgrid/wav files...{"-"*10}')
-    for row in cur :
-        #TODO ADD A CSV WITH ORIGINAL UTTERANCE, TRANSLATED UTTERANCE, ORIGINAL DATASET, FILENAME
-        transform_row(pron_dict = 'tifinagh2ipa',waveform = row['waveform'],sr =row['sr'],old_path=row['filename'], text =row['text'])
+    for row in cur:
+        row['text']= row['text'].replace('[]-','')
+        words = re.sub(r"[?.,!\":;\'\t\*\n]",'', row['text']).lower().split(' ')
+        text = " ".join(words)
 
-        utt+=1
+
+        words = re.sub(r"[?.,!\":«»;\'\t\*]",'', text).split(' ')
+        text = ' '.join(words)
+        if bool(re.search(r'(\d+|%|p|o|_|v|\(|\)|σ)',text)):
+            #skip rows with invalid symbols
+            continue
+
+        audio = row['audio']
+
+        transform_row(origin=row['origin'], waveform = audio['array'],sr = audio['sampling_rate'], text = text, row_id=row["id"])
+
 
 
 
