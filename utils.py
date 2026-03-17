@@ -91,30 +91,15 @@ def load_datasets_zgh():
     # Load each dataset (would be normally under ~/.cache/huggingface/datasets)
     data ={}
 
-    ### LATINSCRIPT DATASET
-    # https://aclanthology.org/2025.icnlsp-1.37.pdf#:~:text=We%20have%20also%20applied%20and%20validated%20the,of%20the%20utilized%20dataset%20for%20benchmarking%20and
-    dataset = load_dataset("TutlaytAI/moroccan_amazigh_asr",cache_dir=CACHE_DIR)
-    dataset = concatenate_datasets([dataset['train'],dataset['test']])
-    dataset = dataset.rename_column("transcription","text")
-    dataset = dataset.map(cleanup_text)
-    # Adding an id that depends on text length 
-    dataset = dataset.map(lambda x : {"text_len":len(x['text'])})
-    dataset =  dataset.sort(['text_len','text'],reverse=True)
-    dataset = dataset.map(lambda x, i: {"id": i}, with_indices=True)
-    offset = len(dataset) #so we know which id to begin on next dataset
-    #dataset = dataset.select_columns(columns_relevant)
-    dataset = dataset.map(lambda x: {"origin":"moroccan_amazigh_asr"})
-    data['moroccan_amazigh_asr'] = dataset
-
     ### TIFINAGH DATASET 
     dataset = load_dataset("fsicoli/common_voice_22_0", "zgh",      trust_remote_code=True, cache_dir=CACHE_DIR)
     dataset = concatenate_datasets([dataset['train'],dataset['validation'],dataset['test']])
     dataset = dataset.rename_column("sentence","text")
-    #dataset = dataset.map(cleanup_text)
-    # assign ids based on same criteria without restarting
+    # Deterministic ID assignment
     dataset = dataset.map(lambda x : {"text_len":len(x['text'])})
     dataset =  dataset.sort(['text_len','text'],reverse=True)
-    dataset = dataset.map(lambda x, i: {"id": i + offset}, with_indices=True)
+    dataset = dataset.map(lambda x, i: {"id": i}, with_indices=True)
+    offset = len(dataset) #so we know which id to begin on next dataset
     dataset = dataset.select_columns(columns_relevant)
     # Use the Audio's sampling rate rather than the
     # Dataset's schema for future concatenate_datasets()
@@ -127,7 +112,22 @@ def load_datasets_zgh():
     dataset = dataset.map(lambda x: {"origin":"common_voice_22_0"})
     data['common_voice_22_0'] = dataset
 
-    return data
+
+    ### LATINSCRIPT DATASET
+    # https://aclanthology.org/2025.icnlsp-1.37.pdf#:~:text=We%20have%20also%20applied%20and%20validated%20the,of%20the%20utilized%20dataset%20for%20benchmarking%20and
+    dataset = load_dataset("TutlaytAI/moroccan_amazigh_asr",cache_dir=CACHE_DIR)
+    dataset = concatenate_datasets([dataset['train'],dataset['test']])
+    dataset = dataset.rename_column("transcription","text")
+    dataset = dataset.map(cleanup_text)
+    # Deterministic ID assignment
+    dataset = dataset.map(lambda x : {"text_len":len(x['text'])})
+    dataset =  dataset.sort(['text_len','text'],reverse=True)
+    dataset = dataset.map(lambda x, i: {"id": i + offset}, with_indices=True)
+    #dataset = dataset.select_columns(columns_relevant)
+    dataset = dataset.map(lambda x: {"origin":"moroccan_amazigh_asr"})
+    data['moroccan_amazigh_asr'] = dataset
+
+        return data
 
 
 # TODO:
@@ -141,12 +141,13 @@ def load_datasets_shi():
     dataset = load_dataset("fsicoli/common_voice_22_0", "zgh",      trust_remote_code=True, cache_dir=CACHE_DIR)
     dataset = concatenate_datasets([dataset['train'],dataset['validation'],dataset['test']])
     dataset = dataset.rename_column("sentence","text")
-    print(len(dataset))
-    dataset = dataset.filter(lambda r: 'Tachelhit' in r['variant'])
-    print(len(dataset))
+    # Deterministic ID assignment matching zgh
     dataset = dataset.map(lambda x : {"text_len":len(x['text'])})
     dataset =  dataset.sort(['text_len','text'],reverse=True)
     dataset = dataset.map(lambda x, i: {"id": i }, with_indices=True)
+    print(len(dataset))
+    dataset = dataset.filter(lambda r: 'Tachelhit' in r['variant'])
+    print(len(dataset))
     dataset = dataset.select_columns(columns_relevant)
     # Use the Audio's sampling rate rather than the
     # Dataset's schema for future concatenate_datasets()
@@ -170,14 +171,13 @@ def load_datasets_tzm():
     dataset = concatenate_datasets([dataset['train'],dataset['validation'],dataset['test']])
 
     dataset = dataset.rename_column("sentence","text")
+    # Deterministic ID assignment matching zgh
+    dataset = dataset.map(lambda x : {"text_len":len(x['text'])})
+    dataset =  dataset.sort(['text_len','text'],reverse=True)
+    dataset = dataset.map(lambda x, i: {"id": i }, with_indices=True)
     print(len(dataset))
     dataset = dataset.filter(lambda r: 'Central Atlas Tamazight' in r['variant'])
     print(len(dataset))
-
-    dataset = dataset.map(lambda x : {"text_len":len(x['text'])})
-    dataset =  dataset.sort(['text_len','text'],reverse=True)
-
-    dataset = dataset.map(cleanup_text)
     dataset = dataset.select_columns(columns_relevant)
     # Use the Audio's sampling rate rather than the
     # Dataset's schema for future concatenate_datasets()
