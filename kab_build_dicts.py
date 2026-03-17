@@ -217,6 +217,7 @@ def arabic2ipa(text):
 
 
 def main():
+    # Careful, this nukes previously generated daaset
     utils.prepare_project_structure()
     data = utils.load_datasets_kab()
     #for i in data:

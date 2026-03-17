@@ -98,8 +98,8 @@ def load_datasets_zgh():
     dataset = dataset.rename_column("transcription","text")
     dataset = dataset.map(cleanup_text)
     # Adding an id that depends on text length 
-    dataset = dataset.map(lambda x : {"duration": len(x['audio']['array'])/x['audio']['sampling_rate'],"text_len":len(x['text'])})
-    dataset =  dataset.sort(['text_len','duration'],reverse=True)
+    dataset = dataset.map(lambda x : {"text_len":len(x['text'])})
+    dataset =  dataset.sort(['text_len','text'],reverse=True)
     dataset = dataset.map(lambda x, i: {"id": i}, with_indices=True)
     offset = len(dataset) #so we know which id to begin on next dataset
     #dataset = dataset.select_columns(columns_relevant)
@@ -110,12 +110,10 @@ def load_datasets_zgh():
     dataset = load_dataset("fsicoli/common_voice_22_0", "zgh",      trust_remote_code=True, cache_dir=CACHE_DIR)
     dataset = concatenate_datasets([dataset['train'],dataset['validation'],dataset['test']])
     dataset = dataset.rename_column("sentence","text")
-    print(dataset[0]['text'])
     #dataset = dataset.map(cleanup_text)
-    print(dataset[0]['text'])
     # assign ids based on same criteria without restarting
-    dataset = dataset.map(lambda x : {"duration": len(x['audio']['array'])/x['audio']['sampling_rate'],"text_len":len(x['text'])})
-    dataset =  dataset.sort(['text_len','duration'],reverse=True)
+    dataset = dataset.map(lambda x : {"text_len":len(x['text'])})
+    dataset =  dataset.sort(['text_len','text'],reverse=True)
     dataset = dataset.map(lambda x, i: {"id": i + offset}, with_indices=True)
     dataset = dataset.select_columns(columns_relevant)
     # Use the Audio's sampling rate rather than the
@@ -146,10 +144,9 @@ def load_datasets_shi():
     print(len(dataset))
     dataset = dataset.filter(lambda r: 'Tachelhit' in r['variant'])
     print(len(dataset))
-    
-    dataset = dataset.map(lambda x : {"duration": len(x['audio']['array'])/x['audio']['sampling_rate'],"text_len":len(x['text'])})
-    dataset =  dataset.sort(['text_len','duration'],reverse=True)
-    dataset = dataset.map(lambda x, i: {"id": i + offset}, with_indices=True)
+    dataset = dataset.map(lambda x : {"text_len":len(x['text'])})
+    dataset =  dataset.sort(['text_len','text'],reverse=True)
+    dataset = dataset.map(lambda x, i: {"id": i }, with_indices=True)
     dataset = dataset.select_columns(columns_relevant)
     # Use the Audio's sampling rate rather than the
     # Dataset's schema for future concatenate_datasets()
@@ -176,8 +173,9 @@ def load_datasets_tzm():
     print(len(dataset))
     dataset = dataset.filter(lambda r: 'Central Atlas Tamazight' in r['variant'])
     print(len(dataset))
-    assert(False)
 
+    dataset = dataset.map(lambda x : {"text_len":len(x['text'])})
+    dataset =  dataset.sort(['text_len','text'],reverse=True)
 
     dataset = dataset.map(cleanup_text)
     dataset = dataset.select_columns(columns_relevant)
@@ -198,20 +196,23 @@ def load_datasets_tzm():
 
 
 def gen_project_folders():
-    for folder in ['dicts','corpus','corpus/kab','corpus/shi','output','output/corpus_kab','output/corpus_shi']:
+    for folder in ['dicts','corpus','corpus/kab','corpus/shi','corpus/tzm','corpus/zgh','output','output/corpus_kab','output/corpus_shi','output/corpus_tzm','output/corpus_zgh']:
         cache_dir= os.path.join(get_curr_folder(),folder)
         Path(cache_dir).mkdir(parents=True, exist_ok=True)
 
 def clean_project_folders():
-    for folder in ['dicts']:
+    for folder in ['dicts','corpus','output']:
         path = os.path.join(get_curr_folder(),folder)
-        for f in os.listdir(path):
-            os.remove(os.path.join(path, f))
+        for root, dirs, files in os.walk(path, topdown=False):
+            for f in files:
+                os.remove(os.path.join(root, f))
+            for d in dirs:
+                os.rmdir(os.path.join(root, d))
 
 
 def prepare_project_structure():
-    gen_project_folders()
     clean_project_folders() #in case they existed
+    gen_project_folders()
     #download_dicts()
 
 

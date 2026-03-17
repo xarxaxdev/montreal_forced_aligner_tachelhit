@@ -64,10 +64,11 @@ def transform_row(origin, waveform, sr, old_path,text):
     new_path = os.path.join(cur_path,'corpus','kab',filename)
 
     ### EXTRACT WAV ###
-    waveform = torch.tensor(waveform)
     new_sr=16000
+    precision = torch.float16
+    waveform = torch.tensor(waveform).to(precision)
     # Downsample and reduce precision to 16 bit
-    resampler = T.Resample(orig_freq=sr, new_freq=new_sr)
+    resampler = T.Resample(orig_freq=sr, new_freq=new_sr,dtype=precision)
     waveform = resampler(waveform)
     torchaudio.save(new_path.replace(ext,'wav'), waveform, new_sr, encoding="PCM_F", bits_per_sample=16)
 
@@ -84,7 +85,7 @@ def process_row(row):
 
     audio = row['audio']
 
-    audio['path'] = f'{utt}.wav'
+    audio['path'] = f'{row["id"]}.wav'
 
     transform_row(origin=row['origin'], waveform = audio['array'],sr = audio['sampling_rate'], old_path = audio['path'], text = text)
 
@@ -93,11 +94,11 @@ def main():
     data = utils.load_datasets_kab()
     global DICTS
     DICTS = utils.load_dicts()
-    print(len(DICTS))
     cur =  concatenate_datasets([data['common_voice_22_0'],data['kabyle_asr']])
     # Remove rows with annoying cases
     cur = cur.filter(lambda x: not bool(re.search(r'(\d+|%|p|P|o|O|_|v|V|\(|\)|σ)',x['text'])))
     print(f'{"-"*10}Generating textgrid/wav files...{"-"*10}')
+    cur.map(process_row)
 
 
 

@@ -83,7 +83,7 @@ def main():
     print('Loaded.')
     global DICTS
     DICTS = utils.load_dicts()
-    cur =  concatenate_datasets([data['common_voice_22_0'],data['moroccan_amazigh_asr']])
+    cur =  data['common_voice_22_0']
     print(f'{"-"*10}Generating textgrid/wav files...{"-"*10}')
     for row in cur:
         row['text']= row['text'].replace('[]-','')
