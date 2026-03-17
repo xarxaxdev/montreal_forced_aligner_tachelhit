@@ -595,10 +595,6 @@ def transliterate(text,my_dict):
     trans = [[]] # list will all possible transliterations
     i = 0
     while i< len(text):
-        print('----')
-        print(text[i])
-        if i+1< len(text):
-            print(text[i+1])
         # Find out character-matching in our dicts
         k = text[i] 
         ## check for 2-character phones
@@ -612,11 +608,8 @@ def transliterate(text,my_dict):
             new_trans = [] 
             for t in trans:
                 for val in my_dict[k]:
-                    print(t)
-                    print(val)
                     new_trans.append(t + [val])
             trans = new_trans
-            print(trans)
         else:
             trans = [t+[my_dict[k]] for t in trans]
 
@@ -627,7 +620,6 @@ def transliterate(text,my_dict):
 def main():
     data = utils.load_datasets_zgh()
     cur =  concatenate_datasets([data['common_voice_22_0'],data['moroccan_amazigh_asr']])
-    #cur =  data['common_voice_22_0']
 
     dicts = {}
     dicts['all2ipa'] = {}
@@ -639,33 +631,20 @@ def main():
         row['text']= row['text'].replace('[]-','')
         words = re.sub(r"[?.,!\":;\'\t\*\n]",'', row['text']).lower().split(' ')
         for w in words:
-            #print('-'*10)
-            #print(w)
-            #print(len(w))
-            #if re.search(r'[\d%po_v()\[\]{}|σ]', w) or len(w) == 0 or w=='-':
             if bool(re.search(r'(\d+|%|p|o|_|v|\(|\)|σ|\[|\])',w)) or len(w)== 0 or w=='-':
                 continue
                 #assert(False)
-            if 'talpidzat' in w:
-                print(f' adding {w}')
-                assert(False)
             if 'common_voice_22_0' == row['origin']:
                 trans = transliterate(w,tifinagh2ipa)
             else:
                 trans = transliterate(w,latin2ipa)
             for t in trans:
-                #if 'nekkni' in w:
-                #    print(w)
-                #    print(t)
                 w_trans = ''.join(t)
                 vocab[w_trans] = ' '.join(t)
                 dicts['all2ipa'][w]= ' '.join(w_trans)
 
 
     for w in vocab:
-        #print('-'*10)
-        #print(f'w:{w};')
-        #for d in [ipa2latin,ipa2tifinagh,ipa2arabic]:
         for d in [ipa2latin,ipa2tifinagh]:
             trans = transliterate(w,d)
             for t in trans:
