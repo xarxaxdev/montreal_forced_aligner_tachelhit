@@ -127,7 +127,7 @@ def load_datasets_zgh():
     dataset = dataset.map(lambda x: {"origin":"moroccan_amazigh_asr"})
     data['moroccan_amazigh_asr'] = dataset
 
-        return data
+    return data
 
 
 # TODO:
@@ -196,7 +196,7 @@ def load_datasets_tzm():
 
 
 def gen_project_folders():
-    for folder in ['dicts','corpus','corpus/kab','corpus/shi','corpus/tzm','corpus/zgh','output','output/corpus_kab','output/corpus_shi','output/corpus_tzm','output/corpus_zgh']:
+    for folder in ['dicts','corpus','corpus/kab','corpus/shi','corpus/tzm','corpus/zgh','output','output/kab_corpus','output/shi_corpus','output/tzm_corpus','output/zgh_corpus']:
         cache_dir= os.path.join(get_curr_folder(),folder)
         Path(cache_dir).mkdir(parents=True, exist_ok=True)
 

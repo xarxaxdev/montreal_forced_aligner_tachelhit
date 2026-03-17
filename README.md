@@ -26,21 +26,33 @@ pip install torchcodec==0.10
 ```
 
 
-# Run to run the aligner
+# Prepare data for the aligner
 
 ```
-conda activate aligner
+conda activate aligner # Activate your environment
+
+# We need to train individual languages in the order
+# kab > zgh > tzm/shi
 
 # Generate unified vocabulary and all pronunciation dictionaries
-python gen_corpus_acoustic_model.py 
+python kab_build_dicts.py
+python zgh_build_dicts.py # we will consider shi/tzm as one
 
-# Generate TextGrid/wav files 
-python gen_corpus_acoustic_model.py 
+python kab_gen_corpus_acoustic_model.py 
+python zgh_gen_corpus_acoustic_model.py 
+python shi_gen_corpus_acoustic_model.py 
+python tzm_gen_corpus_acoustic_model.py 
 
+
+```
+
+# Train aligners
+
+```
+# Optionally validate:
 # mfa validate DICTIONARY_PATH CORPUS_DIRECTORY 
-mfa validate ./corpus ./dicts/vocab.dict
 
-
+# Heavy computational work. Beware.
 # mfa train [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH OUTPUT_MODEL_PATH 
 # 1 job = 1 core, I am using 14 here
 # --single_speaker is required to parallelize
@@ -49,7 +61,12 @@ mfa validate ./corpus ./dicts/vocab.dict
 # "Single speaker mode creates multiprocessing splits based on utterances rather than speakers. This mode also disables speaker adaptation equivalent to --uses_speaker_adaptation false."
 
 # train kabyle model
-mfa train --clean --single_speaker  -j 12 ./corpus ./dicts/vocab_kab.dict ./output/model_kab.zip 
+# mfa train [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH OUTPUT_MODEL_PATH
+mfa train --clean --single_speaker  -j 12 ./corpus/kab ./dicts/kab_vocab.dict ./output/kab_model.zip --output_directory ./output/kab_corpus
+
+# train zgh model based on kabyl model
+# mfa adapt [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH ACOUSTIC_MODEL_PATH  OUTPUT_MODEL_PATH
+mfa adapt --clean --single_speaker  -j 12 ./corpus/zgh ./dicts/zgh_vocab.dict ./output/kab_model.zip ./output/zgh_model.zip --output_directory ./output/zgh_corpus
 
 
 mfa train --clean --single_speaker  -j 12 ./corpus ./dicts/vocab.dict ./output/model.zip --output_directory ./output/corpus_aligned
