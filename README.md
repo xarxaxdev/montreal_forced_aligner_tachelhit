@@ -37,6 +37,8 @@ conda activate aligner # Activate your environment
 # Generate unified vocabulary and all pronunciation dictionaries
 python kab_build_dicts.py
 python zgh_build_dicts.py # we will consider shi/tzm as one
+python merge_dicts.py # generate all.dict 
+
 
 python kab_gen_corpus_acoustic_model.py 
 python zgh_gen_corpus_acoustic_model.py 
@@ -64,19 +66,19 @@ alias mfa=mfa --clean --single_speaker -j 12 --overwrite
 
 # train kabyle model
 # mfa train [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH OUTPUT_MODEL_PATH
-mfa train --clean --single_speaker  -j 12 ./corpus/kab ./dicts/kab_vocab.dict ./output/kab_model.zip --output_directory ./output/kab_corpus
+mfa train --clean --single_speaker  -j 12 ./corpus/kab ./dicts/all.dict ./output/kab_model.zip --output_directory ./output/kab_corpus
 
 # train zgh model based on kabyl model
 # mfa adapt [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH ACOUSTIC_MODEL_PATH  OUTPUT_MODEL_PATH
-mfa adapt --clean --single_speaker  -j 12 ./corpus/zgh ./dicts/zgh_vocab.dict ./output/kab_model.zip ./output/zgh_model.zip --output_directory ./output/zgh_corpus
+mfa adapt --clean --single_speaker  -j 12 ./corpus/zgh ./dicts/all.dict ./output/kab_model.zip ./output/zgh_model.zip --output_directory ./output/zgh_corpus
 
 # train shi model based on zgh model
 # mfa adapt [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH ACOUSTIC_MODEL_PATH  OUTPUT_MODEL_PATH
-mfa adapt --clean --single_speaker  -j 12 ./corpus/shi ./dicts/zgh_vocab.dict ./output/zgh_model.zip ./output/shi_model.zip --output_directory ./output/shi_corpus
+mfa adapt --clean --single_speaker  -j 12 ./corpus/shi ./dicts/all.dict ./output/zgh_model.zip ./output/shi_model.zip --output_directory ./output/shi_corpus
 
 # train tzm model based on zgh model
 # mfa adapt [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH ACOUSTIC_MODEL_PATH  OUTPUT_MODEL_PATH
-mfa adapt --clean --single_speaker  -j 12 ./corpus/tzm ./dicts/zgh_vocab.dict ./output/zgh_model.zip ./output/tzm_model.zip --output_directory ./output/tzm_corpus
+mfa adapt --clean --single_speaker  -j 12 ./corpus/tzm ./dicts/all.dict ./output/zgh_model.zip ./output/tzm_model.zip --output_directory ./output/tzm_corpus
 
 
 
