@@ -36,26 +36,7 @@ def cleanup_text(row):
 columns_relevant= ['text','audio','id']
 
 def load_datasets_kab():
-    print('Loading kabyle_asr dataset...')
-    # Load each dataset (would be normally under ~/.cache/huggingface/datasets)
     data = {}
-    dataset = load_dataset("TutlaytAI/kabyle_asr",cache_dir=CACHE_DIR)
-    print(type(dataset['train']), type(dataset['test']))
-
-    dataset = concatenate_datasets([dataset['train'],dataset['test']])
-    dataset = dataset.rename_column("Text","text")
-    dataset = dataset.map(cleanup_text)
-    # Adding an id that depends on text length 
-    #dataset = dataset.cast_column("audio", Audio(decode=False)) # We dont want to decode 10k+ audios while non-streaming
-    dataset = dataset.map(lambda x : {"text_len":len(x['text'])})
-    dataset =  dataset.sort(['text_len','text'],reverse=True) #text added as a column for determinism order
-    dataset = dataset.map(lambda x, i: {"id": i}, with_indices=True)
-    offset = len(dataset) #so we know which id to begin on next dataset
-    #dataset = dataset.select_columns(columns_relevant)
-    dataset = dataset.map(lambda x: {"origin":"kabyle_asr"})
-    data['kabyle_asr'] = dataset
-    print('Loaded kabyle_asr dataset...')
-
 
     print('Loading common_voice_22_0/kab dataset...')
 
@@ -71,7 +52,8 @@ def load_datasets_kab():
     dataset = dataset.map(cleanup_text)
     dataset = dataset.map(lambda x : {"text_len":len(x['text'])})
     dataset =  dataset.sort(['text_len','text'],reverse=True) #text added as a column for determinism order
-    dataset = dataset.map(lambda x, i: {"id": i + offset}, with_indices=True)
+    dataset = dataset.map(lambda x, i: {"id": i}, with_indices=True)
+    offset = len(dataset) #so we know which id to begin on next dataset
     dataset = dataset.select_columns(columns_relevant)
     new_features = Features({
         "audio": Audio(sampling_rate=None),
@@ -83,7 +65,25 @@ def load_datasets_kab():
     data['common_voice_22_0'] = dataset
     print('Loaded common_voice_22_0/kab dataset...')
 
-    return data
+ 
+    print('Loading kabyle_asr dataset...')
+    dataset = load_dataset("TutlaytAI/kabyle_asr",cache_dir=CACHE_DIR)
+    print(type(dataset['train']), type(dataset['test']))
+
+    dataset = concatenate_datasets([dataset['train'],dataset['test']])
+    dataset = dataset.rename_column("Text","text")
+    dataset = dataset.map(cleanup_text)
+    # Adding an id that depends on text length 
+    #dataset = dataset.cast_column("audio", Audio(decode=False)) # We dont want to decode 10k+ audios while non-streaming
+    dataset = dataset.map(lambda x : {"text_len":len(x['text'])})
+    dataset =  dataset.sort(['text_len','text'],reverse=True) #text added as a column for determinism order
+    dataset = dataset.map(lambda x, i: {"id": i + offset}, with_indices=True)
+    #dataset = dataset.select_columns(columns_relevant)
+    dataset = dataset.map(lambda x: {"origin":"kabyle_asr"})
+    data['kabyle_asr'] = dataset
+    print('Loaded kabyle_asr dataset...')
+
+   return data
 
 
 

@@ -52,6 +52,8 @@ python tzm_gen_corpus_acoustic_model.py
 # Optionally validate:
 # mfa validate DICTIONARY_PATH CORPUS_DIRECTORY 
 
+alias mfa=mfa --clean --single_speaker -j 12 --overwrite
+
 # Heavy computational work. Beware.
 # mfa train [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH OUTPUT_MODEL_PATH 
 # 1 job = 1 core, I am using 14 here
@@ -76,9 +78,18 @@ mfa adapt --clean --single_speaker  -j 12 ./corpus/shi ./dicts/zgh_vocab.dict ./
 # mfa adapt [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH ACOUSTIC_MODEL_PATH  OUTPUT_MODEL_PATH
 mfa adapt --clean --single_speaker  -j 12 ./corpus/tzm ./dicts/zgh_vocab.dict ./output/zgh_model.zip ./output/tzm_model.zip --output_directory ./output/tzm_corpus
 
+
+
+
+
+
+
+
+```
+
+
+## TODO
 # --rules_path
 # --phone_groups_path
 # --phone_groups_path phone_groups/IPA_only.yaml
-
-```
 
