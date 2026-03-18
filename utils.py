@@ -39,6 +39,12 @@ def load_datasets_kab():
     data = {}
 
     print('Loading common_voice_22_0/kab dataset...')
+    # TODO (maybe)
+    # sort by text_len,text PRIOR to doing the .take(20000)
+    # this makes the seeding useless, but prevents us 
+    # from (unluckily) grabbing only short (and less 
+    # representative) samples.
+
 
     # Don't want 500+ hours of data downloading
     dataset = load_dataset("fsicoli/common_voice_22_0", "kab", trust_remote_code=True, cache_dir=CACHE_DIR, streaming=True)
