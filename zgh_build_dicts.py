@@ -539,7 +539,7 @@ ipa2realization = {
     'j':['j','i','ʝ'],
     # shi: j,i (i between consonants)
     # tzm: j
-    # rif: j,ʝ (ʝ has in most central rifian become j)
+    # rif: j,ʝ (ʝ in central rifian is j)
 
     'w':['w','u'],
     # shi: w,u (u between consonants)
@@ -712,13 +712,24 @@ def main():
                 vocab[w_trans] = ' '.join(t)
                 dicts['all2ipa'][w]= ' '.join(w_trans)
 
-
+    # we make sure every word in our vocabulary is written in 
+    # all the possible ways
     for w in vocab:
         for d in [ipa2latin,ipa2tifinagh]:
             trans = transliterate(w,d)
             for t in trans:
                 dicts['all2ipa'][''.join(t)] = w
-            
+    
+    # Now we want to write every realization of every 
+    # word in our vocab
+    vocab_realization = {}
+    for w in vocab:
+        trans = transliterate(w,ipa2realization)
+        for t in trans:
+            vocab_realization[w]=' '.join(t)
+
+
+
 
     print('-' *15)
     print('SAVING DICTS')
@@ -736,7 +747,7 @@ def main():
     # Write ipa-to-ipa dict
     with open(os.path.join(cur_path,'dicts','zgh_vocab.dict'),'w') as f:
         f.write('<unk>\tspn\n')
-        for w in vocab:
+        for w in vocab_realization:
             f.write(f'{w}\t{vocab[w]}\n')
         f.close()
 
