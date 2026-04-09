@@ -50,7 +50,7 @@ def load_datasets_kab():
     dataset = load_dataset("fsicoli/common_voice_22_0", "kab", trust_remote_code=True, cache_dir=CACHE_DIR, streaming=True)
     # average sentence duration is 3.341
     # I want 15 hours, so 20k random samples should suffice
-    subset_dataset = dataset['train'].shuffle(seed =SEED,buffer_size=100).take(20000).remove_columns(["up_votes", "down_votes"])
+    subset_dataset = dataset['train'].shuffle(seed =SEED,buffer_size=len(dataset['train'])).take(20000).remove_columns(["up_votes", "down_votes"])
     f = subset_dataset.features
     #print(f)
     dataset = Dataset.from_generator(lambda: (row for row in subset_dataset),features=f)

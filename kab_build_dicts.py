@@ -94,6 +94,9 @@ latin2ipadict = {
     
 }
 
+
+#https://nantes-universite.hal.science/hal-03682791/document
+
 exceptions = {
     'firefox':'fairfoks',
     'tom':'tom',
@@ -127,92 +130,6 @@ def latin2ipa(text):
             orig.append(text[i])
             trans.append(latin2ipadict[text[i]])
         i += 1
-    return [orig,trans]
-
-# According to:
-# https://en.wikipedia.org/wiki/Berber_Latin_alphabet
-arabic2ipadict = {
-    ### VOWELS AND GLIDES
-    'ا':'a',# according to wiki is 'æ'
-    'أ':'a',
-    ' َ':'a',
-    'ي':'i',
-    ' ِ':'i',
-    'و':'u',
-    ' ُ':'u',
-    'ۍ':'e',
-    'ـ':'e',
-    'ع':'ɛ',
-    'و':'w',
-    'ي':'j', # and 'j':'ʒ'
-
-    # Bilabials
-    'م':'m',
-    'ب':'b',# or 'β'
-
-    # Labiodental
-    'ف':'f',
-
-    # Dental
-
-    # Alveolar
-    'ن':'n',
-
-    'س':'s',
-    'ص':'sˤ',
-    'ز':'z',
-    'ژ':'zˤ',
-
-    'ث':'t',# or 'θ' 
-    'ت':'t',# or 'θ' 
-    'ط':'tˤ',
-    'ذ':'d',# or 'ð' 
-    'د':'d',# or 'ð' 
-    'ظ':'ðˤ',
-    'ض':'ðˤ',
-
-    'ل':'l', # or 'ɫ'
-    'ر':'r', # or 'rˤ'
-    'ر':'ɺ',# 
-    'ڕ':'rˤ',# 
-
-    # Post Alveolar
-    'ش':'ʃ',
-    'ت':'t͡ʃ',
-    'چ':'t͡ʃ',
-    'ج':'ʒ',# and 'y':'j' #CONFLICT WITH TIFINAGH2IPA
-    #'ج':'d͡ʒ', #ambiguity here.
-
-    # Palatal, 
-
-    # Velar 		
-    'خ':'x',# or 'χ' 
-    'غ':'ɣ',# or 'ʁ'
-    'گ':'g',
-    'ݣ':'g',
-    #'ɡʷ':'ɡʷ',# North-berber, no proper writing in arabic
-    'ک':'k',
-    #'kʷ':'kʷ',#  North-berber, no proper writing in arabic
-
-    # Uvular
-    'ق':'q',# or 'qʷ' or 'ɢ'
- 
-    # Pharyngeal
-    'ح':'ħ',# CONSENSUS 1,2,3
-
-    # Glottal 
-    'ه':'h',
-
-}
-
-#TODO
-def arabic2ipa(text):
-    orig = []
-    trans = []
-    i = 0
-    while i< len(text):
-        if text[i] :
-            pass
     return [orig,trans]
 
 
