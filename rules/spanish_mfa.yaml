@@ -1,43 +1,20 @@
-dialects:
-  latin_america:
-    - following_context: '[^ij]'
-      preceding_context: ''
-      replacement: 'ɲ j'
-      segment: 'ɲ'
-    - following_context: ''
-      preceding_context: ''
-      replacement: 'ʃ'
-      segment: 'ʝ'
-    - following_context: ''
-      preceding_context: ''
-      replacement: 'ʃ'
-      segment: 'ɟʝ'
-  spain:
-    - following_context: ''
-      preceding_context: ''
-      replacement: 's'
-      segment: 'θ'
-    - following_context: '$'
-      preceding_context: ''
-      replacement: ''
-      segment: 'θ'
 rules:
-  - following_context: '$'
+  #  - following_context: $ #end of word
+  #    preceding_context: ''
+  #    replacement: ''
+  #    segment: 's'
+  #  - following_context: '[^aiouejw]' #middle of the word not followed by vowel or glide
+  #    preceding_context: ''
+  #    replacement: 'h'
+  #    segment: 's'
+  #    GEMMINATES
+  - following_context: ''
     preceding_context: ''
-    replacement: ''
-    segment: 's'
-  - following_context: '$'
-    preceding_context: ''
-    replacement: 'h'
-    segment: 's'
-  - following_context: '[^aiouejw]'
-    preceding_context: ''
-    replacement: 'h'
-    segment: 's'
-  - following_context: '[^aiouejw]'
-    preceding_context: ''
-    replacement: ''
-    segment: 's'
+    replacement: 't:'
+    segment: 't t'
+  #    https://books.google.de/books?hl=en&lr=&id=T6jmziooEk0C&oi=fnd&pg=PA461&dq=spirantization+in+berber&ots=ffGLmlWXW_&sig=gfaXvI9lnrlMUYpTa9dYtADLZPI&redir_esc=y#v=onepage&q=spirantization%20in%20berberspiran&f=false 
+  #  -  t in nt is never spirantized
+  #  - gemminates(tense in the book)  never spirantized
   - following_context: '[^aiouejw]'
     preceding_context: '^'
     replacement: 'e s'

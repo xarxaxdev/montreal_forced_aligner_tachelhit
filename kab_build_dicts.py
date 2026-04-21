@@ -111,26 +111,169 @@ exceptions = {
     'tokyo':'tokjo'
 }
 
-def latin2ipa(text):
-    text = text.lower()
-    if text in exceptions:
-        return [exceptions[text].split(),exceptions[text].split() ]
-    orig = []
-    trans = []
-    #print(text)
+ipa2realization = {
+    ### VOWELS AND GLIDES
+    'e':['','ə'],
+    'a':['a','æ'],
+    'i':['i','ɪ','j','ɨ','e','ɪj','ɪˤ'],
+    # shi: i,ɪ,j 
+    # tzm: i,ɨ,ɪ,e,ɪj (ɪj as absolute end)
+    # rif: i,ɪ,ɪˤ (ɪˤ in vicinity of pharyngealized cons.)
+
+    'u':['u','ɤ','w','ʊ','o','ʊw','ʊˤ'],
+    # shi: u,ɤ,w,ʊ
+    # tzm: u,ʊ,o,ʊw  (ʊw as absolute end)
+    # rif: u,ʊ,ʊˤ (ʊˤ in vicinity of pharyngealized cons.)
+
+    'j':['j','i','ʝ'],
+    # shi: j,i (i between consonants)
+    # tzm: j
+    # rif: j,ʝ (ʝ in central rifian is j)
+
+    'w':['w','u'],
+    # shi: w,u (u between consonants)
+    # tzm: w
+    # rif: w
+
+
+    # Bilabials
+    'b':['b','β'], 
+    'bʷ':['bʷ','βʷ'],
+    # shi: bʷ occurs sporadically in loandwords
+    # tzm: b spirantizes to β
+
+    'p':['p','pˤ'],# 
+    # shi: p occurs sporadically in loandwords
+    # tzm: p explicitly lacking
+    # rif: p may be pharyngealized(as a result of spreading)
+
+    'm':'m',
+    'mʷ':'mʷ', #non-existant in shi/tzm/rif
+
+    # Labiodental
+    'f':'f',
+
+    # Alveolar
+    'n':['n','nˤ','n̪','ŋ'],
+    # shi: n̪
+    # tzm: n,nˤ
+    # rif: n,ŋ assimilation exclusively before /w/
+
+    # CONSONANT SET: t,d,s,z,l,r
+    # all: have a contrastive pharyngealized equivalent (s-sˤ)
+    # shi: t,d,s,z,l,r are dental t̪,d̪,s̪,z̪,l̪,r̪
+    # tzm/rif: t,d,s,z,l,r are alveolar
+
+    's':['s','s̪'],
+    'sˤ':['sˤ','s̪ˤ'],
+    'z':['z','z̪'],
+    'zˤ':['zˤ','z̪ˤ'],
+
+    't':['t','θ','tʰ','t̪'],
+    'tˤ':['tˤ','θˤ','t̪ˤ','θˤ'],
+    # tzm: t spirantizes to θ
+    #'t͡s':'t͡s',
+    'ts':'ts',
+    'd':['d','ð','d̪'],
+    'dˤ':['dˤ','ðˤ','d̪ˤ'],
+    # tzm: d spirantizes to ð
+    #'d͡z':'d͡z',
+    'dz':'dz',
+
+    'l':'l',
+    'r':['r','r̪','ɾ','ɾ̪'],
+    # shi: r̪,ɾ̪
+    # tzm: r,ɾ
+    # rif: r,ɾ
+    'rˤ':['rˤ','r̪ˤ'],
+    #'ɺ':'ɺ',# Rif Berber only, written ř
+    # "Syllables in Tashlhiyt Berber and in Moroccan Arabic"by FRANÇOIS DELL, MOHAMED ELMEDLAOUI
+    # r should be IPA ɾ or r depending on context
+
+    # Post Alveolar
+    'ʃ':['ʃ','ʃˤ'],
+    # rif:  ʃ may be pharyngealized ʃˤ(as a result of spreading)
+    #       /ç/ has mostly become /ʃ/ in Central Riffian 
+    #       Note: I see no explicit writing of /ç/, so I presume it
+    #       uses the same orthography c.
+
+    #'t͡ʃ':'t͡ʃ',
+    'tʃ':'tʃ',
+    'ʒ':'ʒ',
+    #'d͡ʒ':'d͡ʒ',
+    'dʒ':'dʒ',
+    # Palatal 
+
+    # Velar 		
+    'g':'g',
+    'ɡʷ':'ɡʷ',
+    'k':'k',
+    'kʷ':'kʷ',
+    # ASK AREA EXPERT
+    # shi/rif: have labialized g/k
+    # tzm: does not have labialized g/k
+
+    # Uvular
+    # shi:  clearly contrasts χʷ/χ and ʁʷ/ʁ
+    # tzm:  /χʷ/ and /ʁʷ/ rare(native speakers can freely substitute /χʁ/), however labialization is supposedly contrastive
+    #       x/ɣ can be a realization of k/g in specific dialect
+    # rif: no labialization; x,ɣ orthography should be x,ɣ (which is equivalent to χ,ʁ); ɣ gemminate is ʁ;
+    'χ':['χ','x'],
+    'χʷ':['χʷ','xʷ'],
+    'ʁ':['ʁ','ɣ'],
+    'ʁʷ':['ʁʷ','ɣʷ'],
+
+    'q':'q',
+    'qʷ':'qʷ',
+    # rif: qʷ is not mentioned
+ 
+    # Pharyngeal
+    'ħ':['ʜ','ħ'],# CONSENSUS 1,2,3
+    # shi: ʜ
+    # tzm,rif: ħ
+    'ʕ':['ʢ','ʕ'],
+    # shi: ʢ
+    # tzm,rif: ʕ
+
+    # Glottal 
+    'h':['h','ɦ'],
+    # shi,rif: ɦ
+    # tzm: h
+    
+    #clitics
+    '-':'-',
+
+}
+
+
+
+# Any->IPA == always unambiguous transliteration
+# IPA->Any == may have multiple transliterations
+def transliterate(text,my_dict):
+    trans = [[]] # list will all possible transliterations
     i = 0
     while i< len(text):
-        #print(text[i])
-        if i < len(text) -1 and f'{text[i]}{text[i+1]}' in latin2ipadict:
-            orig.append(text[i] + text[i+1])
-            trans.append(latin2ipadict[text[i]+text[i+1]])
-            i+=1
-            pass
-        else: 
-            orig.append(text[i])
-            trans.append(latin2ipadict[text[i]])
+        # Find out character-matching in our dicts
+        k = text[i] 
+        ## check for 2-character phones
+        if i+1 < len(text) and ''.join([text[i],text[i+1]]) in my_dict:
+            k = ''.join([text[i],text[i+1]])
+            i += 1
+
+        # Update our transliterations
+        if type(my_dict[k]) == type(['a','b']):
+            # a fork in transliteration
+            new_trans = [] 
+            for t in trans:
+                for val in my_dict[k]:
+                    new_trans.append(t + [val])
+            trans = new_trans
+        else:
+            trans = [t+[my_dict[k]] for t in trans]
+
         i += 1
-    return [orig,trans]
+    return trans
+
 
 
 def main():

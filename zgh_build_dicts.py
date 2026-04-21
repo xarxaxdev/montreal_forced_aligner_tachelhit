@@ -1,11 +1,9 @@
-from datasets import Audio, concatenate_datasets #using huggingface's API
+from datasets import Audio, concatenate_datasets  # using huggingface's API
 import utils
 import re
-import os 
+import os
 from pathlib import Path
 import sys
-
- 
 
 """
 In this script, 2 types of dictionary are created:
@@ -67,691 +65,353 @@ https://medium.com/@evan.frank/accessing-and-cleaning-bulk-wikipedia-text-data-b
 - mʷ is exclusively mentioned in https://en.wikipedia.org/wiki/Berber_Latin_alphabet#Berber_Latin_alphabet_and_the_Tifinagh_Berber_alphabet ;  probably non-existant in tzm/shi/rif but present in some other Berber variant
 
 """
-tifinagh2ipa = {
+""" 
+Standardizing several symbols are archaich or extremely rare:
+- Some symbols are dialect-exclusive(not in rif/shi/tzm)
+- Spirantized symbols exist of consonants, but they are rarely used (and I will be handling spirantization as a replacement rule). 
+"""
+
+std_tif = {
+    "ⵋ": "ⵢ",  # SRC 2
+    "ⵌ": "ⵢ",  # SRC 2
+    "ⵘ": "ⵢ",  # SRC 2
+    # Leaving 'ⵋ','ⵌ','ⵘ'; doesn't appear in common_voice_22_0/zgh
+    #'ⴲ':'β',# IRCAM EXTENDED fricative; SRC 1,2
+    "ⴲ": "b",  # b spirantizes to β
+    "ⵠ": "v",  # IRCAM EXTENDED; SRC 1,2
+    # Leaving 'ⵠ'; doesn't appear in common_voice_22_0/zgh
+    #'ⵝ':'θ',# IRCAM EXTENDED fricative; SRC 1,2
+    "ⵝ": "ⵜ",  # t spirantizes to θ
+    #'ⴸ':'ð',# SRC 2
+    "ⴸ": "ⴷ",  # d aspirantizes to ð
+    #'ⴺ':'ðˤ',# IRCAM EXTENDED fricative; SRC 1,2
+    "ⴺ": "ⴹ",  # dˤ aspirantizes to ðˤ
+    # Leaving these 3 ; don't appear in common_voice_22_0/zgh
+    "ⴶ": "ⴵ",  # SRC 2
+    #'ⴴ':'ʝ',# SRC 2 (SRC 5 points to this being aproximant);   CONFLICT!
+    "ⴴ": "ⴳ",  # g aspirantizes to ʝ
+    # Leaving this 1 ; doesn't appear in common_voice_22_0/zgh
+    #'ⴴ':'ʝ',# IRCAM EXTENDED fricative;SRC 1 CONFLICT!
+    "ⴾ": "ⴽ",  # SRC 2
+    #'ⴿ':'ⴽ',# SRC 2  I suspect this is a mixup with SRC 1 and Neo-tifinagh's writing.
+    # Leaving these 2 ; doesn't appear in common_voice_22_0/zgh
+    # x ~ χ
+    "ⵆ": "ⵅ",  # SRC 2
+    "ⴿ": "ⵅ",  # IRCAM EXTENDED fricative; SRC 1 ; I suspect this is a case of aspirantization
+    # Leaving these 2 ; doesn't appear in common_voice_22_0/zgh
+    "ⵗ": "ⵖ",  # SRC 2
+    # Leaving this 1 ; doesn't appear in common_voice_22_0/zgh
+    "ⵈ": "ⵇ",  # SRC 2
+    # Leaving this 1 ; doesn't appear in common_voice_22_0/zgh
+    "ⵂ": "ⵀ",  # SRC 2
+    "ⵁ": "ⵀ",  # IRCAM EXTENDED; SRC 1,2
+    # Leaving these 2 ; doesn't appear in common_voice_22_0/zgh
+    # Palatal
+    #'ⵐ':'ny',# SRC 2
+    # Leaving this 1 ; doesn't appear in common_voice_22_0/zgh
+    # multi-letter
+    #'ⵑ':'ng',# SRC 2
+    # Leaving this  1; doesn't appear in common_voice_22_0/zgh
+}
+
+
+tif2ipa = {
     ### VOWELS AND GLIDES
     # According to Phon[1-3] only a,u,i exist in the language (with sometimes an ə) that may or may not be written/pronounced
     #'ⴰ':'æ',# SRC 1
-    'ⴰ':'a',# SRC 2,3,4
+    "ⴰ": "a",  # SRC 2,3,4
     # According to all Phon[1-4] /a/ is the right phoneme(the other being a common realization)
-
-    'ⴻ':'ə',# SRC 1  CONFLICT! 
+    #'ⴻ':'ə',# SRC 1  CONFLICT!
+    "ⴻ": ["", "ə"],
     #'ⴻ':'e',# SRC 2,3,4
     # rarely written in South-mid Morocco (shi/tzm) https://en.wikipedia.org/wiki/Berber_Latin_alphabet#Souss-Berber_local_usage
     # Epenthetic vowel that may exist or not depending on language
-    # when written usually represents 'ə'
-    # Appears in common_voice_22_0/zgh, unlike the o equivalent
-
-    'ⵉ':'i',# CONSENSUS SRC 1,2,3,4
-    'ⵓ':'u', #SRC 2,3,4  CONFLICT!
-    #'ⵓ':'w', #SRC 1   CONFLICT!
-    'ⵡ':'w',# CONSENSUS 1,2,3,4
-    'ⵢ':'j',# SRC 1,3,4
-    'ⵋ':'j',# SRC 2
-    'ⵌ':'j',# SRC 2
-    'ⵘ':'j',# SRC 2
-    # Leaving 'ⵋ','ⵌ','ⵘ'; doesn't appear in common_voice_22_0/zgh
-
-    'ⵧ':'o', # SRC 1,2  
+    # when written usually represents /ə/
+    # Appears in common_voice_22_0/zgh, unlike the /o/ equivalent
+    "ⵉ": "i",  # CONSENSUS SRC 1,2,3,4
+    "ⵓ": "u",  # SRC 2,3,4  CONFLICT!
+    #'ⵓ':'w', #SRC 1   CONFLICT! (this is true only between vowels)
+    "ⵡ": "w",  # CONSENSUS 1,2,3,4
+    "ⵢ": "j",  # SRC 1,3,4
+    "ⵧ": "o",  # SRC 1,2
     # Leaving 'ⵧ'; doesn't appear in common_voice_22_0/zgh
-    
-
     # Bilabials
-    'ⴱ':'b',# CONSENSUS 1,2,3,4
-    'ⴱⵯ':'bʷ',# SRC 6; velarization
-    'ⴲ':'β',# IRCAM EXTENDED fricative; SRC 1,2
-    'ⵒ':'p', # IRCAM EXTENDED; SRC 1,2
+    "ⴱ": "b",  # CONSENSUS 1,2,3,4
+    "ⴱⵯ": "bʷ",  # SRC 6; velarization
+    "ⵒ": "p",  # IRCAM EXTENDED; SRC 1,2
     # Leaving 'ⵒ'; doesn't appear in common_voice_22_0/zgh
     # Note that /p/ exists only in rif (according to literature)
     # According to literature can also be pharyngealized  pˤ
-    'ⵎ':'m',# CONSENSUS 1,2,3,4
-    'ⵎⵯ':'mʷ',# SRC 6;velarization
+    "ⵎ": "m",  # CONSENSUS 1,2,3,4
+    "ⵎⵯ": "mʷ",  # SRC 6;velarization
     # Leaving 'ⵎⵯ'; doesn't appear in common_voice_22_0/zgh
-
     # Labiodental
-    'ⴼ':'f',# CONSENSUS 1,2,3,4
-    'ⵠ':'v', # IRCAM EXTENDED
-    # Leaving 'ⵠ'; doesn't appear in common_voice_22_0/zgh
-
-    # Dental
-    'ⵝ':'θ',# IRCAM EXTENDED fricative; SRC 1,2
-    'ⴺ':'ðˤ',# IRCAM EXTENDED fricative; SRC 1,2 
-    'ⴸ':'ð',# SRC 2
-    # Leaving these 3 ; don't appear in common_voice_22_0/zgh
-
-
+    "ⴼ": "f",  # CONSENSUS 1,2,3,4
     # Alveolar
-    'ⵏ':'n',# CONSENSUS 1,2,3,4
-
-    'ⵙ':'s',# CONSENSUS 1,2,3,4
-    'ⵚ':'sˤ',# CONSENSUS 1,2,3,4
-    'ⵣ':'z',# CONSENSUS 1,2,3,4
-    'ⵥ':'zˤ',# CONSENSUS 1,2,3,4
-
-    'ⵜ':'t',# CONSENSUS 1,2,3,4
-    'ⵟ':'tˤ',# CONSENSUS 1,2,3,4
-    'ⴷ':'d', # CONSENSUS 1,2,3,4
-    'ⴹ':'dˤ',# CONSENSUS 1,2,3,4
-
-    'ⵍ':'l', # CONSENSUS 1,2,3,4
-    'ⵔ':'r', # CONSENSUS 1,2,3,4
-    'ⵕ':'rˤ',# CONSENSUS 1,2,3,4
-
+    "ⵏ": "n",  # CONSENSUS 1,2,3,4
+    "ⵙ": "s",  # CONSENSUS 1,2,3,4
+    "ⵚ": "sˤ",  # CONSENSUS 1,2,3,4
+    "ⵣ": "z",  # CONSENSUS 1,2,3,4
+    "ⵥ": "zˤ",  # CONSENSUS 1,2,3,4
+    "ⵜ": "t",  # CONSENSUS 1,2,3,4
+    "ⵟ": "tˤ",  # CONSENSUS 1,2,3,4
+    "ⴷ": "d",  # CONSENSUS 1,2,3,4
+    "ⴹ": "dˤ",  # CONSENSUS 1,2,3,4
+    "ⵍ": "l",  # CONSENSUS 1,2,3,4
+    "ⵔ": "r",  # CONSENSUS 1,2,3,4
+    "ⵕ": "rˤ",  # CONSENSUS 1,2,3,4
     # Post Alveolar
-    'ⵛ':'ʃ',# CONSENSUS 1,2,3,4 
-    'ⵊ':'ʒ',# SRC 1 CONFLICT!
+    "ⵛ": "ʃ",  # CONSENSUS 1,2,3,4
+    "ⵊ": "ʒ",  # SRC 1 CONFLICT!
     #'ⵊ':'j',# SRC 2,3,4 CONFLICT!
-    'ⴵ':'d͡ʒ',# SRC 1,2
-    'ⴶ':'d͡ʒ',# SRC 2
-    'ⵞ':'t͡ʃ',# SRC 1,2 
+    "ⴵ": "dʒ",  # SRC 1,2
+    "ⵞ": "tʃ",  # SRC 1,2
     # Leaving these 3 ; doesn't appear in common_voice_22_0/zgh
-
-    # Palatal 
-    'ⵐ':'ny',# SRC 2
-    # Leaving this 1 ; doesn't appear in common_voice_22_0/zgh
-
-    # Velar 		
-    'ⴳ':'g',# CONSENSUS 1,2,3,4
-    'ⴴ':'g',# SRC 2 (SRC 5 points to this being aproximant);   CONFLICT!
-    # Leaving this 1 ; doesn't appear in common_voice_22_0/zgh
-
-    #'ⴴ':'ʝ',# IRCAM EXTENDED fricative;SRC 1 CONFLICT!
-    'ⴳⵯ':'ɡʷ',# CONSENSUS 1,2,3,4
-    # SRC 6; velarization
-    'ⴽ':'k',# CONSENSUS 1,2,3,4
-
-    'ⴾ':'k',# SRC 2
-    'ⴿ':'k',# SRC 2 
-    # Leaving these 2 ; doesn't appear in common_voice_22_0/zgh
-
-    'ⴽⵯ':'kʷ',# CONSENSUS 1,2,3,4
-
+    # Velar
+    "ⴳ": "g",  # CONSENSUS 1,2,3,4
+    "ⴳⵯ": "ɡʷ",  # CONSENSUS 1,2,3,4
+    "ⴽ": "k",  # CONSENSUS 1,2,3,4
+    "ⴽⵯ": "kʷ",  # CONSENSUS 1,2,3,4
     # Uvular
-    'ⵅ':'χ',# SRC 1 CONFLICT!
-    #'ⵅ':'x',# SRC 2,3,4 CONFLICT!
-
-    'ⵅⵯ':'χʷ',# SRC 2,3,4 CONFLICT!
-    'ⵆ':'χ',# SRC 2
-    'ⴿ':'χ',# IRCAM EXTENDED fricative; SRC 1 
-    # Leaving these 3 ; doesn't appear in common_voice_22_0/zgh
-
-    'ⵖ':'ʁ',# CONSENSUS 1,2,3,4
-
-    'ⵖⵯ':'ʁʷ',# SRC 6; velarization
-    'ⵗ':'ʁ',# SRC 2
-    # Leaving these 2 ; doesn't appear in common_voice_22_0/zgh
-
-    'ⵇ':'q',# CONSENSUS 1,2,3,4
-
-    'ⵇⵯ':'qʷ',# SRC 6;velarization
-    'ⵈ':'q',# SRC 2
-    # Leaving these 2 ; doesn't appear in common_voice_22_0/zgh
-
+    # x ~ χ
+    # These 2 phonemes get always written the same way (x and ⵅ),
+    # velarization is contrastive, and change depending on dialect.
+    "ⵅ": "x",  # SRC 1,2,3,4 CONFLICT!
+    "ⵅⵯ": "xʷ",  # SRC 2,3,4 CONFLICT!
+    "ⵖ": "ɣ",  # CONSENSUS 1,2,3,4
+    "ⵖⵯ": "ɣʷ",  # SRC 6; velarization
+    "ⵇ": "q",  # CONSENSUS 1,2,3,4
+    "ⵇⵯ": "qʷ",  # SRC 6;velarization
     # Pharyngeal
-    'ⵃ':'ħ',# CONSENSUS 1,2,3
-    'ⵄ':'ʕ',# SRC 1  CONFLICT! 
-    #'ⵄ':'ɛ',# SRC 2,3,4  CONFLICT! #Latin, more common
-
-    # Glottal 
-    'ⵀ':'h',# CONSENSUS 1,2,3,4; SRC 2 does not mention if for shi
-    
-    'ⵂ':'h',# SRC 2
-    'ⵁ':'h',# IRCAM EXTENDED; SRC 1,2
-    # Leaving these 2 ; doesn't appear in common_voice_22_0/zgh
-    
-    # multi-letter
-    'ⵑ':'ng',# SRC 2
-    # Leaving this  1; doesn't appear in common_voice_22_0/zgh
-
-    #clitics
-    '-':'-',
+    "ⵃ": "ħ",  # CONSENSUS 1,2,3
+    "ⵄ": "ʕ",  # SRC 1  CONFLICT!
+    #'ⵄ':'ɛ',# SRC 2,3,4  CONFLICT! # This is the latinscript equivalent
+    # Glottal
+    "ⵀ": "h",  # CONSENSUS 1,2,3,4; SRC 2 does not mention if for shi
+    # clitics
+    "-": "-",
 }
 
-# Leaving ipa symbols that should not appear commented for simplicity
-ipa2tifinagh = {
-    ### VOWELS AND GLIDES
-    'a':'ⴰ',
-    #'ə':['ⴻ',''],# 
-    # Though it is epenthethic, it is used in Tifinagh text.
-    # appears in moroccan_amazigh_asr
-    # and ⴻ in common_voice_22_0/zgh; Should not be discarded for generating word orthography 
-    'ə':'ⴻ',
-    #'o':'ⵧ',
-
-    'i':'ⵉ',
-    'u':'ⵓ',
-
-    'w':'ⵡ',
-    'j':'ⵢ',
-
-    # Bilabials
-    'b':'ⴱ',
-    'bʷ':'ⴱⵯ',
-    #'β':'ⴲ',
-    'p':'ⵒ',
-    'm':'ⵎ',
-    'mʷ':'ⵎⵯ',
-
-    # Labiodental
-    'f':'ⴼ',
-    #'v':'ⵠ',
-
-    # Dental
-    #'θ':'ⵝ',
-    #'ðˤ':'ⴺ',
-    #'ð':'ⴸ',
- 
-    # Alveolar
-    'n':'ⵏ',
-    
-    's':'ⵙ',
-    'sˤ':'ⵚ',
-    'z':'ⵣ',
-    'zˤ':'ⵥ',
-    
-    't':'ⵜ',
-    'tˤ':'ⵟ',
-    'd':'ⴷ',
-    'dˤ':'ⴹ',
-    
-    'l':'ⵍ',
-    'r':'ⵔ', 
-    'rˤ':'ⵕ',
-
-    # Post Alveolar
-    'ʃ':'ⵛ',
-    'ʒ':'ⵊ',
-    'd͡ʒ':'ⴵ',
-    't͡ʃ':'ⵞ',
-
-    # Velar 		
-    'g':'ⴳ',
-    'ɡʷ':'ⴳⵯ',
-    'k':'ⴽ',
-    'kʷ':'ⴽⵯ',
-
-    # Uvular
-    'χ':'ⵅ',
-    'χʷ':'ⵅⵯ',
-    'ʁ':'ⵖ',
-    'ʁʷ':'ⵖⵯ',
-    'q':'ⵇ',
-    'qʷ':'ⵇⵯ',
-
-    # Pharyngeal
-    'ħ':'ⵃ',
-    #'ʕ':['ⵄ','ɛ'],# ɛ is latinscript
-    'ʕ':'ⵄ',
-
-
-    # Glottal 
-    #'h':['ⵀ','ⵁ'],# trusting common_voice_22_0/zgh as standard
-    'h':'ⵀ',
-
-    #clitics
-    '-':'-',
-    '-':'-',
+std_lat = {
+    "bᵒ": "bʷ",
+    "mᵒ": "mʷ",
+    "š": "c",  # rif # Arbitrary choice, both c/š are used interchangeably
+    "ṣ̌": "c",  # rif
+    "ɡᵒ": "ɡʷ",
+    "kᵒ": "kʷ",
+    "xᵒ": "xʷ",
+    "qᵒ": "qʷ",
+    "â": "ɛ",
 }
-
 
 # Used to generate cross-script dictionary for zgh
 # https://en.wikipedia.org/wiki/Berber_Latin_alphabet
-# and IRCAM Tifinagh~latin~arabic alphabet equivalence   
-latin2ipa = { 
+# and IRCAM Tifinagh~latina alphabet equivalence
+lat2ipa = {
     ### VOWELS AND GLIDES
-    'a':'a',
-    'e':'ə',
-    'i':'i',
-    'u':'u',
-    'w':'w',
-    'y':'j', 
-
+    "a": "a",
+    "e": ["", "ə"],
+    "i": "i",
+    "u": "u",
+    "w": "w",
+    "y": "j",
     # Bilabials
-    'b':'b',
-    'bʷ':'bʷ',
-    'bᵒ':'bʷ',
-    'm':'m',
-    'mʷ':'mʷ',
-    'mᵒ':'mʷ',
-    'p':'p',
-
+    "b": "b",
+    "bʷ": "bʷ",
+    "m": "m",
+    "mʷ": "mʷ",
+    "p": "p",
     # Labiodental
-    'f':'f',
+    "f": "f",
+    # Alveolar
+    "n": "n",
+    "s": "s",
+    "ṣ": "sˤ",
+    "z": "z",
+    "ẓ": "zˤ",
+    "t": "t",
+    "ṭ": "tˤ",
+    #'ţ':'t͡s',
+    "ţ": "ts",
+    "d": "d",
+    "ḍ": "dˤ",
+    #'z̧':'d͡z',
+    "z̧": "dz",
+    "l": "l",
+    "r": "r",
+    "ṛ": "rˤ",
+    #'ř':'ɺ',# between r and l, Rif Berber
+    # Post Alveolar
+    "c": "ʃ",
+    "č": "tʃ",
+    "j": "ʒ",
+    "ǧ": "dʒ",
+    # rif has some uncommon orthography:
+    #'ll':['ll','dʒ']
+    #'lt':['lt','tʃ']
+    # Palatal
+    # Velar
+    "g": "g",
+    "ɡʷ": "ɡʷ",
+    "k": "k",
+    "kʷ": "kʷ",
+    # Uvular
+    "x": "x",
+    "xʷ": "xʷ",
+    "ɣ": "ɣ",
+    "ɣʷ": "ɣʷ",
+    "ɣᵒ": "ɣʷ",
+    "q": "q",
+    "qʷ": "qʷ",
+    # Pharyngeal
+    "ḥ": "ħ",  # CONSENSUS 1,2,3
+    "ɛ": "ʕ",
+    # Glottal
+    "h": "h",
+    # clitics
+    "-": "-",
+}
 
+
+tif2lat = {
+    ### VOWELS AND GLIDES
+    # According to Phon[1-3] only a,u,i exist in the language (with sometimes an ə) that may or may not be written/pronounced
+    "ⴰ": "a",
+    "ⴻ": "e",
+    "ⵉ": "i",
+    "ⵓ": "u",
+    "ⵡ": "w",
+    "ⵢ": "y",
+    "ⵧ": "o",
+    # Bilabials
+    "ⴱ": "b",
+    "ⴱⵯ": "bʷ",
+    "ⵒ": "p",
+    "ⵎ": "m",
+    "ⵎⵯ": "mʷ",
+    # Labiodental
+    "ⴼ": "f",
     # Dental
     # Alveolar
-    'n':'n', # ŋ exists in Tuareg but in rif/kab/shi/tzm is an assimilation
-
-    's':'s',
-    'ṣ':'sˤ',
-    'z':'z',
-    'ẓ':'zˤ',
-
-    't':'t',
-    'ṭ':'tˤ',
-    #'ţ':'t͡s',
-    'ţ':'ts',
-    'd':'d',
-    'ḍ':'dˤ',
-    #'z̧':'d͡z',
-    'z̧':'dz',
-
-    'l':'l', 
-    'r':'r', 
-    'ṛ':'rˤ',
-    #'ř':'ɺ',# between r and l, Rif Berber
-
+    "ⵏ": "n",
+    "ⵙ": "s",
+    "ⵚ": "ṣ",
+    "ⵣ": "z",
+    "ⵥ": "ẓ",
+    "ⵜ": "t",
+    "ⵟ": "ṭ",
+    "ⴷ": "d",
+    "ⴹ": "ḍ",
+    "ⵍ": "l",
+    "ⵔ": "r",
+    "ⵕ": "ṛ",
+    "ⵜⵙ": "ţ",
+    "ⴷⵣ": "z̧",
     # Post Alveolar
-    'c':'ʃ',
-    'š':'ʃ', # rif
-    'ṣ̌':'ʃˤ', # rif
-    #'č':'t͡ʃ',
-    'č':'tʃ',#can be simple or double, same pronunciation
-    'čč':'tʃ',
-    'j':'ʒ',
-    #'dj':'d͡ʒ',
-    #'ǧ':'d͡ʒ',
-    'ǧ':'dʒ',#can be simple or double, same pronunciation
-    #'ǧǧ':'d͡ʒ',
-    'ǧǧ':'dʒ',
-
-    # rif has some uncommon orthography:
-    #'ll':['ll','dʒ'] 
-    #'lt':['lt','tʃ']
-    # Palatal 
-
-    # Velar 		
-    'g':'g',
-    'ɡʷ':'ɡʷ',
-    'ɡᵒ':'ɡʷ',
-    'k':'k',
-    'kʷ':'kʷ',
-    'kᵒ':'kʷ',
-
+    "ⵛ": "c",
+    "ⵞ": "č",  # tsh
+    "ⵊ": "j",
+    "ⴵ": "ǧ",  # dj
+    # Velar
+    "ⴳ": "g",
+    "ⴳⵯ": "ɡʷ",
+    "ⴽ": "k",
+    "ⴽⵯ": "kʷ",
     # Uvular
-    'x':'χ',
-    'xʷ':'χʷ',
-    'xᵒ':'χʷ',
-    'ɣ':'ʁ',
-    'ɣʷ':'ʁʷ',
-    'ɣᵒ':'ʁʷ',
-    'q':'q',
-    'qʷ':'qʷ',
-    'qᵒ':'qʷ',
- 
+    "ⵅ": "x",
+    "ⵅⵯ": "xʷ",
+    "ⵖ": "ɣ",
+    "ⵖⵯ": "ɣʷ",
+    "ⵇ": "q",
+    "ⵇⵯ": "qʷ",
     # Pharyngeal
-    'ḥ':'ħ',# CONSENSUS 1,2,3
-    'ɛ':'ʕ',
-    'â':'ʕ',
-
-    # Glottal 
-    'h':'h',
-    
-    #clitics
-    '-':'-',
+    "ⵃ": "ḥ",  # CONSENSUS 1,2,3
+    "ⵄ": "ɛ",  # SRC 1  CONFLICT!
+    # Glottal
+    "ⵀ": "h",
+    # clitics
+    "-": "-",
 }
 
-ipa2latin = { 
-    ### VOWELS AND GLIDES
-    'a':'a',
-    'ə':'e',
-    'i':'i',
-    'u':'u',
-    'w':'w',
-    'j':'y', 
+lat2tif = {}
 
-    # Bilabials
-    'b':'b',
-    'br':'bʷ',
-    'p':'p',
-    'm':'m',
-    'mʷ':'mʷ',
-
-    # Labiodental
-    'f':'f',
-
-    # Alveolar
-    'n':'n',
-
-    's':'s',
-    'sˤ':'ṣ',
-    'z':'z',
-    'zˤ':'ẓ',
-
-    't':'t',
-    'θ':'t',
-    'tˤ':'ṭ',
-    #'t͡s':'ţ',
-    'ts':'ţ',
-    'd':'d',
-    'ð':'d',
-    'dˤ':'ḍ',#had to add manually
-    'ðˤ':'ḍ',
-    #'d͡z':'z̧',
-    'dz':'z̧',
-
-    'l':'l', # or 'ɫ'
-    'r':'r', # or 'rˤ'
-    'rˤ':'ṛ',# 
-    'ɺ':'ř',# between r and l, Rif Berber
-    # according to "Syllables in Tashlhiyt Berber and in Moroccan Arabic"
-    # by FRANÇOIS DELL, MOHAMED ELMEDLAOUI
-    # r should be IPA ɾ or r depending on context
-
-    # Post Alveolar
-    'ʃ':'c',
-    #'t͡ʃ':'č',
-    'tʃ':'č',
-    'ʒ':'j',
-    #'d͡ʒ':'dj',
-    #'d͡ʒ':'ǧ',
-    'dʒ':'ǧ',
-    #'d͡ʒ':'ǧǧ',
-    'dʒ':'ǧǧ',
-
-    # Palatal 
-
-    # Velar 		
-    'g':'g',
-    'ɡʷ':'ɡʷ',
-    'k':'k',
-    'kʷ':'kʷ',
-
-    # Uvular
-    'χ':'x',
-    'χʷ':'xʷ',
-    'ʁ':'ɣ',
-    'ʁʷ':'ɣʷ',
-    'q':'q',# or 'qʷ' or 'ɢ'
-    'qʷ':'qʷ',
- 
-    # Pharyngeal
-    'ħ':'ḥ',# CONSENSUS 1,2,3
-    'ʕ':'ɛ',
-
-    # Glottal 
-    'h':'h',
-    
-    #clitics
-    '-':'-',
-
-    #'p':'p',#talpidzat
-}
-
-# Multiple allophones, adding every option from Phon[1-3] so the aligner can choose the best match.
-# Ignoring gemminates as of now
-
-# RIF vocalized r replacements: [Phon3] -> IGNORED
-# iɾ -> ɛa
-# uɾ -> ɔa
-# aɾ -> a/æ
-# iɾˤ-> ɪˤɑ
-# uɾˤ-> ʊˤa
-# aɾˤ-> ɑˤ
-
-# DENTALIZATION (e.g. n -> n̪) 
-# shi dentalizes 
-# tzm/rif dont 
-
-# LABIALIZATION: contrastive (according to Phon2)
-# rif: kʷ,gʷ
-# tzm: xʷ,ɣʷ,qʷ,χʷ,ʁʷ
-# shi: kʷ,gʷ,qʷ,χʷ,ʁʷ
-
-# PHARINGEALIZATION: contrastive (according to Phon2)
-# rif: dˤ,zˤ,rˤ,ʃˤ
-# tzm: tˤ,dˤ,sˤ,zˤ,lˤ,nˤ,rˤ
-# shi: tˤ,dˤ,sˤ,zˤ,lˤ,rˤ
-
-# SPIRANTIZATION: existing but non-contrastive
-# rif:  explicitly mentioned https://books.google.de/books?id=ZDxrzQEACAAJ&redir_esc=y
-#       both b and β have the same orthography
-
-# Generally a huge amount of vowel realizations due to Berber's limited vowel set
-# shi does not allow hiats, therefore : i->j/u->w/a->ʕ
-# conversely, between consonants: j->i/w->u
-# reference for this is: Syllables in Tashlhiyt Berber and in Moroccan Arabic
-# by FRANÇOIS DELL, MOHAMED ELMEDLAOUI
-
-# I used Phon[1-3] for each languages' specific realizations
-ipa2realization = {
-    ### VOWELS AND GLIDES
-    'e':['','ə','ɪ̈'],# transitional vocoid
-    # shi: ''  from wiki "a vowel may be heard"; meaning not always
-    # tzm: ɪ̈,ə
-    # rif: '' 
-
-    'a':['a','æ','ɐ','ʕ','ɑ','ɑˤ'],
-    # shi: a,æ,ɐ,ʕ 
-    # tzm: æ,ɐ,ɑ
-    # rif: a,æ,ɑˤ (ɑˤ in vicinity of pharyngealized cons.)
+for k in tif2lat:
+    lat2tif[tif2lat[k]] = k
 
 
-    'i':['i','ɪ','j','ɨ','e','ɪj','ɪˤ'],
-    # shi: i,ɪ,j 
-    # tzm: i,ɨ,ɪ,e,ɪj (ɪj as absolute end)
-    # rif: i,ɪ,ɪˤ (ɪˤ in vicinity of pharyngealized cons.)
-
-    'u':['u','ɤ','w','ʊ','o','ʊw','ʊˤ'],
-    # shi: u,ɤ,w,ʊ
-    # tzm: u,ʊ,o,ʊw  (ʊw as absolute end)
-    # rif: u,ʊ,ʊˤ (ʊˤ in vicinity of pharyngealized cons.)
-
-    'j':['j','i','ʝ'],
-    # shi: j,i (i between consonants)
-    # tzm: j
-    # rif: j,ʝ (ʝ in central rifian is j)
-
-    'w':['w','u'],
-    # shi: w,u (u between consonants)
-    # tzm: w
-    # rif: w
-
-
-    # Bilabials
-    'b':['b','β'], 
-    'bʷ':['bʷ','βʷ'],
-    # shi: bʷ occurs sporadically in loandwords
-    # tzm: b spirantizes to β
-
-    'p':['p','pˤ'],# 
-    # shi: p occurs sporadically in loandwords
-    # tzm: p explicitly lacking
-    # rif: p may be pharyngealized(as a result of spreading)
-
-    'm':'m',
-    'mʷ':'mʷ', #non-existant in shi/tzm/rif
-
-    # Labiodental
-    'f':'f',
-
-    # Alveolar
-    'n':['n','nˤ','n̪','ŋ'],
-    # shi: n̪
-    # tzm: n,nˤ
-    # rif: n,ŋ assimilation exclusively before /w/
-
-    # CONSONANT SET: t,d,s,z,l,r
-    # all: have a contrastive pharyngealized equivalent (s-sˤ)
-    # shi: t,d,s,z,l,r are dental t̪,d̪,s̪,z̪,l̪,r̪
-    # tzm/rif: t,d,s,z,l,r are alveolar
-
-    's':['s','s̪'],
-    'sˤ':['sˤ','s̪ˤ'],
-    'z':['z','z̪'],
-    'zˤ':['zˤ','z̪ˤ'],
-
-    't':['t','θ','tʰ','t̪'],
-    'tˤ':['tˤ','θˤ','t̪ˤ','θˤ'],
-    # tzm: t spirantizes to θ
-    #'t͡s':'t͡s',
-    'ts':'ts',
-    'd':['d','ð','d̪'],
-    'dˤ':['dˤ','ðˤ','d̪ˤ'],
-    # tzm: d spirantizes to ð
-    #'d͡z':'d͡z',
-    'dz':'dz',
-
-    'l':'l',
-    'r':['r','r̪','ɾ','ɾ̪'],
-    # shi: r̪,ɾ̪
-    # tzm: r,ɾ
-    # rif: r,ɾ
-    'rˤ':['rˤ','r̪ˤ'],
-    #'ɺ':'ɺ',# Rif Berber only, written ř
-    # "Syllables in Tashlhiyt Berber and in Moroccan Arabic"by FRANÇOIS DELL, MOHAMED ELMEDLAOUI
-    # r should be IPA ɾ or r depending on context
-
-    # Post Alveolar
-    'ʃ':['ʃ','ʃˤ'],
-    # rif:  ʃ may be pharyngealized ʃˤ(as a result of spreading)
-    #       /ç/ has mostly become /ʃ/ in Central Riffian 
-    #       Note: I see no explicit writing of /ç/, so I presume it
-    #       uses the same orthography c.
-
-    #'t͡ʃ':'t͡ʃ',
-    'tʃ':'tʃ',
-    'ʒ':'ʒ',
-    #'d͡ʒ':'d͡ʒ',
-    'dʒ':'dʒ',
-    # Palatal 
-
-    # Velar 		
-    'g':'g',
-    'ɡʷ':'ɡʷ',
-    'k':'k',
-    'kʷ':'kʷ',
-    # ASK AREA EXPERT
-    # shi/rif: have labialized g/k
-    # tzm: does not have labialized g/k
-
-    # Uvular
-    # shi:  clearly contrasts χʷ/χ and ʁʷ/ʁ
-    # tzm:  /χʷ/ and /ʁʷ/ rare(native speakers can freely substitute /χʁ/), however labialization is supposedly contrastive
-    #       x/ɣ can be a realization of k/g in specific dialect
-    # rif: no labialization; x,ɣ orthography should be x,ɣ (which is equivalent to χ,ʁ); ɣ gemminate is ʁ;
-    'χ':['χ','x'],
-    'χʷ':['χʷ','xʷ'],
-    'ʁ':['ʁ','ɣ'],
-    'ʁʷ':['ʁʷ','ɣʷ'],
-
-    'q':'q',
-    'qʷ':'qʷ',
-    # rif: qʷ is not mentioned
- 
-    # Pharyngeal
-    'ħ':['ʜ','ħ'],# CONSENSUS 1,2,3
-    # shi: ʜ
-    # tzm,rif: ħ
-    'ʕ':['ʢ','ʕ'],
-    # shi: ʢ
-    # tzm,rif: ʕ
-
-    # Glottal 
-    'h':['h','ɦ'],
-    # shi,rif: ɦ
-    # tzm: h
-    
-    #clitics
-    '-':'-',
-
-}
-
-
-# Any->IPA == always unambiguous transliteration
-# IPA->Any == may have multiple transliterations
-def transliterate(text,my_dict):
-    trans = [[]] # list will all possible transliterations
+def transliterate(text, my_dict):
+    trans = [[]]  # list will all possible transliterations
     i = 0
-    while i< len(text):
+    while i < len(text):
         # Find out character-matching in our dicts
-        k = text[i] 
+        k = text[i]
         ## check for 2-character phones
-        if i+1 < len(text) and ''.join([text[i],text[i+1]]) in my_dict:
-            k = ''.join([text[i],text[i+1]])
+        if i + 1 < len(text) and "".join([text[i], text[i + 1]]) in my_dict:
+            k = "".join([text[i], text[i + 1]])
             i += 1
 
         # Update our transliterations
-        if type(my_dict[k]) == type(['a','b']):
+        if type(my_dict[k]) == type(["a", "b"]):
             # a fork in transliteration
-            new_trans = [] 
+            new_trans = []
             for t in trans:
                 for val in my_dict[k]:
                     new_trans.append(t + [val])
             trans = new_trans
         else:
-            trans = [t+[my_dict[k]] for t in trans]
+            trans = [t + [my_dict[k]] for t in trans]
 
         i += 1
     return trans
 
 
+def standardize(text, std_dict):
+    out = text
+    for k in std_dict:
+        out = out.replace(k, std_dict[k])
+    return out
+
+
 def main():
     data = utils.load_datasets_zgh()
-    cur =  concatenate_datasets([data['common_voice_22_0'],data['moroccan_amazigh_asr']])
-
-    dicts = {}
-    dicts['all2ipa'] = {}
-    # We want to collect the totality of words that exist, 
-    # and do so to create an IPA->IPA pronunciation dictionary
+    cur = concatenate_datasets(
+        [data["common_voice_22_0"], data["moroccan_amazigh_asr"]]
+    )
     vocab = {}
-
     for row in cur:
-        row['text']= row['text'].replace('[]-','')
-        words = re.sub(r"[?.,!\":;\'\t\*\n]",'', row['text']).lower().split(' ')
+        row["text"] = row["text"].replace("[]-", "")
+        words = re.sub(r"[?.,!\":;\'\t\*\n]", "", row["text"]).lower().split(" ")
         for w in words:
-            #if bool(re.search(r'(\d+|%|p|o|_|v|\(|\)|σ|\[|\])',w)) or len(w)== 0 or w=='-':
-            if bool(re.search(r'(\d+|%|o|_|v|\(|\)|σ|\[|\])',w)) or len(w)== 0 or w=='-':
-                continue
-                #assert(False)
-            if 'common_voice_22_0' == row['origin']:
-                trans = transliterate(w,tifinagh2ipa)
+            if (
+                bool(re.search(r"(\d+|%|o|_|v|\(|\)|σ|\[|\])", w))
+                or len(w) == 0
+                or w == "-"
+            ):
+                continue  # skip ambiguous pronunciation cases
+            if "common_voice_22_0" == row["origin"]:
+                w_std_tif = standardize(w, std_tif)
+                w_std_lat = ''.join(transliterate(w_std_tif, tif2lat)[0])
+                trans = transliterate(w_std_tif, tif2ipa)
             else:
-                trans = transliterate(w,latin2ipa)
-            for t in trans:
-                w_trans = ''.join(t)
-                vocab[w_trans] = ' '.join(t)
-                dicts['all2ipa'][w]= ' '.join(w_trans)
+                w_std_lat = standardize(w, std_lat)
+                w_std_tif = ''.join(transliterate(w_std_lat, lat2tif)[0])
+                trans = transliterate(w_std_lat, lat2ipa)
+            for t in trans:  # e may be 'ə',''
+                vocab[w] = " ".join(t)
+                vocab[w_std_tif] = " ".join(t)
+                vocab[w_std_lat] = " ".join(t)
 
-    # we make sure every word in our vocabulary is written in 
-    # all the possible ways
-    for w in vocab:
-        for d in [ipa2latin,ipa2tifinagh]:
-            trans = transliterate(w,d)
-            for t in trans:
-                dicts['all2ipa'][''.join(t)] = w
-    
-    # Now we want to write every realization of every 
-    # word in our vocab
-    vocab_realization = {}
-    for w in vocab:
-        trans = transliterate(w,ipa2realization)
-        for t in trans:
-            vocab_realization[w]=' '.join(t)
-
-
-
-
-    print('-' *15)
-    print('SAVING DICTS')
-    print('-' *15)
+    print("-" * 15)
+    print("SAVING DICTS")
+    print("-" * 15)
     cur_path = utils.get_curr_folder()
-    #del vocab['']
-    # Write ipa-to-else dicts
-    for d in dicts:
-        filename = os.path.join(cur_path,'dicts',f'zgh_{d}.dict')
-        with open(filename,'w') as f:
-            f.write('<unk>\tspn\n')
-            for key in dicts[d]:
-                f.write(f'{key}\t{dicts[d][key]}\n')
-            f.close()
-    # Write ipa-to-ipa dict
-    with open(os.path.join(cur_path,'dicts','zgh_vocab.dict'),'w') as f:
-        f.write('<unk>\tspn\n')
-        for w in vocab_realization:
-            f.write(f'{w}\t{vocab[w]}\n')
+    # Write all-spelling to ipa dict
+    with open(os.path.join(cur_path, "dicts", "zgh_vocab.dict"), "w") as f:
+        f.write("<unk>\tspn\n")
+        for w in vocab:
+            f.write(f"{w}\t{vocab[w]}\n")
         f.close()
 
 
 if __name__ == "__main__":
     main()
-
