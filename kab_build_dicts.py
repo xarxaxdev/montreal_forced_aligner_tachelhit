@@ -1,344 +1,289 @@
-from datasets import concatenate_datasets #using huggingface's API
+from datasets import Audio, concatenate_datasets  # using huggingface's API
 import utils
 import re
-import os 
+import os
 from pathlib import Path
- 
+import sys
+
+"""
+# (SRC 1) https://en.wikipedia.org/wiki/Tifinagh#Neo-Tifinagh_letters
+# (SRC 2) https://en.wiktionary.org/wiki/Module:Tfng-translit
+# (SRC 3) https://www.mdpi.com/2078-2489/16/7/600
+# (SRC 4) https://ieeexplore.ieee.org/abstract/document/8284715
+# (SRC 5) https://commons.wikimedia.org/wiki/Tifinagh
+# (SRC 6) https://en.wikipedia.org/wiki/Berber_Latin_alphabet (for specific berber variants)
+# (SRC 7) https://aclanthology.org/2021.icnlsp-1.3.pdf #Paper on kabyle transliteration
+"
+
+Transliteration relevant links:
+- (Phon1) https://en.wikipedia.org/wiki/Shilha_language#Phonology
+- (Phon2) https://en.wikipedia.org/wiki/Central_Atlas_Tamazight#Phonology
+- (Phon3) https://en.wikipedia.org/wiki/Tarifit#Phonology (An Introduction To Tarifiyt Berber)
+- (Phon4) https://en.wikipedia.org/wiki/Kabyle_language#Phonology
+
+Note that:
+- shi & tzm are similar
+- rif & kab are similar
+Therefore for {language_iso}_all2ipa.dict I will be prioriziting shi/tzm, then use rif as a tierbreaker, then use kab as a tierbreaker.
+{language_iso}_vocab.dict will include all allophones.
+
+"""
+
+
+"""
+CONSIDER TODO
+Other word sources:
+https://universeofmemory.com/tashelhit-language-resources/
+https://en.wiktionary.org/w/index.php?title=Category:Tashelhit_lemmas&pageuntil=IGIDR%0Aigidr#mw-pages
+https://www.livelingua.com/peace-corps/Tashelhit/tashelhit-dictionary-2011.pdf
+https://friendsofmorocco.org/Docs/Tashlheet/tashlheettextbook2011.pdf
+# 4000 WORDS
+https://friendsofmorocco.org/Docs/Dict/Tamazizght%20T-E.htm
+# 22k SENTENCES
+https://tatoeba.org/en/downloads
+https://downloads.tatoeba.org/exports/per_language/shi/shi_sentences.tsv.bz2
+# Wikipedia - Nuclear option; 14k pages however major cleanup needed
+https://shi.wikipedia.org/wiki/Tasna_Tamzwarut
+https://dumps.wikimedia.org/other/mediawiki_content_current/shiwiki/2026-02-01/xml/bzip2/
+https://medium.com/@evan.frank/accessing-and-cleaning-bulk-wikipedia-text-data-bfde3b550474
+"""
 
 
 
-# https://en.wikipedia.org/wiki/Kabyle_language#Phonology
-latin2ipadict = { 
+"""
+Neo-Tifinagh: https://en.wikipedia.org/wiki/Tifinagh#Neo-Tifinagh_letters
+
+Many Tifinagh symbols are uncommon/not officially recognized by IRCAM. Roughly speaking the 33 symbols are the ones that should be used for almost all Tamazight; whereas the extended cover language edge cases:
+- ⵁ is just an alternative writing for ⵀ
+- /o/(ⵧ) is for the Tuareg dialect, it is a variant of /u/(ⵓ).
+- /p/(ⵒ) and /v/(ⵠ)  are  intended for foreign words. I will leave them in-code (for completion's sake), but sentences with foreign words will be skipped due to their more volatile pronunciation.
+- /β/(ⴲ) /ʝ/(ⴴ) /ð/(ⴸ, from SRC 2) /ðˤ/(ⴺ) /θ/(ⵝ) /x/(ⴿ) are just specific aspirantizations of existing phonemes. These are sometimes used when the writer wants to emphasize some pronunciation in the specific dialect, but not the standard. I will transform them to their specific unaspired consonant(/β/->/b/,/ʝ/->/g/,/ð/->/d/,/ðˤ/->/dˤ/,/θ/->/t/,/x/->/k/)
+- /tʃ/(ⵞ) /dʒ/(ⴵ) are equivalent to ⵜⵛ and ⴷⵊ respectively; and are interchangeable. I will handle this as a phonological rule.
+
+Note: 
+- shi is in particular non-spirantizing (https://www.internationalphoneticassociation.org/icphs-proceedings/ICPhS1999/papers/p14_0603.pdf) but supposedly some dialects in it do spirantize (https://www.cambridge.org/core/journals/journal-of-the-international-phonetic-association/article/tashlhiyt-berber/D5C8F16C425A89314D833DDE0ACF83D4)
+
+"""
+
+std_lat = {
+    "bᵒ": "bʷ",
+    "mᵒ": "mʷ",
+    "š": "c",  # rif # Arbitrary choice, both c/š are used interchangeably
+    "ṣ̌": "c",  # rif
+    "ɡᵒ": "ɡʷ",
+    "kᵒ": "kʷ",
+    "xᵒ": "xʷ",
+    "qᵒ": "qʷ",
+    "â": "ɛ",
+}
+
+# Used to generate cross-script dictionary for zgh
+# https://en.wikipedia.org/wiki/Berber_Latin_alphabet
+# and IRCAM Tifinagh~latina alphabet equivalence
+lat2ipa = {
     ### VOWELS AND GLIDES
-    # vowel allophones depend on surrounding consonants
-    'a':'a',# 'æ' is an allophone
-    'e':'ə',
-    #https://en.wikipedia.org/wiki/Berber_Latin_alphabet#Souss-Berber_local_usage
-    'i':'i',# 'ɪ' is an allophone
-    'u':'u',# 'ʊ' is an allophone
-    'w':'w',
-    'y':'j', # and 'j':'ʒ'
-
+    "a": "a",
+    "e": ["", "ə"],
+    "i": "i",
+    "u": "u",
+    "w": "w",
+    "y": "j",
     # Bilabials
-    'b':'b',# 'bʷ' is an allophone
-    'm':'m',
-
+    "b": "b",
+    "bʷ": "bʷ",
+    "m": "m",
+    "p": "p",
     # Labiodental
-    'f':'f',
+    "f": "f",
+    # Alveolar
+    "n": "n",
+    "s": "s",
+    "ṣ": "sˤ",
+    "z": "z",
+    "ẓ": "zˤ",
+    "t": "t",
+    "ṭ": "tˤ",
+    #'ţ':'t͡s',
+    "ţ": "ts",
+    "d": "d",
+    "ḍ": "dˤ",
+    #'z̧':'d͡z',
+    "z̧": "dz",
+    "l": "l",
+    "r": "r",
+    "ṛ": "rˤ",
+    #'ř':'ɺ',# between r and l, Rif Berber
+    # Post Alveolar
+    "c": "ʃ",
+    "č": "tʃ",
+    "j": "ʒ",
+    "ǧ": "dʒ",
+    # rif has some uncommon orthography:
+    #'ll':['ll','dʒ']
+    #'lt':['lt','tʃ']
+    # Palatal
+    # Velar
+    "g": "g",
+    "ɡʷ": "ɡʷ",
+    "k": "k",
+    "kʷ": "kʷ",
+    # Uvular
+    "x": "x",
+    "xʷ": "xʷ",
+    "ɣ": "ɣ",
+    "ɣʷ": "ɣʷ",
+    "ɣᵒ": "ɣʷ",
+    "q": "q",
+    "qʷ": "qʷ",
+    # Pharyngeal
+    "ḥ": "ħ",  # CONSENSUS 1,2,3
+    "ɛ": "ʕ",
+    # Glottal
+    "h": "h",
+    # clitics
+    "-": "-",
+}
 
+
+tif2lat = {
+    ### VOWELS AND GLIDES
+    # According to Phon[1-3] only a,u,i exist in the language (with sometimes an ə) that may or may not be written/pronounced
+    "ⴰ": "a",
+    "ⴻ": "e",
+    "ⵉ": "i",
+    "ⵓ": "u",
+    "ⵡ": "w",
+    "ⵢ": "y",
+    "ⵧ": "o",
+    # Bilabials
+    "ⴱ": "b",
+    "ⴱⵯ": "bʷ",
+    "ⵒ": "p",
+    "ⵎ": "m",
+    "ⵎⵯ": "mʷ",
+    # Labiodental
+    "ⴼ": "f",
     # Dental
-    't':'θ',
-
     # Alveolar
-    'n':'n',
-
-    's':'s',
-    'ṣ':'sˤ',
-    'z':'z',
-    'ẓ':'zˤ',
-
-    't':'t̪',
-    'ṭ':'tˤ',
-    'ţ':'t͡s',
-    'tt':'t͡s',
-    'd':'d̪',# or 'ð' 
-    'ḍ':'ðˤ',
-    'z':'z',
-    'ẓ':'zˤ',
-    'zz':'d͡z',
-
-    'l':'l', # 'lˤ' is an allophone
-    'r':'r', 
-    'ṛ':'rˤ',# 
-
+    "ⵏ": "n",
+    "ⵙ": "s",
+    "ⵚ": "ṣ",
+    "ⵣ": "z",
+    "ⵥ": "ẓ",
+    "ⵜ": "t",
+    "ⵟ": "ṭ",
+    "ⴷ": "d",
+    "ⴹ": "ḍ",
+    "ⵍ": "l",
+    "ⵔ": "r",
+    "ⵕ": "ṛ",
+    "ⵜⵙ": "ţ",
+    "ⴷⵣ": "z̧",
     # Post Alveolar
-    'c':'ʃ', # or 'ʃˤ'
-    'č':'t͡ʃ',
-    'j':'ʒ',# or 'ʒˤ'
-    'dj':'d͡ʒ',
-    'ġ':'ɣ',
-    'Γ':'ɣ',
-    'γ':'ɣ',
-    'ǧ':'d͡ʒ',
-    'ǧǧ':'d͡ʒ',
-
-    # Palatal 
-
-    # Velar 		
-    'ɣ':'ɣ',
-    'g':'g',# or 'ʝ','ʝᶣ','ɡʷ'
-    'k':'k',# or 'ç','çᶣ','çʷ'
-
+    "ⵛ": "c",
+    "ⵞ": "č",  # tsh
+    "ⵊ": "j",
+    "ⴵ": "ǧ",  # dj
+    # Velar
+    "ⴳ": "g",
+    "ⴳⵯ": "ɡʷ",
+    "ⴽ": "k",
+    "ⴽⵯ": "kʷ",
     # Uvular
-    'x':'χ',# or 'χʷ' 
-    'ɣ':'ʁ',# or 'ʁʷ'
-    'q':'q',# or 'qʷ' or 'ɢ'
- 
+    "ⵅ": "x",
+    "ⵅⵯ": "xʷ",
+    "ⵖ": "ɣ",
+    "ⵖⵯ": "ɣʷ",
+    "ⵇ": "q",
+    "ⵇⵯ": "qʷ",
     # Pharyngeal
-    'ḥ':'ħ',
-    'ɛ':'ʕ',#  Multiple unicode values for this symbol
-    'ε':'ʕ',
-    'ԑ':'ʕ',
-    'Σ':'ʕ',# https://en.wikipedia.org/wiki/Berber_Latin_alphabet#Kabyle-Berber_local_usages
-    'â':'ʕ',# https://en.wikipedia.org/wiki/Berber_Latin_alphabet#Kabyle-Berber_local_usages
-
-    # Glottal 
-    'h':'h',
-
-    # clitic:
-    '-':'-',
-    '‑':'-',
-    'ḅ':'bʷ', #not standard, but in dataset
-
-
-    
+    "ⵃ": "ḥ",  # CONSENSUS 1,2,3
+    "ⵄ": "ɛ",  # SRC 1  CONFLICT!
+    # Glottal
+    "ⵀ": "h",
+    # clitics
+    "-": "-",
 }
 
+lat2tif = {}
 
-#https://nantes-universite.hal.science/hal-03682791/document
-
-exceptions = {
-    'firefox':'fairfoks',
-    'tom':'tom',
-    'lpizza':'lpid͡za',
-    'purtugal':'purtugal',
-    'paris':'paris',
-    'york':'jork',
-    'boston':'boston',
-    'shakespeare':'ʃeikspir',
-    'facebook':'feisbuk',
-    'jackson':'d͡ʒakson',
-    'tokyo':'tokjo'
-}
-
-ipa2realization = {
-    ### VOWELS AND GLIDES
-    'e':['','ə'],
-    'a':['a','æ'],
-    'i':['i','ɪ','j','ɨ','e','ɪj','ɪˤ'],
-    # shi: i,ɪ,j 
-    # tzm: i,ɨ,ɪ,e,ɪj (ɪj as absolute end)
-    # rif: i,ɪ,ɪˤ (ɪˤ in vicinity of pharyngealized cons.)
-
-    'u':['u','ɤ','w','ʊ','o','ʊw','ʊˤ'],
-    # shi: u,ɤ,w,ʊ
-    # tzm: u,ʊ,o,ʊw  (ʊw as absolute end)
-    # rif: u,ʊ,ʊˤ (ʊˤ in vicinity of pharyngealized cons.)
-
-    'j':['j','i','ʝ'],
-    # shi: j,i (i between consonants)
-    # tzm: j
-    # rif: j,ʝ (ʝ in central rifian is j)
-
-    'w':['w','u'],
-    # shi: w,u (u between consonants)
-    # tzm: w
-    # rif: w
+for k in tif2lat:
+    lat2tif[tif2lat[k]] = k
 
 
-    # Bilabials
-    'b':['b','β'], 
-    'bʷ':['bʷ','βʷ'],
-    # shi: bʷ occurs sporadically in loandwords
-    # tzm: b spirantizes to β
-
-    'p':['p','pˤ'],# 
-    # shi: p occurs sporadically in loandwords
-    # tzm: p explicitly lacking
-    # rif: p may be pharyngealized(as a result of spreading)
-
-    'm':'m',
-    'mʷ':'mʷ', #non-existant in shi/tzm/rif
-
-    # Labiodental
-    'f':'f',
-
-    # Alveolar
-    'n':['n','nˤ','n̪','ŋ'],
-    # shi: n̪
-    # tzm: n,nˤ
-    # rif: n,ŋ assimilation exclusively before /w/
-
-    # CONSONANT SET: t,d,s,z,l,r
-    # all: have a contrastive pharyngealized equivalent (s-sˤ)
-    # shi: t,d,s,z,l,r are dental t̪,d̪,s̪,z̪,l̪,r̪
-    # tzm/rif: t,d,s,z,l,r are alveolar
-
-    's':['s','s̪'],
-    'sˤ':['sˤ','s̪ˤ'],
-    'z':['z','z̪'],
-    'zˤ':['zˤ','z̪ˤ'],
-
-    't':['t','θ','tʰ','t̪'],
-    'tˤ':['tˤ','θˤ','t̪ˤ','θˤ'],
-    # tzm: t spirantizes to θ
-    #'t͡s':'t͡s',
-    'ts':'ts',
-    'd':['d','ð','d̪'],
-    'dˤ':['dˤ','ðˤ','d̪ˤ'],
-    # tzm: d spirantizes to ð
-    #'d͡z':'d͡z',
-    'dz':'dz',
-
-    'l':'l',
-    'r':['r','r̪','ɾ','ɾ̪'],
-    # shi: r̪,ɾ̪
-    # tzm: r,ɾ
-    # rif: r,ɾ
-    'rˤ':['rˤ','r̪ˤ'],
-    #'ɺ':'ɺ',# Rif Berber only, written ř
-    # "Syllables in Tashlhiyt Berber and in Moroccan Arabic"by FRANÇOIS DELL, MOHAMED ELMEDLAOUI
-    # r should be IPA ɾ or r depending on context
-
-    # Post Alveolar
-    'ʃ':['ʃ','ʃˤ'],
-    # rif:  ʃ may be pharyngealized ʃˤ(as a result of spreading)
-    #       /ç/ has mostly become /ʃ/ in Central Riffian 
-    #       Note: I see no explicit writing of /ç/, so I presume it
-    #       uses the same orthography c.
-
-    #'t͡ʃ':'t͡ʃ',
-    'tʃ':'tʃ',
-    'ʒ':'ʒ',
-    #'d͡ʒ':'d͡ʒ',
-    'dʒ':'dʒ',
-    # Palatal 
-
-    # Velar 		
-    'g':'g',
-    'ɡʷ':'ɡʷ',
-    'k':'k',
-    'kʷ':'kʷ',
-    # ASK AREA EXPERT
-    # shi/rif: have labialized g/k
-    # tzm: does not have labialized g/k
-
-    # Uvular
-    # shi:  clearly contrasts χʷ/χ and ʁʷ/ʁ
-    # tzm:  /χʷ/ and /ʁʷ/ rare(native speakers can freely substitute /χʁ/), however labialization is supposedly contrastive
-    #       x/ɣ can be a realization of k/g in specific dialect
-    # rif: no labialization; x,ɣ orthography should be x,ɣ (which is equivalent to χ,ʁ); ɣ gemminate is ʁ;
-    'χ':['χ','x'],
-    'χʷ':['χʷ','xʷ'],
-    'ʁ':['ʁ','ɣ'],
-    'ʁʷ':['ʁʷ','ɣʷ'],
-
-    'q':'q',
-    'qʷ':'qʷ',
-    # rif: qʷ is not mentioned
- 
-    # Pharyngeal
-    'ħ':['ʜ','ħ'],# CONSENSUS 1,2,3
-    # shi: ʜ
-    # tzm,rif: ħ
-    'ʕ':['ʢ','ʕ'],
-    # shi: ʢ
-    # tzm,rif: ʕ
-
-    # Glottal 
-    'h':['h','ɦ'],
-    # shi,rif: ɦ
-    # tzm: h
-    
-    #clitics
-    '-':'-',
-
-}
-
-
-
-# Any->IPA == always unambiguous transliteration
-# IPA->Any == may have multiple transliterations
-def transliterate(text,my_dict):
-    trans = [[]] # list will all possible transliterations
+def transliterate(text, my_dict):
+    trans = [[]]  # list will all possible transliterations
     i = 0
-    while i< len(text):
+    while i < len(text):
         # Find out character-matching in our dicts
-        k = text[i] 
+        k = text[i]
         ## check for 2-character phones
-        if i+1 < len(text) and ''.join([text[i],text[i+1]]) in my_dict:
-            k = ''.join([text[i],text[i+1]])
+        if i + 1 < len(text) and "".join([text[i], text[i + 1]]) in my_dict:
+            k = "".join([text[i], text[i + 1]])
             i += 1
 
         # Update our transliterations
-        if type(my_dict[k]) == type(['a','b']):
+        if type(my_dict[k]) == type(["a", "b"]):
             # a fork in transliteration
-            new_trans = [] 
+            new_trans = []
             for t in trans:
                 for val in my_dict[k]:
                     new_trans.append(t + [val])
             trans = new_trans
         else:
-            trans = [t+[my_dict[k]] for t in trans]
+            trans = [t + [my_dict[k]] for t in trans]
 
         i += 1
     return trans
 
 
+def standardize(text, std_dict):
+    out = text
+    for k in std_dict:
+        out = out.replace(k, std_dict[k])
+    return out
+
 
 def main():
-    # Careful, this nukes previously generated daaset
-    utils.prepare_project_structure()
-    data = utils.load_datasets_kab()
-    #for i in data:
-        #print(f'i:{i}, data[i]:{data[i]}')
-    cur =  concatenate_datasets([data['common_voice_22_0'],data['kabyle_asr']])
-    # we want the dictionary in both directions:
-    # tifinagh2ipa: to transcribe our datasets
-    # ipa2tifinagh: to take note of homophones
-
-    dicts = {}
-    dicts['latin2ipa'] = {}
-    dicts['ipa2latin'] = {}
-
-    vocab = {}# a set is more fitting, but lists do not have a builtin way to get hashed for sets.
-    i_row=0
-    #TODO:
-    # Make this parallel (not high priority, still takes under a min)
+    data = utils.load_datasets_zgh()
+    cur = concatenate_datasets(
+        [data["common_voice_22_0"], data["moroccan_amazigh_asr"]]
+    )
+    vocab = {}
     for row in cur:
-        #print(f'row={i_row}' )
-        i_row+=1
-        #if i_row < 20000:
-            #pass
-            #continue
-        text = row['text'].lower()
-        words = re.sub(r"[?.,!\":«»;\'\t\*]",'', text).split(' ')
+        row["text"] = row["text"].replace("[]-", "")
+        words = re.sub(r"[?.,!\":;\'\t\*\n]", "", row["text"]).lower().split(" ")
         for w in words:
-            if bool(re.search(r'(\d+|%|p|o|_|v|\(|\)|σ)',w)):
-                continue
-            orig,trans = latin2ipa(w)
-            w_trans = ''.join(trans)
-            # Standard Pronunciation dictionary format
-            vocab[w_trans] = ' '.join(trans)
-            dicts['latin2ipa'][w]= ' '.join(w_trans)
-            # We keep this as a safety check, so the format is designed for that
-            if not w_trans in dicts['ipa2latin']:
-                dicts['ipa2latin'][w_trans] = [w]
-            # homophone check
-            elif not (w in dicts['ipa2latin'][w_trans]):
-                dicts['ipa2latin'][w_trans].append(w)
+            if (
+                bool(re.search(r"(\d+|%|o|_|v|\(|\)|σ|\[|\])", w))
+                or len(w) == 0
+                or w == "-"
+            ):
+                continue  # skip ambiguous pronunciation cases
+            if "common_voice_22_0" == row["origin"]:
+                w_std_tif = standardize(w, std_tif)
+                w_std_lat = ''.join(transliterate(w_std_tif, tif2lat)[0])
+                trans = transliterate(w_std_tif, tif2ipa)
+            else:
+                w_std_lat = standardize(w, std_lat)
+                w_std_tif = ''.join(transliterate(w_std_lat, lat2tif)[0])
+                trans = transliterate(w_std_lat, lat2ipa)
+            for t in trans:  # e may be 'ə',''
+                vocab[w] = " ".join(t)
+                vocab[w_std_tif] = " ".join(t)
+                vocab[w_std_lat] = " ".join(t)
 
-    print('-' *15)
-    print('SAVING DICTS')
-    print('-' *15)
+    print("-" * 15)
+    print("SAVING DICTS")
+    print("-" * 15)
     cur_path = utils.get_curr_folder()
-    #del vocab['']
-    # Write ipa-to-else dicts
-    for d in dicts:
-        filename = os.path.join(cur_path,'dicts',f'kab_{d}.dict')
-        with open(filename,'w') as f:
-            f.write('<unk>\tspn\n')
-            for key in dicts[d]:
-                f.write(f'{key}\t{dicts[d][key]}\n')
-            f.close()
-    # Write ipa-to-ipa dict
-    with open(os.path.join(cur_path,'dicts','kab_vocab.dict'),'w') as f:
-        f.write('<unk>\tspn\n')
+    # Write all-spelling to ipa dict
+    with open(os.path.join(cur_path, "dicts", "zgh_vocab.dict"), "w") as f:
+        f.write("<unk>\tspn\n")
         for w in vocab:
-            f.write(f'{w}\t{vocab[w]}\n')
+            f.write(f"{w}\t{vocab[w]}\n")
         f.close()
 
 
 if __name__ == "__main__":
     main()
-

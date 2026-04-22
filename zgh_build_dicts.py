@@ -6,11 +6,14 @@ from pathlib import Path
 import sys
 
 """
-In this script, 2 types of dictionary are created:
-1. {language_iso}_all2ipa.dict: creates Tifinagh->IPA and Latinscript-> IPA entries for later transforming our base dataset into usable textgrids. Each IPA word only appears once per writing system(no multiple realizations).
-
-2. {language_iso}_vocab.dict: creates IPA-> IPA entries, allowing for multiple realizations of a word.
-
+# (SRC 1) https://en.wikipedia.org/wiki/Tifinagh#Neo-Tifinagh_letters
+# Which is the correct writing according to: https://en.wikipedia.org/wiki/Shilha_language#Writing_systems
+# (SRC 2) https://en.wiktionary.org/wiki/Module:Tfng-translit
+# (SRC 3) https://www.mdpi.com/2078-2489/16/7/600
+# (SRC 4) https://ieeexplore.ieee.org/abstract/document/8284715
+# (SRC 5) https://commons.wikimedia.org/wiki/Tifinagh
+# (SRC 6)  https://en.wikipedia.org/wiki/Berber_Latin_alphabet (for specific berber variants)
+"
 
 Transliteration relevant links:
 - (Phon1) https://en.wikipedia.org/wiki/Shilha_language#Phonology
@@ -46,29 +49,20 @@ https://medium.com/@evan.frank/accessing-and-cleaning-bulk-wikipedia-text-data-b
 """
 
 
-"""
-# (SRC 1) https://en.wikipedia.org/wiki/Tifinagh#Neo-Tifinagh_letters
-# Which is the correct writing according to: https://en.wikipedia.org/wiki/Shilha_language#Writing_systems
-# (SRC 2) https://en.wiktionary.org/wiki/Module:Tfng-translit
-# (SRC 3) https://www.mdpi.com/2078-2489/16/7/600
-# (SRC 4) https://ieeexplore.ieee.org/abstract/document/8284715
-# (SRC 5) https://commons.wikimedia.org/wiki/Tifinagh
-# (SRC 6)  https://en.wikipedia.org/wiki/Berber_Latin_alphabet (for specific berber variants)
-"""
 
 """
- Many Tifinagh symbols are uncommon/not officially recognized by IRCAM:
-- Some are for foreign phonemes (v,o) and I will leave for the sake of completion (but will not be used as training).
-- Some are just specific realizations of existing phonemes(e.g. ⴲ is β). I will transform them to their specific realization (so long they are not in the corpus common_voice_22_0/zgh) for the sake of completion.
-- In case a symbol is in common_voice_22_0 I will consider it a standard symbol and adjust it to the best fitting phoneme in Phon[1-4]
-- A glottal stop ʔ is mentioned in the rif literature. Upon inspection on the sources, it has not dedicated Tifinagh symbol and in latin writing a ' is used. While ' appears in the data, seeing as ʔ is not part tzm,shi or even kab'; we will filter it out.
-- mʷ is exclusively mentioned in https://en.wikipedia.org/wiki/Berber_Latin_alphabet#Berber_Latin_alphabet_and_the_Tifinagh_Berber_alphabet ;  probably non-existant in tzm/shi/rif but present in some other Berber variant
+Neo-Tifinagh: https://en.wikipedia.org/wiki/Tifinagh#Neo-Tifinagh_letters
 
-"""
-""" 
-Standardizing several symbols are archaich or extremely rare:
-- Some symbols are dialect-exclusive(not in rif/shi/tzm)
-- Spirantized symbols exist of consonants, but they are rarely used (and I will be handling spirantization as a replacement rule). 
+Many Tifinagh symbols are uncommon/not officially recognized by IRCAM. Roughly speaking the 33 symbols are the ones that should be used for almost all Tamazight; whereas the extended cover language edge cases:
+- ⵁ is just an alternative writing for ⵀ
+- /o/(ⵧ) is for the Tuareg dialect, it is a variant of /u/(ⵓ).
+- /p/(ⵒ) and /v/(ⵠ)  are  intended for foreign words. I will leave them in-code (for completion's sake), but sentences with foreign words will be skipped due to their more volatile pronunciation.
+- /β/(ⴲ) /ʝ/(ⴴ) /ð/(ⴸ, from SRC 2) /ðˤ/(ⴺ) /θ/(ⵝ) /x/(ⴿ) are just specific aspirantizations of existing phonemes. These are sometimes used when the writer wants to emphasize some pronunciation in the specific dialect, but not the standard. I will transform them to their specific unaspired consonant(/β/->/b/,/ʝ/->/g/,/ð/->/d/,/ðˤ/->/dˤ/,/θ/->/t/,/x/->/k/)
+- /tʃ/(ⵞ) /dʒ/(ⴵ) are equivalent to ⵜⵛ and ⴷⵊ respectively; and are interchangeable. I will handle this as a phonological rule.
+
+Note: 
+- shi is in particular non-spirantizing (https://www.internationalphoneticassociation.org/icphs-proceedings/ICPhS1999/papers/p14_0603.pdf) but supposedly some dialects in it do spirantize (https://www.cambridge.org/core/journals/journal-of-the-international-phonetic-association/article/tashlhiyt-berber/D5C8F16C425A89314D833DDE0ACF83D4)
+
 """
 
 std_tif = {
@@ -77,7 +71,7 @@ std_tif = {
     "ⵘ": "ⵢ",  # SRC 2
     # Leaving 'ⵋ','ⵌ','ⵘ'; doesn't appear in common_voice_22_0/zgh
     #'ⴲ':'β',# IRCAM EXTENDED fricative; SRC 1,2
-    "ⴲ": "b",  # b spirantizes to β
+    "ⴲ": "ⴱ",  # b spirantizes to β
     "ⵠ": "v",  # IRCAM EXTENDED; SRC 1,2
     # Leaving 'ⵠ'; doesn't appear in common_voice_22_0/zgh
     #'ⵝ':'θ',# IRCAM EXTENDED fricative; SRC 1,2
@@ -105,6 +99,7 @@ std_tif = {
     # Leaving this 1 ; doesn't appear in common_voice_22_0/zgh
     "ⵂ": "ⵀ",  # SRC 2
     "ⵁ": "ⵀ",  # IRCAM EXTENDED; SRC 1,2
+    # Alternative writing, no difference with 
     # Leaving these 2 ; doesn't appear in common_voice_22_0/zgh
     # Palatal
     #'ⵐ':'ny',# SRC 2
@@ -305,8 +300,8 @@ tif2lat = {
     "ⵍ": "l",
     "ⵔ": "r",
     "ⵕ": "ṛ",
-    "ⵜⵙ": "ţ",
-    "ⴷⵣ": "z̧",
+    "ⵜⵙ": "ţ",#ts
+    "ⴷⵣ": "z̧",#dz
     # Post Alveolar
     "ⵛ": "c",
     "ⵞ": "č",  # tsh
