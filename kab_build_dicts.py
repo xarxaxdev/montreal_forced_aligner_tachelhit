@@ -6,65 +6,23 @@ from pathlib import Path
 import sys
 
 """
-# (SRC 1) https://en.wikipedia.org/wiki/Tifinagh#Neo-Tifinagh_letters
-# (SRC 2) https://en.wiktionary.org/wiki/Module:Tfng-translit
-# (SRC 3) https://www.mdpi.com/2078-2489/16/7/600
-# (SRC 4) https://ieeexplore.ieee.org/abstract/document/8284715
-# (SRC 5) https://commons.wikimedia.org/wiki/Tifinagh
-# (SRC 6) https://en.wikipedia.org/wiki/Berber_Latin_alphabet (for specific berber variants)
-# (SRC 7) https://aclanthology.org/2021.icnlsp-1.3.pdf #Paper on kabyle transliteration
-"
+Based on zgh_build_dicts.py
 
-Transliteration relevant links:
-- (Phon1) https://en.wikipedia.org/wiki/Shilha_language#Phonology
-- (Phon2) https://en.wikipedia.org/wiki/Central_Atlas_Tamazight#Phonology
-- (Phon3) https://en.wikipedia.org/wiki/Tarifit#Phonology (An Introduction To Tarifiyt Berber)
-- (Phon4) https://en.wikipedia.org/wiki/Kabyle_language#Phonology
 
-Note that:
-- shi & tzm are similar
-- rif & kab are similar
-Therefore for {language_iso}_all2ipa.dict I will be prioriziting shi/tzm, then use rif as a tierbreaker, then use kab as a tierbreaker.
-{language_iso}_vocab.dict will include all allophones.
+https://en.wikipedia.org/wiki/Kabyle_language#Assimilation:
+- (I see 3-4 listed with no account of when are they dialectal).
+- Gemmination turns fricatives to stops? The table makes no sense.
+- epenthethic e (is it impredictably properly pronounced?)
+
+https://en.wikipedia.org/wiki/Berber_Latin_alphabet#Kabyle-Berber_local_usages
+- ţ, z̧ can be just added.
+- kkw may be  kʷ for k,g,d,t,b. How to discern those from gemminates.
+- gh may be ɣ(so how is ɣʷ written)
+- kͦkͦ may be kʷ
 
 """
 
-
-"""
-CONSIDER TODO
-Other word sources:
-https://universeofmemory.com/tashelhit-language-resources/
-https://en.wiktionary.org/w/index.php?title=Category:Tashelhit_lemmas&pageuntil=IGIDR%0Aigidr#mw-pages
-https://www.livelingua.com/peace-corps/Tashelhit/tashelhit-dictionary-2011.pdf
-https://friendsofmorocco.org/Docs/Tashlheet/tashlheettextbook2011.pdf
-# 4000 WORDS
-https://friendsofmorocco.org/Docs/Dict/Tamazizght%20T-E.htm
-# 22k SENTENCES
-https://tatoeba.org/en/downloads
-https://downloads.tatoeba.org/exports/per_language/shi/shi_sentences.tsv.bz2
-# Wikipedia - Nuclear option; 14k pages however major cleanup needed
-https://shi.wikipedia.org/wiki/Tasna_Tamzwarut
-https://dumps.wikimedia.org/other/mediawiki_content_current/shiwiki/2026-02-01/xml/bzip2/
-https://medium.com/@evan.frank/accessing-and-cleaning-bulk-wikipedia-text-data-bfde3b550474
-"""
-
-
-
-"""
-Neo-Tifinagh: https://en.wikipedia.org/wiki/Tifinagh#Neo-Tifinagh_letters
-
-Many Tifinagh symbols are uncommon/not officially recognized by IRCAM. Roughly speaking the 33 symbols are the ones that should be used for almost all Tamazight; whereas the extended cover language edge cases:
-- ⵁ is just an alternative writing for ⵀ
-- /o/(ⵧ) is for the Tuareg dialect, it is a variant of /u/(ⵓ).
-- /p/(ⵒ) and /v/(ⵠ)  are  intended for foreign words. I will leave them in-code (for completion's sake), but sentences with foreign words will be skipped due to their more volatile pronunciation.
-- /β/(ⴲ) /ʝ/(ⴴ) /ð/(ⴸ, from SRC 2) /ðˤ/(ⴺ) /θ/(ⵝ) /x/(ⴿ) are just specific aspirantizations of existing phonemes. These are sometimes used when the writer wants to emphasize some pronunciation in the specific dialect, but not the standard. I will transform them to their specific unaspired consonant(/β/->/b/,/ʝ/->/g/,/ð/->/d/,/ðˤ/->/dˤ/,/θ/->/t/,/x/->/k/)
-- /tʃ/(ⵞ) /dʒ/(ⴵ) are equivalent to ⵜⵛ and ⴷⵊ respectively; and are interchangeable. I will handle this as a phonological rule.
-
-Note: 
-- shi is in particular non-spirantizing (https://www.internationalphoneticassociation.org/icphs-proceedings/ICPhS1999/papers/p14_0603.pdf) but supposedly some dialects in it do spirantize (https://www.cambridge.org/core/journals/journal-of-the-international-phonetic-association/article/tashlhiyt-berber/D5C8F16C425A89314D833DDE0ACF83D4)
-
-"""
-
+#https://en.wikipedia.org/wiki/Berber_Latin_alphabet#Kabyle-Berber_local_usages
 std_lat = {
     "bᵒ": "bʷ",
     "mᵒ": "mʷ",
@@ -73,13 +31,23 @@ std_lat = {
     "ɡᵒ": "ɡʷ",
     "kᵒ": "kʷ",
     "xᵒ": "xʷ",
+    "ɣᵒ": "ɣʷ",
     "qᵒ": "qʷ",
     "â": "ɛ",
+    "Σ":"ɛ",
+    "ε":"ɛ",# Greek epsylon (not IPA epsylon)
+    "Γ":"ɣ",# Greek gammas
+    "γ":"ɣ",
+    "tt":"ţ",
+    "ss":"ţ",
+    "zz":"z̧",
+
 }
 
-# Used to generate cross-script dictionary for zgh
-# https://en.wikipedia.org/wiki/Berber_Latin_alphabet
-# and IRCAM Tifinagh~latina alphabet equivalence
+
+
+
+#https://www.omniglot.com/writing/kabyle.php
 lat2ipa = {
     ### VOWELS AND GLIDES
     "a": "a",
@@ -92,7 +60,7 @@ lat2ipa = {
     "b": "b",
     "bʷ": "bʷ",
     "m": "m",
-    "p": "p",
+    "mʷ": "mʷ",
     # Labiodental
     "f": "f",
     # Alveolar
@@ -128,11 +96,10 @@ lat2ipa = {
     "k": "k",
     "kʷ": "kʷ",
     # Uvular
-    "x": "x",
-    "xʷ": "xʷ",
-    "ɣ": "ɣ",
-    "ɣʷ": "ɣʷ",
-    "ɣᵒ": "ɣʷ",
+    "x": "χʷ",
+    "xʷ": "χʷ",
+    "ɣ": "ʁ",#SRC 7 disagrees: it suggests /ɣ/
+    "ɣʷ": "ʁʷ",
     "q": "q",
     "qʷ": "qʷ",
     # Pharyngeal
@@ -158,7 +125,6 @@ tif2lat = {
     # Bilabials
     "ⴱ": "b",
     "ⴱⵯ": "bʷ",
-    "ⵒ": "p",
     "ⵎ": "m",
     "ⵎⵯ": "mʷ",
     # Labiodental
@@ -177,13 +143,13 @@ tif2lat = {
     "ⵍ": "l",
     "ⵔ": "r",
     "ⵕ": "ṛ",
-    "ⵜⵙ": "ţ",
-    "ⴷⵣ": "z̧",
+    "ⵜⵙ": "ţ",#ts
+    "ⴷⵣ": "z̧",#dz
     # Post Alveolar
     "ⵛ": "c",
-    "ⵞ": "č",  # tsh
+    "ⵜⵛ": "č",  # tsh
     "ⵊ": "j",
-    "ⴵ": "ǧ",  # dj
+    "ⴷⵊ": "ǧ", # dj 
     # Velar
     "ⴳ": "g",
     "ⴳⵯ": "ɡʷ",
@@ -245,32 +211,23 @@ def standardize(text, std_dict):
 
 
 def main():
-    data = utils.load_datasets_zgh()
-    cur = concatenate_datasets(
-        [data["common_voice_22_0"], data["moroccan_amazigh_asr"]]
-    )
+    data = utils.load_datasets_kab()
+    cur = concatenate_datasets([data["common_voice_22_0"]])
     vocab = {}
     for row in cur:
         row["text"] = row["text"].replace("[]-", "")
         words = re.sub(r"[?.,!\":;\'\t\*\n]", "", row["text"]).lower().split(" ")
         for w in words:
             if (
-                bool(re.search(r"(\d+|%|o|_|v|\(|\)|σ|\[|\])", w))
+                bool(re.search(r"(\d+|ⵒ|ⵠ|%|o|_|v|p|\(|\)|σ|\[|\])", w))
                 or len(w) == 0
                 or w == "-"
             ):
                 continue  # skip ambiguous pronunciation cases
-            if "common_voice_22_0" == row["origin"]:
-                w_std_tif = standardize(w, std_tif)
-                w_std_lat = ''.join(transliterate(w_std_tif, tif2lat)[0])
-                trans = transliterate(w_std_tif, tif2ipa)
-            else:
-                w_std_lat = standardize(w, std_lat)
-                w_std_tif = ''.join(transliterate(w_std_lat, lat2tif)[0])
-                trans = transliterate(w_std_lat, lat2ipa)
+            w_std_lat = standardize(w, std_lat)
+            trans = transliterate(w_std_lat, lat2ipa)
             for t in trans:  # e may be 'ə',''
                 vocab[w] = " ".join(t)
-                vocab[w_std_tif] = " ".join(t)
                 vocab[w_std_lat] = " ".join(t)
 
     print("-" * 15)
@@ -278,7 +235,7 @@ def main():
     print("-" * 15)
     cur_path = utils.get_curr_folder()
     # Write all-spelling to ipa dict
-    with open(os.path.join(cur_path, "dicts", "zgh_vocab.dict"), "w") as f:
+    with open(os.path.join(cur_path, "dicts", "kab_vocab.dict"), "w") as f:
         f.write("<unk>\tspn\n")
         for w in vocab:
             f.write(f"{w}\t{vocab[w]}\n")

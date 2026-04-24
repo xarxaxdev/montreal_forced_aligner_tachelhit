@@ -42,6 +42,7 @@ https://friendsofmorocco.org/Docs/Dict/Tamazizght%20T-E.htm
 # 22k SENTENCES
 https://tatoeba.org/en/downloads
 https://downloads.tatoeba.org/exports/per_language/shi/shi_sentences.tsv.bz2
+https://analytics.hplt-project.org/viewer/HPLT-v3-zgh_Tfng.yaml -> Misslabeled
 # Wikipedia - Nuclear option; 14k pages however major cleanup needed
 https://shi.wikipedia.org/wiki/Tasna_Tamzwarut
 https://dumps.wikimedia.org/other/mediawiki_content_current/shiwiki/2026-02-01/xml/bzip2/
@@ -60,53 +61,65 @@ Many Tifinagh symbols are uncommon/not officially recognized by IRCAM. Roughly s
 - /β/(ⴲ) /ʝ/(ⴴ) /ð/(ⴸ, from SRC 2) /ðˤ/(ⴺ) /θ/(ⵝ) /x/(ⴿ) are just specific aspirantizations of existing phonemes. These are sometimes used when the writer wants to emphasize some pronunciation in the specific dialect, but not the standard. I will transform them to their specific unaspired consonant(/β/->/b/,/ʝ/->/g/,/ð/->/d/,/ðˤ/->/dˤ/,/θ/->/t/,/x/->/k/)
 - /tʃ/(ⵞ) /dʒ/(ⴵ) are equivalent to ⵜⵛ and ⴷⵊ respectively; and are interchangeable. I will handle this as a phonological rule.
 
-Note: 
+Notes: 
+- "ʃˁ", "ʒˁ","nˁ"  exist, but is not lexically relevant (happens due to environemnt/in loanwords) and has no explicit orthography.
+- "H" has been suggested as the pronunciation in IPA for tachelhit, but a lot more literature (in both tachelhit and other dialects) suggests it to be "ħ". 
 - shi is in particular non-spirantizing (https://www.internationalphoneticassociation.org/icphs-proceedings/ICPhS1999/papers/p14_0603.pdf) but supposedly some dialects in it do spirantize (https://www.cambridge.org/core/journals/journal-of-the-international-phonetic-association/article/tashlhiyt-berber/D5C8F16C425A89314D833DDE0ACF83D4)
+
+
 
 """
 
 std_tif = {
+    # UNCOMMON SYMBOLS AND ALTERNATIVE WRITINGS
     "ⵋ": "ⵢ",  # SRC 2
     "ⵌ": "ⵢ",  # SRC 2
     "ⵘ": "ⵢ",  # SRC 2
-    # Leaving 'ⵋ','ⵌ','ⵘ'; doesn't appear in common_voice_22_0/zgh
+    "ⵗ": "ⵖ",  # SRC 2
+    "ⵈ": "ⵇ",  # SRC 2
+    "ⵂ": "ⵀ",  # SRC 2
+    "ⵁ": "ⵀ",  # IRCAM EXTENDED; SRC 1,2
+    "ⴾ": "ⴽ",  # SRC 2
+    "ⵧ": "o",  # SRC 1,2; Touareg-only symbol
+    # Leaving these; don't appear in common_voice_22_0/zgh
+    #'ⴿ':'ⴽ',# SRC 2  I suspect this is a mixup with SRC 1 and Neo-tifinagh's writing.
+    # Leaving these 2 ; doesn't appear in common_voice_22_0/zgh
+    #"ⵆ": "ⵅ",  # SRC 2 # I am uncertain of this symbol, leaving it commented for posterity
+
+    # FOREIGN PHONEMES(OR VERY DIALECTAL
+    #"ⵠ": "v",  # IRCAM EXTENDED; SRC 1,2
+    #"ⵒ": "p",  # IRCAM EXTENDED; SRC 1,2
+    # Leaving 'ⵒ'; uncommon in common_voice_22_0/zgh
+    # Note that /p/ exists only in rif (according to literature)
+    # According to literature can also be pharyngealized  pˤ
+
+    # SPIRANTIZATIONS
     #'ⴲ':'β',# IRCAM EXTENDED fricative; SRC 1,2
     "ⴲ": "ⴱ",  # b spirantizes to β
-    "ⵠ": "v",  # IRCAM EXTENDED; SRC 1,2
-    # Leaving 'ⵠ'; doesn't appear in common_voice_22_0/zgh
     #'ⵝ':'θ',# IRCAM EXTENDED fricative; SRC 1,2
     "ⵝ": "ⵜ",  # t spirantizes to θ
     #'ⴸ':'ð',# SRC 2
     "ⴸ": "ⴷ",  # d aspirantizes to ð
     #'ⴺ':'ðˤ',# IRCAM EXTENDED fricative; SRC 1,2
     "ⴺ": "ⴹ",  # dˤ aspirantizes to ðˤ
-    # Leaving these 3 ; don't appear in common_voice_22_0/zgh
-    "ⴶ": "ⴵ",  # SRC 2
-    #'ⴴ':'ʝ',# SRC 2 (SRC 5 points to this being aproximant);   CONFLICT!
+    #'ⴴ':'ʝ',# SRC 2 (SRC 5 points to this being g aspirantized);   CONFLICT!
     "ⴴ": "ⴳ",  # g aspirantizes to ʝ
-    # Leaving this 1 ; doesn't appear in common_voice_22_0/zgh
     #'ⴴ':'ʝ',# IRCAM EXTENDED fricative;SRC 1 CONFLICT!
-    "ⴾ": "ⴽ",  # SRC 2
-    #'ⴿ':'ⴽ',# SRC 2  I suspect this is a mixup with SRC 1 and Neo-tifinagh's writing.
-    # Leaving these 2 ; doesn't appear in common_voice_22_0/zgh
-    # x ~ χ
-    "ⵆ": "ⵅ",  # SRC 2
-    "ⴿ": "ⵅ",  # IRCAM EXTENDED fricative; SRC 1 ; I suspect this is a case of aspirantization
-    # Leaving these 2 ; doesn't appear in common_voice_22_0/zgh
-    "ⵗ": "ⵖ",  # SRC 2
-    # Leaving this 1 ; doesn't appear in common_voice_22_0/zgh
-    "ⵈ": "ⵇ",  # SRC 2
-    # Leaving this 1 ; doesn't appear in common_voice_22_0/zgh
-    "ⵂ": "ⵀ",  # SRC 2
-    "ⵁ": "ⵀ",  # IRCAM EXTENDED; SRC 1,2
-    # Alternative writing, no difference with 
-    # Leaving these 2 ; doesn't appear in common_voice_22_0/zgh
+    "ⴿ": "ⴽ",  # IRCAM EXTENDED fricative; SRC 1 ; I suspect this is a case of aspirantization
+    # Leaving these; don't appear in common_voice_22_0/zgh
+
+    # MULTI-SYMBOL
     # Palatal
-    #'ⵐ':'ny',# SRC 2
-    # Leaving this 1 ; doesn't appear in common_voice_22_0/zgh
-    # multi-letter
-    #'ⵑ':'ng',# SRC 2
-    # Leaving this  1; doesn't appear in common_voice_22_0/zgh
+    #'ⵐ':'ny',# SRC 2,5
+    #'ⵑ':'ng',# SRC 2,5
+    "ⴶ": "ⴷⵊ",  # SRC 2,5
+    "ⴵ": "ⴷⵊ",  # SRC 1,2
+    "ⵞ": "ⵜⵛ",  # SRC 1,2
+    # Leaving these 5 in-code; don't appear in common_voice_22_0/zgh
+    # Pondered a lot whether these are worth simplifying. At the end, since 'ⵜⵛ' appears in common voice corpus but not 'ⵞ' it is probably a better standardization. Same applies to 'ⴷⵊ'. 
+    # The more basic the representation; the easier our work becomes.
+    # The other cover dialects very dissimilar to shi
+
 }
 
 
@@ -122,21 +135,15 @@ tif2ipa = {
     # rarely written in South-mid Morocco (shi/tzm) https://en.wikipedia.org/wiki/Berber_Latin_alphabet#Souss-Berber_local_usage
     # Epenthetic vowel that may exist or not depending on language
     # when written usually represents /ə/
-    # Appears in common_voice_22_0/zgh, unlike the /o/ equivalent
+    # Appears in common_voice_22_0/zgh
     "ⵉ": "i",  # CONSENSUS SRC 1,2,3,4
     "ⵓ": "u",  # SRC 2,3,4  CONFLICT!
     #'ⵓ':'w', #SRC 1   CONFLICT! (this is true only between vowels)
     "ⵡ": "w",  # CONSENSUS 1,2,3,4
     "ⵢ": "j",  # SRC 1,3,4
-    "ⵧ": "o",  # SRC 1,2
-    # Leaving 'ⵧ'; doesn't appear in common_voice_22_0/zgh
     # Bilabials
     "ⴱ": "b",  # CONSENSUS 1,2,3,4
     "ⴱⵯ": "bʷ",  # SRC 6; velarization
-    "ⵒ": "p",  # IRCAM EXTENDED; SRC 1,2
-    # Leaving 'ⵒ'; doesn't appear in common_voice_22_0/zgh
-    # Note that /p/ exists only in rif (according to literature)
-    # According to literature can also be pharyngealized  pˤ
     "ⵎ": "m",  # CONSENSUS 1,2,3,4
     "ⵎⵯ": "mʷ",  # SRC 6;velarization
     # Leaving 'ⵎⵯ'; doesn't appear in common_voice_22_0/zgh
@@ -159,22 +166,17 @@ tif2ipa = {
     "ⵛ": "ʃ",  # CONSENSUS 1,2,3,4
     "ⵊ": "ʒ",  # SRC 1 CONFLICT!
     #'ⵊ':'j',# SRC 2,3,4 CONFLICT!
-    "ⴵ": "dʒ",  # SRC 1,2
-    "ⵞ": "tʃ",  # SRC 1,2
-    # Leaving these 3 ; doesn't appear in common_voice_22_0/zgh
     # Velar
     "ⴳ": "g",  # CONSENSUS 1,2,3,4
     "ⴳⵯ": "ɡʷ",  # CONSENSUS 1,2,3,4
     "ⴽ": "k",  # CONSENSUS 1,2,3,4
     "ⴽⵯ": "kʷ",  # CONSENSUS 1,2,3,4
     # Uvular
-    # x ~ χ
-    # These 2 phonemes get always written the same way (x and ⵅ),
     # velarization is contrastive, and change depending on dialect.
-    "ⵅ": "x",  # SRC 1,2,3,4 CONFLICT!
-    "ⵅⵯ": "xʷ",  # SRC 2,3,4 CONFLICT!
-    "ⵖ": "ɣ",  # CONSENSUS 1,2,3,4
-    "ⵖⵯ": "ɣʷ",  # SRC 6; velarization
+    "ⵅ": "χ",  # SRC 1,2,3,4 CONFLICT!
+    "ⵅⵯ": "χʷ",  # SRC 2,3,4 CONFLICT!
+    "ⵖ": "ʁ",  # CONSENSUS 1,2,3,4
+    "ⵖⵯ": "ʁʷ",  # SRC 6; velarization
     "ⵇ": "q",  # CONSENSUS 1,2,3,4
     "ⵇⵯ": "qʷ",  # SRC 6;velarization
     # Pharyngeal
@@ -184,8 +186,14 @@ tif2ipa = {
     # Glottal
     "ⵀ": "h",  # CONSENSUS 1,2,3,4; SRC 2 does not mention if for shi
     # clitics
-    "-": "-",
+    "-": "",
 }
+non_geminated = "ⴰⴻⵉⵓ-"#aeiu
+# Gemminates
+keys =list( tif2ipa.keys())
+for k in keys:
+    if k not in non_geminated:
+        tif2ipa[f'{k}{k}']= f'{k}:'
 
 std_lat = {
     "bᵒ": "bʷ",
@@ -195,8 +203,13 @@ std_lat = {
     "ɡᵒ": "ɡʷ",
     "kᵒ": "kʷ",
     "xᵒ": "xʷ",
+    "ɣᵒ": "ɣʷ",
     "qᵒ": "qʷ",
     "â": "ɛ",
+    "Σ":"ɛ",
+    "ε":"ɛ",# Greek epsylon (not IPA epsylon)
+    "Γ":"ɣ",# Greek gammas
+    "γ":"ɣ",
 }
 
 # Used to generate cross-script dictionary for zgh
@@ -215,7 +228,6 @@ lat2ipa = {
     "bʷ": "bʷ",
     "m": "m",
     "mʷ": "mʷ",
-    "p": "p",
     # Labiodental
     "f": "f",
     # Alveolar
@@ -251,11 +263,10 @@ lat2ipa = {
     "k": "k",
     "kʷ": "kʷ",
     # Uvular
-    "x": "x",
-    "xʷ": "xʷ",
-    "ɣ": "ɣ",
-    "ɣʷ": "ɣʷ",
-    "ɣᵒ": "ɣʷ",
+    "x": "χ",
+    "xʷ": "χʷ",
+    "ɣ": "ʁ",
+    "ɣʷ": "ʁʷ",
     "q": "q",
     "qʷ": "qʷ",
     # Pharyngeal
@@ -264,8 +275,14 @@ lat2ipa = {
     # Glottal
     "h": "h",
     # clitics
-    "-": "-",
+    "-": "",
 }
+non_geminated = "aeiučǧz̧ţ-"
+# Geminates
+keys = list(lat2ipa.keys())
+for k in keys:
+    if k not in non_geminated:
+        lat2ipa[f'{k}{k}']= f'{k}:'
 
 
 tif2lat = {
@@ -281,7 +298,6 @@ tif2lat = {
     # Bilabials
     "ⴱ": "b",
     "ⴱⵯ": "bʷ",
-    "ⵒ": "p",
     "ⵎ": "m",
     "ⵎⵯ": "mʷ",
     # Labiodental
@@ -304,9 +320,9 @@ tif2lat = {
     "ⴷⵣ": "z̧",#dz
     # Post Alveolar
     "ⵛ": "c",
-    "ⵞ": "č",  # tsh
+    "ⵜⵛ": "č",  # tsh
     "ⵊ": "j",
-    "ⴵ": "ǧ",  # dj
+    "ⴷⵊ": "ǧ", # dj 
     # Velar
     "ⴳ": "g",
     "ⴳⵯ": "ɡʷ",
@@ -341,13 +357,16 @@ def transliterate(text, my_dict):
         # Find out character-matching in our dicts
         k = text[i]
         ## check for 2-character phones
-        if i + 1 < len(text) and "".join([text[i], text[i + 1]]) in my_dict:
-            k = "".join([text[i], text[i + 1]])
-            i += 1
+        if i + 1 < len(text) and "".join([text[i], text[i + 1]]) in my_dict: # match 2-character
+            if i+2 == len(text) or text[i+2] not in 'ʷⵯ':
+                # unless the 3rd character labializes 2nd
+                k = "".join([text[i], text[i + 1]])
+                i += 1
 
         # Update our transliterations
         if type(my_dict[k]) == type(["a", "b"]):
             # a fork in transliteration
+            # this handles even ⵜⵓⵜⵜ (tett) well
             new_trans = []
             for t in trans:
                 for val in my_dict[k]:
@@ -370,7 +389,7 @@ def standardize(text, std_dict):
 def main():
     data = utils.load_datasets_zgh()
     cur = concatenate_datasets(
-        [data["common_voice_22_0"], data["moroccan_amazigh_asr"]]
+        [data["common_voice_22_0"]]
     )
     vocab = {}
     for row in cur:
@@ -378,11 +397,15 @@ def main():
         words = re.sub(r"[?.,!\":;\'\t\*\n]", "", row["text"]).lower().split(" ")
         for w in words:
             if (
-                bool(re.search(r"(\d+|%|o|_|v|\(|\)|σ|\[|\])", w))
+                bool(re.search(r"(\d+|ⵒ|ⵠ|%|o|_|v|p|\(|\)|σ|\[|\])", w))
                 or len(w) == 0
                 or w == "-"
             ):
                 continue  # skip ambiguous pronunciation cases
+            
+            if not (w in vocab):
+                vocab[w] = set()
+
             if "common_voice_22_0" == row["origin"]:
                 w_std_tif = standardize(w, std_tif)
                 w_std_lat = ''.join(transliterate(w_std_tif, tif2lat)[0])
@@ -391,10 +414,27 @@ def main():
                 w_std_lat = standardize(w, std_lat)
                 w_std_tif = ''.join(transliterate(w_std_lat, lat2tif)[0])
                 trans = transliterate(w_std_lat, lat2ipa)
+
+
             for t in trans:  # e may be 'ə',''
-                vocab[w] = " ".join(t)
-                vocab[w_std_tif] = " ".join(t)
-                vocab[w_std_lat] = " ".join(t)
+                vocab[w].add(" ".join(t))
+                vocab[w_std_tif].add(" ".join(t))
+                vocab[w_std_lat].add(" ".join(t))
+    #  "Syllables in tashlhiyt berber and in moroccan arabic"
+    # says "the genitive preposition /n/ completely assimilates to the initial segment of the following word"
+    # therefore we not hear /n/ before /uinwyrlm/
+    # before w,y becomes u,i respectively
+    # before u,i becomes u,i respectively and transforms the following u,i to w,y
+    # before l,r(pharing or not) become l or r
+    #(not with geminates)
+    vocab['n'] = {'n','u','i','r','l'}
+
+    #  "Syllables in tashlhiyt berber and in moroccan arabic"
+    #  (R)AD's final consonant: sometimes /ad/ or /rad/ drop 
+    #  the d at the end of the word
+    vocab['ad'] = {'ad','a'}
+    vocab['rad'] = {'rad','ra'}
+
 
     print("-" * 15)
     print("SAVING DICTS")
@@ -404,7 +444,8 @@ def main():
     with open(os.path.join(cur_path, "dicts", "zgh_vocab.dict"), "w") as f:
         f.write("<unk>\tspn\n")
         for w in vocab:
-            f.write(f"{w}\t{vocab[w]}\n")
+            for pron in vocab[w]:
+                f.write(f"{w}\t{pron}\n")
         f.close()
 
 

@@ -1,0 +1,364 @@
+rules:
+  # GEMINATION
+  # In-word gemminates are handled in-code when generating the
+  # pronunciation dictionary. These rules are meant to 
+  # integrate cross-word gemination. We allow a word to eat its
+  # following word consonant.
+  - following_context: $ 
+    preceding_context: ''
+    replacement: 'b:'
+    segment: 'b'
+  - following_context: ''
+    preceding_context: ^
+    replacement: ''
+    segment: 'b'
+  - following_context: $ 
+    preceding_context: ''
+    replacement: 'b:'
+    segment: 'b'
+  - following_context: ''
+    preceding_context: ^
+    replacement: ''
+    segment: 'b'
+  - following_context: $
+    preceding_context: ''
+    replacement: 'bʷ:'
+    segment: 'bʷ'
+  - following_context: ''
+    preceding_context: ^
+    replacement: ''
+    segment: 'bʷ'
+  - following_context: $ 
+    preceding_context: ''
+    replacement: 'm:'
+    segment: 'm'
+  - following_context: ''
+    preceding_context: ^
+    replacement: ''
+    segment: 'm'
+  - following_context: $
+    preceding_context: ''
+    replacement: 'mʷ:'
+    segment: 'mʷ'
+  - following_context: ''
+    preceding_context: ^
+    replacement: ''
+    segment: 'mʷ'
+  - following_context: $ 
+    preceding_context: ''
+    replacement: 's:'
+    segment: 's'
+  - following_context: ''
+    preceding_context: ^
+    replacement: ''
+    segment: 's'
+  - following_context: $
+    preceding_context: ''
+    replacement: 'sʷ:'
+    segment: 'sʷ'
+  - following_context: ''
+    preceding_context: ^
+    replacement: ''
+    segment: 'sʷ'
+  - following_context: $ 
+    preceding_context: ''
+    replacement: 'z:'
+    segment: 'z'
+  - following_context: ''
+    preceding_context: ^
+    replacement: ''
+    segment: 'z'
+  - following_context: $
+    preceding_context: ''
+    replacement: 'zʷ:'
+    segment: 'zʷ'
+  - following_context: ''
+    preceding_context: ^
+    replacement: ''
+    segment: 'zʷ'
+  - following_context: $ 
+    preceding_context: ''
+    replacement: 't:'
+    segment: 't'
+  - following_context: ''
+    preceding_context: ^
+    replacement: ''
+    segment: 't'
+  - following_context: $
+    preceding_context: ''
+    replacement: 'tʷ:'
+    segment: 'tʷ'
+  - following_context: ''
+    preceding_context: ^
+    replacement: ''
+    segment: 'tʷ'
+  - following_context: $ 
+    preceding_context: ''
+    replacement: 'd:'
+    segment: 'd'
+  - following_context: ''
+    preceding_context: ^
+    replacement: ''
+    segment: 'd'
+  - following_context: $
+    preceding_context: ''
+    replacement: 'dʷ:'
+    segment: 'dʷ'
+  - following_context: ''
+    preceding_context: ^
+    replacement: ''
+    segment: 'dʷ'
+  - following_context: $ 
+    preceding_context: ''
+    replacement: 'r:'
+    segment: 'r'
+  - following_context: ''
+    preceding_context: ^
+    replacement: ''
+    segment: 'r'
+  - following_context: $
+    preceding_context: ''
+    replacement: 'rʷ:'
+    segment: 'rʷ'
+  - following_context: ''
+    preceding_context: ^
+    replacement: ''
+    segment: 'rʷ'
+  - following_context: $ 
+    preceding_context: ''
+    replacement: 'g:'
+    segment: 'g'
+  - following_context: ''
+    preceding_context: ^
+    replacement: ''
+    segment: 'g'
+  - following_context: $
+    preceding_context: ''
+    replacement: 'gʷ:'
+    segment: 'gʷ'
+  - following_context: ''
+    preceding_context: ^
+    replacement: ''
+    segment: 'gʷ'
+  - following_context: $ 
+    preceding_context: ''
+    replacement: 'k:'
+    segment: 'k'
+  - following_context: ''
+    preceding_context: ^
+    replacement: ''
+    segment: 'k'
+  - following_context: $
+    preceding_context: ''
+    replacement: 'kʷ:'
+    segment: 'kʷ'
+  - following_context: ''
+    preceding_context: ^
+    replacement: ''
+    segment: 'kʷ'
+  - following_context: $ 
+    preceding_context: ''
+    replacement: 'χ:'
+    segment: 'χ'
+  - following_context: ''
+    preceding_context: ^
+    replacement: ''
+    segment: 'χ'
+  - following_context: $
+    preceding_context: ''
+    replacement: 'χʷ:'
+    segment: 'χʷ'
+  - following_context: ''
+    preceding_context: ^
+    replacement: ''
+    segment: 'χʷ'
+  - following_context: $ 
+    preceding_context: ''
+    replacement: 'ʁ:'
+    segment: 'ʁ'
+  - following_context: ''
+    preceding_context: ^
+    replacement: ''
+    segment: 'ʁ'
+  - following_context: $
+    preceding_context: ''
+    replacement: 'ʁʷ:'
+    segment: 'ʁʷ'
+  - following_context: ''
+    preceding_context: ^
+    replacement: ''
+    segment: 'ʁʷ'
+  - following_context: $ 
+    preceding_context: ''
+    replacement: 'q:'
+    segment: 'q'
+  - following_context: ''
+    preceding_context: ^
+    replacement: ''
+    segment: 'q'
+  - following_context: $
+    preceding_context: ''
+    replacement: 'qʷ:'
+    segment: 'qʷ'
+  - following_context: ''
+    preceding_context: ^
+    replacement: ''
+    segment: 'qʷ'
+  - following_context: $ 
+    preceding_context: ''
+    replacement: 'w:'
+    segment: 'w'
+  - following_context: ''
+    preceding_context: ^
+    replacement: ''
+    segment: 'w'
+  - following_context: $ 
+    preceding_context: ''
+    replacement: 'j:'
+    segment: 'j'
+  - following_context: ''
+    preceding_context: ^
+    replacement: ''
+    segment: 'j'
+  - following_context: $ 
+    preceding_context: ''
+    replacement: 'f:'
+    segment: 'f'
+  - following_context: ''
+    preceding_context: ^
+    replacement: ''
+    segment: 'f'
+  - following_context: $ 
+    preceding_context: ''
+    replacement: 'n:'
+    segment: 'n'
+  - following_context: ''
+    preceding_context: ^
+    replacement: ''
+    segment: 'n'
+  - following_context: $ 
+    preceding_context: ''
+    replacement: 'l:'
+    segment: 'l'
+  - following_context: ''
+    preceding_context: ^
+    replacement: ''
+    segment: 'l'
+  - following_context: $ 
+    preceding_context: ''
+    replacement: 'ʃ:'
+    segment: 'ʃ'
+  - following_context: ''
+    preceding_context: ^
+    replacement: ''
+    segment: 'ʃ'
+  - following_context: $ 
+    preceding_context: ''
+    replacement: 'ʒ:'
+    segment: 'ʒ'
+  - following_context: ''
+    preceding_context: ^
+    replacement: ''
+    segment: 'ʒ'
+  - following_context: $ 
+    preceding_context: ''
+    replacement: 'ħ:'
+    segment: 'ħ'
+  - following_context: ''
+    preceding_context: ^
+    replacement: ''
+    segment: 'ħ'
+  - following_context: $ 
+    preceding_context: ''
+    replacement: 'ʕ:'
+    segment: 'ʕ'
+  - following_context: ''
+    preceding_context: ^
+    replacement: ''
+    segment: 'ʕ'
+  - following_context: $ 
+    preceding_context: ''
+    replacement: 'h:'
+    segment: 'h'
+  - following_context: ''
+    preceding_context: ^
+    replacement: ''
+    segment: 'h'
+  #  - following_context: $ #end of word
+  #    preceding_context: ''
+  #    replacement: ''
+  #    segment: 's'
+  #  - following_context: '[^aiouejw]' #middle of the word not followed by vowel or glide
+  #    preceding_context: ''
+  #    replacement: 'h'
+  #    segment: 's'
+
+#@article{ridouane2010geminates,
+#  title={Geminates at the junction of phonetics and phonology},
+#  author={Ridouane, Rachid},
+#  journal={Laboratory phonology},
+#  volume={10},
+#  pages={61--90},
+#  year={2010},
+#  publisher={Mouton de Gruyter Berlin}
+#}
+# This article mentions that velars may be realized as palatals
+# Before /i/
+# Then the autor cite himself in a French paper
+#
+#@article{ridouane1999spirantisation,
+#  title={La spirantisation dans un parler berb{\`e}re du Maroc (parler chleuh de Haha)},
+#  author={Ridouane, Rachid},
+#  journal={Dipl{\^o}me d’Etudes Approfondies, Universit{\'e} Paris},
+#  volume={3},
+#  year={1999}
+#}
+#
+#
+#However in the first page of "Syllables in tashlhiyt berber and in moroccan arabic"
+# it says "Prevocalic voiceless stops are unaspirated"
+#
+#
+
+  #  -  t in nt is never spirantized
+  #  - gemminates(tense in the book)  never spirantized
+  #  "Syllables in tashlhiyt berber and in moroccan arabic"
+  #  y between consonants becomes i
+  #  w between consonants becomes u
+  #  i with adjacent vowel becomes y
+  #  u with adjacent vowel becomes w
+  - following_context: $
+    preceding_context: '(w|y|b|bʷ|m|mʷ|f|n|s|sʷ|z|zʷ|t|tʷ|d|dʷ|l|r|rʷ|ʃ|ʒ|g|gʷ|k|kʷ|χ|χʷ|ʁ|ʁʷ|q|qʷ|ħ|ʕ)'
+    replacement: 'i'
+    segment: 'y'
+  - following_context: '(w|y|b|bʷ|m|mʷ|f|n|s|sʷ|z|zʷ|t|tʷ|d|dʷ|l|r|rʷ|ʃ|ʒ|g|gʷ|k|kʷ|χ|χʷ|ʁ|ʁʷ|q|qʷ|ħ|ʕ)'
+    preceding_context: ^
+    replacement: 'i'
+    segment: 'y'
+  - following_context: $
+    preceding_context: ''
+    replacement: 'y'
+    segment: 'i'
+  - following_context: 
+    preceding_context: ^
+    replacement: 'y'
+    segment: 'i'
+  - following_context: $
+    preceding_context: '(w|y|b|bʷ|m|mʷ|f|n|s|sʷ|z|zʷ|t|tʷ|d|dʷ|l|r|rʷ|ʃ|ʒ|g|gʷ|k|kʷ|χ|χʷ|ʁ|ʁʷ|q|qʷ|ħ|ʕ)'
+    replacement: 'u'
+    segment: 'w'
+  - following_context: '(w|y|b|bʷ|m|mʷ|f|n|s|sʷ|z|zʷ|t|tʷ|d|dʷ|l|r|rʷ|ʃ|ʒ|g|gʷ|k|kʷ|χ|χʷ|ʁ|ʁʷ|q|qʷ|ħ|ʕ)'
+    preceding_context: ^
+    replacement: 'u'
+    segment: 'w'
+  - following_context: $
+    preceding_context: ''
+    replacement: 'w'
+    segment: 'u'
+  - following_context: 
+    preceding_context: ^
+    replacement: 'w'
+    segment: 'u'
+
+
+
