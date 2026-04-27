@@ -448,8 +448,8 @@ def main():
 
     #  "Syllables in tashlhiyt berber and in moroccan arabic" p. 139
     # when does a release happen(not only epethetic e) between any
-    #  stops (b,t,d,k,g,q) consonant c1 and c2
-    #  book considers n and m noncontinuants(stops) as well.
+    #  noncontinuant(b,t,d,k,g,q) consonant c1 and c2
+    #  book considers n and m noncontinuants as well.
     # vocoids are voiced 
     #   if (articulation_place(c1)  != articulation_place(c2)) :
     #       release() # /tb//kt//mn/ /lm/ MUST release audibly
@@ -470,10 +470,19 @@ def main():
     # p.145
     # VTV never near a vowel. Always next to voiced segment
     # After consonant
+
+    # p.154 : a geminate articulation can never be fused to another
+    # (closures are not articulations, so ttt ddd kkk  ddd is ok)
+    # consistent with the previous, mm + m is fine as /mmm/ (p.158)
+    # such as xmm'm
+    #
+
+    #p. 160 regressive devoicing exists (across word boundaries too)
+    # Kernel(syllable) dependant, so not implementing this.
     #
     #
     #
-    #
+
 
 
 

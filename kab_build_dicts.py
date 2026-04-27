@@ -16,9 +16,24 @@ https://en.wikipedia.org/wiki/Kabyle_language#Assimilation:
 
 https://en.wikipedia.org/wiki/Berber_Latin_alphabet#Kabyle-Berber_local_usages
 - ţ, z̧ can be just added.
-- kkw may be  kʷ for k,g,d,t,b. How to discern those from gemminates.
+- kkw may be  kʷ/ kk w      for k,g,d,t,b. How to discern those from gemminates.
+
 - gh may be ɣ(so how is ɣʷ written)
 - kͦkͦ may be kʷ
+- wiki says : n +w = bb  
+- my native speaker says, optionally : n+w = nbw /npw
+- NEARLY ALWAYS TD/TT = TS
+- SS = LONG S, not ts
+- wiki says I+Y=IG : we couldnt find a pattern but most examples it didnt
+
+- wiki says: kkw/ggw/qqw are common kʷgʷqʷ writings
+- my native speaker would only pronounce kʷ at the end of a word.
+
+According to native speaker
+- ww -> bb/ww (dialectal-dependent)
+- yy -> gg/yy (dialectal-dependent)
+- ɣɣ -> ɣɣ/qq (dialectal-dependent)
+- https://en.wikipedia.org/wiki/Kabyle_language#Fricatives_vs._stops this entire section sounds good to him
 
 """
 
@@ -39,7 +54,7 @@ std_lat = {
     "Γ":"ɣ",# Greek gammas
     "γ":"ɣ",
     "tt":"ţ",
-    "ss":"ţ",
+    #"ss":"ţ",
     "zz":"z̧",
 
 }
@@ -51,7 +66,7 @@ std_lat = {
 lat2ipa = {
     ### VOWELS AND GLIDES
     "a": "a",
-    "e": ["", "ə"],
+    "e": ["ə",""],
     "i": "i",
     "u": "u",
     "w": "w",
@@ -96,7 +111,7 @@ lat2ipa = {
     "k": "k",
     "kʷ": "kʷ",
     # Uvular
-    "x": "χʷ",
+    "x": "χ",
     "xʷ": "χʷ",
     "ɣ": "ʁ",#SRC 7 disagrees: it suggests /ɣ/
     "ɣʷ": "ʁʷ",

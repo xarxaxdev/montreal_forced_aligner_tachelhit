@@ -3,7 +3,12 @@ rules:
   # In-word gemminates are handled in-code when generating the
   # pronunciation dictionary. These rules are meant to 
   # integrate cross-word gemination. We allow a word to eat its
-  # following word consonant.
+  # following word consonant. 
+  #
+  # The rule implementation here also covers for triplets:
+  # endword_t + startword_tt  = /t.tt/ or /ttt/
+  # startword_tt + endword_t = /tt.t/ or /ttt/
+  # Since the triplet gets assigned as t: at the from of the 2nd word
   #
   # According to "Syllables in tashlhiyt berber and in moroccan arabic"
   # assimilation is done according to the initial of the next word.
@@ -281,6 +286,9 @@ rules:
     preceding_context: ^
     replacement: 'h:'
     segment: 'h'
+  # According to "Syllables in tashlhiyt berber and in moroccan arabic" p.156 
+  # "tt t" or "t tt" may be realized as /tt + t/ or /ttt/
+  # this happens for d and k as well.
   #  - following_context: $ #end of word
   #    preceding_context: ''
   #    replacement: ''
@@ -319,32 +327,33 @@ rules:
 
   #  -  t in nt is never spirantized
   #  - gemminates(tense in the book)  never spirantized
-  #  "Syllables in tashlhiyt berber and in moroccan arabic"
+  #  "Syllables in tashlhiyt berber and in moroccan arabic" p.190-193
   #  y between consonants becomes i
   #  w between consonants becomes u
   #  i with adjacent vowel becomes y
   #  u with adjacent vowel becomes w
+  #  a(end) + a(begin) = /aa/(long a)
   - following_context: $
-    preceding_context: '(w|y|b|bʷ|m|mʷ|f|n|s|sʷ|z|zʷ|t|tʷ|d|dʷ|l|r|rʷ|ʃ|ʒ|g|gʷ|k|kʷ|χ|χʷ|ʁ|ʁʷ|q|qʷ|ħ|ʕ)'
+    preceding_context: '(w|j|b|bʷ|m|mʷ|f|n|s|sʷ|z|zʷ|t|tʷ|d|dʷ|l|r|rʷ|ʃ|ʒ|g|gʷ|k|kʷ|χ|χʷ|ʁ|ʁʷ|q|qʷ|ħ|ʕ)'
     replacement: 'i'
-    segment: 'y'
-  - following_context: '(w|y|b|bʷ|m|mʷ|f|n|s|sʷ|z|zʷ|t|tʷ|d|dʷ|l|r|rʷ|ʃ|ʒ|g|gʷ|k|kʷ|χ|χʷ|ʁ|ʁʷ|q|qʷ|ħ|ʕ)'
+    segment: 'j'
+  - following_context: '(w|j|b|bʷ|m|mʷ|f|n|s|sʷ|z|zʷ|t|tʷ|d|dʷ|l|r|rʷ|ʃ|ʒ|g|gʷ|k|kʷ|χ|χʷ|ʁ|ʁʷ|q|qʷ|ħ|ʕ)'
     preceding_context: ^
     replacement: 'i'
-    segment: 'y'
+    segment: 'j'
   - following_context: $
     preceding_context: ''
-    replacement: 'y'
+    replacement: 'j'
     segment: 'i'
   - following_context: ''
     preceding_context: ^
-    replacement: 'y'
+    replacement: 'j'
     segment: 'i'
   - following_context: $
-    preceding_context: '(w|y|b|bʷ|m|mʷ|f|n|s|sʷ|z|zʷ|t|tʷ|d|dʷ|l|r|rʷ|ʃ|ʒ|g|gʷ|k|kʷ|χ|χʷ|ʁ|ʁʷ|q|qʷ|ħ|ʕ)'
+    preceding_context: '(w|j|b|bʷ|m|mʷ|f|n|s|sʷ|z|zʷ|t|tʷ|d|dʷ|l|r|rʷ|ʃ|ʒ|g|gʷ|k|kʷ|χ|χʷ|ʁ|ʁʷ|q|qʷ|ħ|ʕ)'
     replacement: 'u'
     segment: 'w'
-  - following_context: '(w|y|b|bʷ|m|mʷ|f|n|s|sʷ|z|zʷ|t|tʷ|d|dʷ|l|r|rʷ|ʃ|ʒ|g|gʷ|k|kʷ|χ|χʷ|ʁ|ʁʷ|q|qʷ|ħ|ʕ)'
+  - following_context: '(w|j|b|bʷ|m|mʷ|f|n|s|sʷ|z|zʷ|t|tʷ|d|dʷ|l|r|rʷ|ʃ|ʒ|g|gʷ|k|kʷ|χ|χʷ|ʁ|ʁʷ|q|qʷ|ħ|ʕ)'
     preceding_context: ^
     replacement: 'u'
     segment: 'w'
@@ -356,6 +365,14 @@ rules:
     preceding_context: ^
     replacement: 'w'
     segment: 'u'
+  - following_context: $
+    preceding_context: ''
+    replacement: ''
+    segment: 'a'
+  - following_context: 
+    preceding_context: ^
+    replacement: 'a:'
+    segment: 'a'
 
 
 
