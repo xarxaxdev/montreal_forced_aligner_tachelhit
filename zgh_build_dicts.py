@@ -188,6 +188,7 @@ tif2ipa = {
     # clitics
     "-": "",
 }
+
 non_geminated = "ⴰⴻⵉⵓ-"#aeiu
 # Gemminates
 keys =list( tif2ipa.keys())
@@ -420,7 +421,7 @@ def main():
                 vocab[w].add(" ".join(t))
                 vocab[w_std_tif].add(" ".join(t))
                 vocab[w_std_lat].add(" ".join(t))
-    #  "Syllables in tashlhiyt berber and in moroccan arabic"
+    #  "Syllables in tashlhiyt berber and in moroccan arabic" p. 46
     # says "the genitive preposition /n/ completely assimilates to the initial segment of the following word"
     # therefore we not hear /n/ before /uinwyrlm/
     # before w,y becomes u,i respectively
@@ -429,11 +430,51 @@ def main():
     #(not with geminates)
     vocab['n'] = {'n','u','i','r','l'}
 
-    #  "Syllables in tashlhiyt berber and in moroccan arabic"
+    #  "Syllables in tashlhiyt berber and in moroccan arabic" p.48
     #  (R)AD's final consonant: sometimes /ad/ or /rad/ drop 
     #  the d at the end of the word
     vocab['ad'] = {'ad','a'}
     vocab['rad'] = {'rad','ra'}
+
+    #  "Syllables in tashlhiyt berber and in moroccan arabic" p. 94
+    # Sonority scale: 
+    # /a/ > high vocoids > liquids > nasals > fricatives > stops
+    # a > iuyw > rl > mn > sxzʃʒh > tkqbdg
+    # r is liquid
+    # higher sonorant = nuclei of syllable = epenthesis before it
+    # coda cannot have higher sonority than nucleus
+    # ambiguous syllabification = VC~CCV= V.C~C.CV = VC~C.CV
+    # (where first C and second C merge through gemination)
+
+    #  "Syllables in tashlhiyt berber and in moroccan arabic" p. 139
+    # when does a release happen(not only epethetic e) between any
+    #  stops (b,t,d,k,g,q) consonant c1 and c2
+    #  book considers n and m noncontinuants(stops) as well.
+    # vocoids are voiced 
+    #   if (articulation_place(c1)  != articulation_place(c2)) :
+    #       release() # /tb//kt//mn/ /lm/ MUST release audibly
+    #               # may have voicoid
+    #   else:
+    #       if (sonority(c1) != sonority(c2)):
+    #           no_release() # /nd/ /tl/ /bm/ never release
+    #                       # guaranteed no vocoid
+    #       else:
+    #           if (cannot_fusion(c1,c2)):
+    #               optional_release() # /tt +t/ /nn + n/
+    #                   # may have vocoid
+    #           else :#prohibited release
+    #               gemination(c1,c2) #/t+t/ /n+n/
+    #
+    # VTV's (which are voice) cannot happen between voiceless 
+    # obstruents. 
+    # p.145
+    # VTV never near a vowel. Always next to voiced segment
+    # After consonant
+    #
+    #
+    #
+    #
+
 
 
     print("-" * 15)
