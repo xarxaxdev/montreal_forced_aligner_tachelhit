@@ -194,7 +194,12 @@ non_geminated = "ⴰⴻⵉⵓ-"#aeiu
 keys =list( tif2ipa.keys())
 for k in keys:
     if k not in non_geminated:
-        tif2ipa[f'{k}{k}']= f'{k}:'
+        if 'ⵯ' in k:
+            # https://huggingface.co/datasets/fsicoli/common_voice_22_0/blob/main/transcript/zgh/validated.tsv 
+            # many cases of ⴽⴽⵯ; this must be the correct way to write the geminate
+            tif2ipa[f'{k[0]}{k}']= f'{k}:'
+        else:
+            tif2ipa[f'{k}{k}']= f'{k}:'
 
 std_lat = {
     "bᵒ": "bʷ",
@@ -411,10 +416,10 @@ def main():
                 w_std_tif = standardize(w, std_tif)
                 w_std_lat = ''.join(transliterate(w_std_tif, tif2lat)[0])
                 trans = transliterate(w_std_tif, tif2ipa)
-            else:
-                w_std_lat = standardize(w, std_lat)
-                w_std_tif = ''.join(transliterate(w_std_lat, lat2tif)[0])
-                trans = transliterate(w_std_lat, lat2ipa)
+            #else:
+            #    w_std_lat = standardize(w, std_lat)
+            #    w_std_tif = ''.join(transliterate(w_std_lat, lat2tif)[0])
+            #    trans = transliterate(w_std_lat, lat2ipa)
 
 
             for t in trans:  # e may be 'ə',''
@@ -429,14 +434,26 @@ def main():
     # before l,r(pharing or not) become l or r
     #(not with geminates)
     vocab['n'] = {'n','u','i','r','l'}
+    vocab['ⵏ'] = {'n','u','i','r','l'}
 
-    #  "Syllables in tashlhiyt berber and in moroccan arabic" p.48
-    #  (R)AD's final consonant: sometimes /ad/ or /rad/ drop 
-    #  the d at the end of the word
+    # "Syllables in tashlhiyt berber and in moroccan arabic" p.48
+    # (R)AD's final consonant: sometimes /ad/ or /rad/ drop (or assimilates)
+    # the d at the end of the word
+    vocab['ⴰⴷ'] = {'ad','a'}
+    vocab['ⵔⴰⴷ'] = {'rad','ra'}
     vocab['ad'] = {'ad','a'}
     vocab['rad'] = {'rad','ra'}
 
-    #  "Syllables in tashlhiyt berber and in moroccan arabic" p. 94
+
+    # "Syllables in tashlhiyt berber and in moroccan arabic" p.59
+    # Comments on context-dependant realizations of vowels 
+    # (near emphatic pronunciations). However I see unclear how
+    # syllabization influences this, I find it therefore better 
+    # not to implement
+    #
+
+
+    # "Syllables in tashlhiyt berber and in moroccan arabic" p. 94
     # Sonority scale: 
     # /a/ > high vocoids > liquids > nasals > fricatives > stops
     # a > iuyw > rl > mn > sxzʃʒh > tkqbdg
@@ -479,8 +496,6 @@ def main():
 
     #p. 160 regressive devoicing exists (across word boundaries too)
     # Kernel(syllable) dependant, so not implementing this.
-    #
-    #
     #
 
 

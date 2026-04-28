@@ -16,10 +16,14 @@ https://en.wikipedia.org/wiki/Kabyle_language#Assimilation:
 
 https://en.wikipedia.org/wiki/Berber_Latin_alphabet#Kabyle-Berber_local_usages
 - ţ, z̧ can be just added.
-- kkw may be  kʷ/ kk w      for k,g,d,t,b. How to discern those from gemminates.
 
+- wiki says:
 - gh may be ɣ(so how is ɣʷ written)
-- kͦkͦ may be kʷ
+- kkw may be  kʷ/ kk w      for k,g,d,t,b. 
+- my native speaker says:
+- gh is very informal, rarely used 
+- kkw is pronounced  /k:w/. /kʷ/ is rare, and from data he only used when it was word-terminating
+
 - wiki says : n +w = bb  
 - my native speaker says, optionally : n+w = nbw /npw
 - NEARLY ALWAYS TD/TT = TS
@@ -27,7 +31,7 @@ https://en.wikipedia.org/wiki/Berber_Latin_alphabet#Kabyle-Berber_local_usages
 - wiki says I+Y=IG : we couldnt find a pattern but most examples it didnt
 
 - wiki says: kkw/ggw/qqw are common kʷgʷqʷ writings
-- my native speaker would only pronounce kʷ at the end of a word.
+- my native speaker would only pronounce kʷ at the end of a word. 
 
 According to native speaker
 - ww -> bb/ww (dialectal-dependent)
@@ -53,8 +57,9 @@ std_lat = {
     "ε":"ɛ",# Greek epsylon (not IPA epsylon)
     "Γ":"ɣ",# Greek gammas
     "γ":"ɣ",
-    "tt":"ţ",
-    #"ss":"ţ",
+    "tt":"ţ", # Technically an old writing
+    "dt":"ţ", # Technically an old writing
+    #"ss":"ţ", # Native speaker did not recognize this
     "zz":"z̧",
 
 }
