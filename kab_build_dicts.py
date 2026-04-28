@@ -28,30 +28,36 @@ I will summarize my findings here:
     SRC: https://en.wikipedia.org/wiki/Berber_Latin_alphabet#Kabyle-Berber_local_usages
 
 Now, some discrepancies:
-Regarding gh as an alternative spelling for ɣ
+Regarding gh as an alternative spelling for ɣ 
 - wiki says it is sometimes used
 - Native speaker said it is understandable, but informal and rarely-if-ever used
+DISMISSED 
 
 Regarding kkw/ggw  as an alternative spelling for kʷ/gʷ  (SRC: https://en.wikipedia.org/wiki/Berber_Latin_alphabet#Kabyle-Berber_local_usages)
 - wiki says many authors use kkw for  kʷ    
 - my native speaker pronounced kkw /k:w/. /kʷ/ was exclusively used when it was word-terminating
+IMPLEMENTED (according to speaker), replacement rule 
 
 Spelling /ts/ as tt or ss (SRC https://en.wikipedia.org/wiki/Berber_Latin_alphabet#Kabyle-Berber_local_usages)
 - wiki  mentions  both tt and ss  spellings for /ts/
 - my native speaker did never pronounce ss as /ts/ and pronounced tt always as /ts/ (including cross-word assimilations such as d+t)
+IMPLEMENTED (according to speaker) 
 
 Assimilation n+w 
 - wiki says : n+w = /bb/ or /pp/
 - my native speaker said, all these feel correct: n+w = /nbw/ /npw/ /nw/
 - https://en.wikipedia.org/wiki/Kabyle_language#Dialects -> The native speaker never heard of n+w= /ggʷ/
+IMPLEMENTED (according to speaker) 
 
 Assimilation n+y:
 - wiki says: n+w = /gg/ or /yy/
 - native speaker only would pronounce /yy/
+IMPLEMENTED ACCORDING TO SPEAKER
 
 Assimilation i+y= /ig/
 - wiki does not specify if dialectal.
 - My native speaker used it with specific words, but not as a general case (no pattern)
+DISMISSED
 
 
 Several dialectal pronunciations of geminates are listed in 
@@ -61,10 +67,11 @@ However, no source is available.These have been confirmed by my native speaker:
 - ww -> bbʷ/ww (dialectal-dependent) (could not confirm ggʷ from dialects)
 - yy -> gg/yy (dialectal-dependent)
 - ɣɣ -> ɣɣ/qq (dialectal-dependent)
+IMPLEMENTED (according to speaker) 
 
 Once again a section without sources: https://en.wikipedia.org/wiki/Kabyle_language#Fricatives_vs._stops 
 My native speakers pronunciation matched this table.
-
+IMPLEMENTED (according to wiki) 
 """
 
 #https://en.wikipedia.org/wiki/Berber_Latin_alphabet#Kabyle-Berber_local_usages
@@ -103,7 +110,7 @@ lat2ipa = {
     "w": "w",
     "y": "j",
     # Bilabials
-    "b": "b",
+    "b": "β",
     "bʷ": "bʷ",
     "m": "m",
     "mʷ": "mʷ",
@@ -115,11 +122,11 @@ lat2ipa = {
     "ṣ": "sˤ",
     "z": "z",
     "ẓ": "zˤ",
-    "t": "t",
+    "t": "θ",
     "ṭ": "tˤ",
     #'ţ':'t͡s',
     "ţ": "ts",
-    "d": "d",
+    "d": "ð",
     "ḍ": "dˤ",
     #'z̧':'d͡z',
     "z̧": "dz",
@@ -137,9 +144,9 @@ lat2ipa = {
     #'lt':['lt','tʃ']
     # Palatal
     # Velar
-    "g": "g",
+    "g": "ʝ",
     "ɡʷ": "ɡʷ",
-    "k": "k",
+    "k": "ç",
     "kʷ": "kʷ",
     # Uvular
     "x": "χ",
@@ -158,69 +165,33 @@ lat2ipa = {
 }
 
 
-tif2lat = {
-    ### VOWELS AND GLIDES
-    # According to Phon[1-3] only a,u,i exist in the language (with sometimes an ə) that may or may not be written/pronounced
-    "ⴰ": "a",
-    "ⴻ": "e",
-    "ⵉ": "i",
-    "ⵓ": "u",
-    "ⵡ": "w",
-    "ⵢ": "y",
-    "ⵧ": "o",
-    # Bilabials
-    "ⴱ": "b",
-    "ⴱⵯ": "bʷ",
-    "ⵎ": "m",
-    "ⵎⵯ": "mʷ",
-    # Labiodental
-    "ⴼ": "f",
-    # Dental
-    # Alveolar
-    "ⵏ": "n",
-    "ⵙ": "s",
-    "ⵚ": "ṣ",
-    "ⵣ": "z",
-    "ⵥ": "ẓ",
-    "ⵜ": "t",
-    "ⵟ": "ṭ",
-    "ⴷ": "d",
-    "ⴹ": "ḍ",
-    "ⵍ": "l",
-    "ⵔ": "r",
-    "ⵕ": "ṛ",
-    "ⵜⵙ": "ţ",#ts
-    "ⴷⵣ": "z̧",#dz
-    # Post Alveolar
-    "ⵛ": "c",
-    "ⵜⵛ": "č",  # tsh
-    "ⵊ": "j",
-    "ⴷⵊ": "ǧ", # dj 
-    # Velar
-    "ⴳ": "g",
-    "ⴳⵯ": "ɡʷ",
-    "ⴽ": "k",
-    "ⴽⵯ": "kʷ",
-    # Uvular
-    "ⵅ": "x",
-    "ⵅⵯ": "xʷ",
-    "ⵖ": "ɣ",
-    "ⵖⵯ": "ɣʷ",
-    "ⵇ": "q",
-    "ⵇⵯ": "qʷ",
-    # Pharyngeal
-    "ⵃ": "ḥ",  # CONSENSUS 1,2,3
-    "ⵄ": "ɛ",  # SRC 1  CONFLICT!
-    # Glottal
-    "ⵀ": "h",
-    # clitics
-    "-": "-",
-}
+lat2ipa['nw']= ['nw','nbw','npw']
+lat2ipa['ny'] = 'y:'
+lat2ipa['ww'] = ['bʷ:','w:']
+lat2ipa['yy'] = ['y:','g:']
+lat2ipa['ɣɣ'] = ['ɣ:','q:']
+#https://en.wikipedia.org/wiki/Kabyle_language#Fricatives_vs._stops
+lat2ipa[f'mb'] = [f'mb']# no fricative b
+for c in 'ln':
+    lat2ipa[f'{c}d'] = [f'{c}d']
+for c in 'brz':
+    lat2ipa[f'{c}g'] = [f'{c}g']
+lat2ipa[f'ɛg'] = [f'ʕg']
+lat2ipa[f'jg'] = [f'ʒg']
+for c in 'fbslrn':
+    lat2ipa[f'{c}k'] = [f'{c}k']
+lat2ipa[f'ḥk'] = [f'ħk']
+lat2ipa[f'ɛk'] = [f'ʕk']
+lat2ipa[f'ck'] = [f'ʃk']
+for c in 'lmn':
+    lat2ipa[f'{c}t'] = [f'{c}t']
 
-lat2tif = {}
 
-for k in tif2lat:
-    lat2tif[tif2lat[k]] = k
+
+#However, no source is available.These have been confirmed by my native speaker:
+#- ww -> bbʷ/ww (dialectal-dependent) (could not confirm ggʷ from dialects)
+#- yy -> gg/yy (dialectal-dependent)
+#- ɣɣ -> ɣɣ/qq (dialectal-dependent)
 
 
 def transliterate(text, my_dict):
