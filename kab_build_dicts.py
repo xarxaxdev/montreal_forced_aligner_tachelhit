@@ -15,7 +15,7 @@ are present in some dialects and some are global. To be usable, it
 would be nice to know which are global and which are not. Or at
 least some source.
 
-Given these, I contacted a native speaker of Kabyle from Kabilia 
+Given these, I contacted a native speaker of Kabyle from Tizi_Ouzou
 and asked him how he would pronounce (or if he had heard other 
 pronunciations) of different assimilations. 
 I will summarize my findings here:
@@ -44,6 +44,10 @@ Assimilation n+w
 - wiki says : n+w = /bb/ or /pp/
 - my native speaker said, all these feel correct: n+w = /nbw/ /npw/ /nw/
 - https://en.wikipedia.org/wiki/Kabyle_language#Dialects -> The native speaker never heard of n+w= /ggʷ/
+
+Assimilation n+y:
+- wiki says: n+w = /gg/ or /yy/
+- native speaker only would pronounce /yy/
 
 Assimilation i+y= /ig/
 - wiki does not specify if dialectal.
