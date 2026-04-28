@@ -6,38 +6,60 @@ from pathlib import Path
 import sys
 
 """
-Based on zgh_build_dicts.py
+Built from zgh_build_dicts.py
+
+Information cross-referenced from:
+https://en.wikipedia.org/wiki/Kabyle_language#Assimilation
+A lot of information in this table mentions how some assimilations 
+are present in some dialects and some are global. To be usable, it 
+would be nice to know which are global and which are not. Or at
+least some source.
+
+Given these, I contacted a native speaker of Kabyle from Kabilia 
+and asked him how he would pronounce (or if he had heard other 
+pronunciations) of different assimilations. 
+I will summarize my findings here:
+
+-   e may be pronounced as an epenthetic vowel with a wide range, 
+    or  even not be pronounced
 
 
-https://en.wikipedia.org/wiki/Kabyle_language#Assimilation:
-- (I see 3-4 listed with no account of when are they dialectal).
-- Gemmination turns fricatives to stops? The table makes no sense.
-- epenthethic e (is it impredictably properly pronounced?)
+-   ţ, z̧ can be just added (and I will use them for simplicity)
+    SRC: https://en.wikipedia.org/wiki/Berber_Latin_alphabet#Kabyle-Berber_local_usages
 
-https://en.wikipedia.org/wiki/Berber_Latin_alphabet#Kabyle-Berber_local_usages
-- ţ, z̧ can be just added.
+Now, some discrepancies:
+Regarding gh as an alternative spelling for ɣ
+- wiki says it is sometimes used
+- Native speaker said it is understandable, but informal and rarely-if-ever used
 
-- wiki says:
-- gh may be ɣ(so how is ɣʷ written)
-- kkw may be  kʷ/ kk w      for k,g,d,t,b. 
-- my native speaker says:
-- gh is very informal, rarely used 
-- kkw is pronounced  /k:w/. /kʷ/ is rare, and from data he only used when it was word-terminating
+Regarding kkw/ggw  as an alternative spelling for kʷ/gʷ  (SRC: https://en.wikipedia.org/wiki/Berber_Latin_alphabet#Kabyle-Berber_local_usages)
+- wiki says many authors use kkw for  kʷ    
+- my native speaker pronounced kkw /k:w/. /kʷ/ was exclusively used when it was word-terminating
 
-- wiki says : n +w = bb  
-- my native speaker says, optionally : n+w = nbw /npw
-- NEARLY ALWAYS TD/TT = TS
-- SS = LONG S, not ts
-- wiki says I+Y=IG : we couldnt find a pattern but most examples it didnt
+Spelling /ts/ as tt or ss (SRC https://en.wikipedia.org/wiki/Berber_Latin_alphabet#Kabyle-Berber_local_usages)
+- wiki  mentions  both tt and ss  spellings for /ts/
+- my native speaker did never pronounce ss as /ts/ and pronounced tt always as /ts/ (including cross-word assimilations such as d+t)
 
-- wiki says: kkw/ggw/qqw are common kʷgʷqʷ writings
-- my native speaker would only pronounce kʷ at the end of a word. 
+Assimilation n+w 
+- wiki says : n+w = /bb/ or /pp/
+- my native speaker said, all these feel correct: n+w = /nbw/ /npw/ /nw/
+- https://en.wikipedia.org/wiki/Kabyle_language#Dialects -> The native speaker never heard of n+w= /ggʷ/
 
-According to native speaker
-- ww -> bb/ww (dialectal-dependent)
+Assimilation i+y= /ig/
+- wiki does not specify if dialectal.
+- My native speaker used it with specific words, but not as a general case (no pattern)
+
+
+Several dialectal pronunciations of geminates are listed in 
+- https://en.wikipedia.org/wiki/Kabyle_language#Dialects
+- https://en.wikipedia.org/wiki/Kabyle_language#Phonology
+However, no source is available.These have been confirmed by my native speaker:
+- ww -> bbʷ/ww (dialectal-dependent) (could not confirm ggʷ from dialects)
 - yy -> gg/yy (dialectal-dependent)
 - ɣɣ -> ɣɣ/qq (dialectal-dependent)
-- https://en.wikipedia.org/wiki/Kabyle_language#Fricatives_vs._stops this entire section sounds good to him
+
+Once again a section without sources: https://en.wikipedia.org/wiki/Kabyle_language#Fricatives_vs._stops 
+My native speakers pronunciation matched this table.
 
 """
 
