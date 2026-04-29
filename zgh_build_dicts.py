@@ -197,9 +197,9 @@ for k in keys:
         if 'ⵯ' in k:
             # https://huggingface.co/datasets/fsicoli/common_voice_22_0/blob/main/transcript/zgh/validated.tsv 
             # many cases of ⴽⴽⵯ; this must be the correct way to write the geminate
-            tif2ipa[f'{k[0]}{k}']= f'{k}:'
+            tif2ipa[f'{k[0]}{k}']= f'{tif2ipa[k]}:'
         else:
-            tif2ipa[f'{k}{k}']= f'{k}:'
+            tif2ipa[f'{k}{k}']= f'{tif2ipa[k]}:'
 
 std_lat = {
     "bᵒ": "bʷ",
@@ -288,7 +288,7 @@ non_geminated = "aeiučǧz̧ţ-"
 keys = list(lat2ipa.keys())
 for k in keys:
     if k not in non_geminated:
-        lat2ipa[f'{k}{k}']= f'{k}:'
+        lat2ipa[f'{k}{k}']= f'{lat2ipa[k]}:'
 
 
 tif2lat = {
@@ -400,17 +400,15 @@ def main():
     vocab = {}
     for row in cur:
         row["text"] = row["text"].replace("[]-", "")
-        words = re.sub(r"[?.,!\":;\'\t\*\n]", "", row["text"]).lower().split(" ")
+        words = re.sub(r"[?.,!\":;\'\t\*\n\“”’‘«»]", "", row["text"]).lower().split(" ")
         for w in words:
             if (
-                bool(re.search(r"(\d+|ⵒ|ⵠ|%|o|_|v|p|\(|\)|σ|\[|\])", w))
+                bool(re.search(r"(\d+|…|é|ğ|ï|ⵒ|ⵠ|%|o|_|v|p|\(|\)|σ|\[|\])", w))
                 or len(w) == 0
                 or w == "-"
             ):
                 continue  # skip ambiguous pronunciation cases
             
-            if not (w in vocab):
-                vocab[w] = set()
 
             if "common_voice_22_0" == row["origin"]:
                 w_std_tif = standardize(w, std_tif)
@@ -423,9 +421,16 @@ def main():
 
 
             for t in trans:  # e may be 'ə',''
-                vocab[w].add(" ".join(t))
-                vocab[w_std_tif].add(" ".join(t))
-                vocab[w_std_lat].add(" ".join(t))
+                pron = " ".join(t).replace('  ',' ')       #e being '' causes double spacing
+                if not (w in vocab):
+                    vocab[w] = set()
+                vocab[w].add(pron)
+                if not (w_std_tif in vocab):
+                    vocab[w_std_tif] = set()
+                vocab[w_std_tif].add(pron)
+                if not (w_std_lat in vocab):
+                    vocab[w_std_lat] = set()
+                vocab[w_std_lat].add(pron)
     #  "Syllables in tashlhiyt berber and in moroccan arabic" p. 46
     # says "the genitive preposition /n/ completely assimilates to the initial segment of the following word"
     # therefore we not hear /n/ before /uinwyrlm/

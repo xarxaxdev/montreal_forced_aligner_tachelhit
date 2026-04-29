@@ -243,3 +243,21 @@ def load_dicts():
                 DICTS[d_name][left]=right
     return DICTS
 
+
+
+def trim_trailing_silence(waveform, threshold=1e-2):
+    # waveform: (channels, samples) or (samples,)
+    if waveform.dim() > 1:
+        energy = waveform.abs().max(dim=0).values
+    else:
+        energy = waveform.abs()
+
+    # Find last index above threshold
+    non_silent = torch.where(energy > threshold)[0]
+    if len(non_silent) == 0:
+        return waveform  # all silence
+
+    start_idx = non_silent[0]
+    end_idx = non_silent[-1]
+    return waveform[..., start_idx:end_idx + 1]
+

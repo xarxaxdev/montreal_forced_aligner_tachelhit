@@ -14,6 +14,7 @@ from tqdm import tqdm
 
 # TODO make filenames shorter
 from utils import dataset_alias as dataset_alias
+from utils import trim_trailing_silence
 from utils import NUM_PROC, BATCH_SIZE
 
 
@@ -71,6 +72,7 @@ def transform_row(origin, waveform, sr, old_path,text):
     # Downsample and reduce precision to 16 bit
     resampler = T.Resample(orig_freq=sr, new_freq=new_sr,dtype=precision)
     waveform = resampler(waveform)
+    waveform = trim_trailing_silence(waveform)
     torchaudio.save(new_path.replace(ext,'wav'), waveform, new_sr, encoding="PCM_F", bits_per_sample=16)
 
     ### GEN TEXTGRID ###

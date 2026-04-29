@@ -284,11 +284,17 @@ def main():
                 or w == "-"
             ):
                 continue  # skip ambiguous pronunciation cases
+
             w_std_lat = standardize(w, std_lat)
             trans = transliterate(w_std_lat, lat2ipa)
             for t in trans:  # e may be 'ə',''
-                vocab[w] = " ".join(t)
-                vocab[w_std_lat] = " ".join(t)
+                pron = " ".join(t).replace('  ',' ')       #e being '' causes double spacing
+                if not (w in vocab):
+                    vocab[w] = set()
+                vocab[w].add(pron)
+                if not (w_std_lat in vocab):
+                    vocab[w_std_lat] = set()
+                vocab[w_std_lat].add(pron)
 
     print("-" * 15)
     print("SAVING DICTS")
@@ -298,7 +304,8 @@ def main():
     with open(os.path.join(cur_path, "dicts", "kab_vocab.dict"), "w") as f:
         f.write("<unk>\tspn\n")
         for w in vocab:
-            f.write(f"{w}\t{vocab[w]}\n")
+            for pron in vocab[w]:
+                f.write(f"{w}\t{pron}\n")
         f.close()
 
 
