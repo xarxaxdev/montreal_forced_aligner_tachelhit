@@ -139,19 +139,17 @@ lat2ipa = {
     "č": "tʃ",
     "j": "ʒ",
     "ǧ": "dʒ",
-    # rif has some uncommon orthography:
-    #'ll':['ll','dʒ']
-    #'lt':['lt','tʃ']
     # Palatal
     # Velar
-    "g": "ʝ",
+    "g": "ʝ", # I have seen examples in common voice that sound
+    # /ɣ/
     "ɡʷ": "ɡʷ",
     "k": "ç",
     "kʷ": "kʷ",
     # Uvular
     "x": "χ",
     "xʷ": "χʷ",
-    "ɣ": "ʁ",#SRC 7 disagrees: it suggests /ɣ/
+    "ɣ": "ʁ",
     "ɣʷ": "ʁʷ",
     "q": "q",
     "qʷ": "qʷ",
@@ -161,37 +159,56 @@ lat2ipa = {
     # Glottal
     "h": "h",
     # clitics
-    "-": "-",
+    "-": "",
 }
 
 
+#https://en.wikipedia.org/wiki/Kabyle_language#Fricatives_vs._stops
+lat2ipa[f'mb'] = [f'm b']# no fricative b
+for c in 'ln':
+    lat2ipa[f'{c}d'] = [f'{c} d']
+for c in 'brz':
+    lat2ipa[f'{c}g'] = [f'{c} g']
+lat2ipa[f'ɛg'] = [f'ʕ g']
+lat2ipa[f'jg'] = [f'ʒ g']
+for c in 'fbslrn':
+    lat2ipa[f'{c}k'] = [f'{c} k']
+lat2ipa[f'ḥk'] = [f'ħ k']
+lat2ipa[f'ɛk'] = [f'ʕ k']
+lat2ipa[f'ck'] = [f'ʃ k']
+for c in 'lmn':
+    lat2ipa[f'{c}t'] = [f'{c} t']
+
 lat2ipa['nw']= ['nw','nbw','npw']
 lat2ipa['ny'] = 'y:'
-lat2ipa['ww'] = ['bʷ:','w:']
+
+## GEMINATES
+lat2ipa['ww'] = ['bʷ:','w:'] 
 lat2ipa['yy'] = ['y:','g:']
-lat2ipa['ɣɣ'] = ['ɣ:','q:']
-#https://en.wikipedia.org/wiki/Kabyle_language#Fricatives_vs._stops
-lat2ipa[f'mb'] = [f'mb']# no fricative b
-for c in 'ln':
-    lat2ipa[f'{c}d'] = [f'{c}d']
-for c in 'brz':
-    lat2ipa[f'{c}g'] = [f'{c}g']
-lat2ipa[f'ɛg'] = [f'ʕg']
-lat2ipa[f'jg'] = [f'ʒg']
-for c in 'fbslrn':
-    lat2ipa[f'{c}k'] = [f'{c}k']
-lat2ipa[f'ḥk'] = [f'ħk']
-lat2ipa[f'ɛk'] = [f'ʕk']
-lat2ipa[f'ck'] = [f'ʃk']
-for c in 'lmn':
-    lat2ipa[f'{c}t'] = [f'{c}t']
+lat2ipa['ɣɣ'] = ['ʁ:','q:']
+    #"ɣ": "ʁ"
+
+"""
+From: 
+- https://en.wikipedia.org/wiki/Kabyle_language#Fricatives_vs._stops
+"note that gemination turns fricatives into stops)."
+- not true for tt (becomes affricate /ts/)
+- not true for most geminates (checked dataset manually)
 
 
-
-#However, no source is available.These have been confirmed by my native speaker:
-#- ww -> bbʷ/ww (dialectal-dependent) (could not confirm ggʷ from dialects)
-#- yy -> gg/yy (dialectal-dependent)
-#- ɣɣ -> ɣɣ/qq (dialectal-dependent)
+"""
+lat2ipa[f'bb'] = [f'b:'] # True for b
+lat2ipa[f'dd'] = [f'd:'] # True for d
+lat2ipa[f'gg'] = [f'g:'] # True for g
+lat2ipa[f'kk'] = [f'k:'] # True for g
+# normal gemminates (do not change from affricate to stop)
+for c in 'mfnszlrqh':
+    lat2ipa[f'{c}{c}'] = [f'{c}:'] 
+lat2ipa['cc']=f'ʃ:'
+lat2ipa['jj']=f'ʒ:'
+lat2ipa['xx']=f'χ:'
+lat2ipa['ḥḥ']=f'ħ:'
+lat2ipa['ɛɛ']=f'ʕ:'
 
 
 def transliterate(text, my_dict):

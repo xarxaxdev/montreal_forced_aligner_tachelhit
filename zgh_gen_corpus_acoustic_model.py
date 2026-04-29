@@ -17,7 +17,7 @@ from utils import dataset_alias as dataset_alias
 
 
 data = {}
-DICTS = {}
+#DICTS = {}
 tg_header = """File type = "ooTextFile"
 Object class = "TextGrid"
 
@@ -35,20 +35,20 @@ intervals: size = {interval_size}"""
 
 DICT = "zgh_all2ipa" 
 # All kabyle data is in latinscript 
-def latin2ipa(text):
-    transcript= []
-    for w in text.split(' '):
-        #print(f'w:{w}')
-        try:
-            transcript.append(DICTS[DICT][w].replace(' ',''))
-        except:
-            print(f'word "{w}" not found in dictionary "{DICT}"')
-            transcript.append(w)
-    return ' '.join(transcript)
-
+#def latin2ipa(text):
+#    transcript= []
+#    for w in text.split(' '):
+#        #print(f'w:{w}')
+#        try:
+#            transcript.append(DICTS[DICT][w].replace(' ',''))
+#        except:
+#            print(f'word "{w}" not found in dictionary "{DICT}"')
+#            transcript.append(w)
+#    return ' '.join(transcript)
+#
 # One annotation = one utterance
 def gen_naive_textgrid(wave,sr,transcript):
-    transcript= latin2ipa(transcript)
+    #transcript= latin2ipa(transcript)
     t = len(wave)/sr
     #intervals at the utterance level
     tg_main =  tg_header.format(xmax=round(t,6),name='utt',interval_size=1)
@@ -81,9 +81,9 @@ def main():
     print('Loading datasets and assigning ids...')
     data = utils.load_datasets_zgh()
     print('Loaded.')
-    global DICTS
-    DICTS = utils.load_dicts()
-    cur =  concatenate_datasets([data['common_voice_22_0'],data['moroccan_amazigh_asr']])
+    #global DICTS
+    #DICTS = utils.load_dicts()
+    cur =  concatenate_datasets([data['common_voice_22_0']])
     print(f'{"-"*10}Generating textgrid/wav files...{"-"*10}')
     for row in cur:
         row['text']= row['text'].replace('[]-','')

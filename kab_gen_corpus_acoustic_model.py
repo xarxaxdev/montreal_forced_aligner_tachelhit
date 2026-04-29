@@ -34,20 +34,23 @@ xmax = {xmax}
 intervals: size = {interval_size}"""
 
  
-# All kabyle data is in latinscript 
-def latin2ipa(text):
-    transcript= []
-    for w in text.split(' '):
-        try:
-            transcript.append(DICTS['kab_latin2ipa'][w].replace(' ',''))
-        except:
-            print(f'word "{w}" not found in dictionary "latin2ipa_kab"')
-            transcript.append(w)
-    return ' '.join(transcript)
-
+## All kabyle data is in latinscript 
+#def latin2ipa(text):
+#    transcript= []
+#    for w in text.split(' '):
+#        try:
+#            transcript.append(DICTS['kab_latin2ipa'][w].replace(' ',''))
+#        except:
+#            print(f'word "{w}" not found in dictionary "latin2ipa_kab"')
+#            transcript.append(w)
+#    return ' '.join(transcript)
+#
 # One annotation = one utterance
 def gen_naive_textgrid(wave,sr,transcript):
-    transcript= latin2ipa(transcript)
+    #transcript= latin2ipa(transcript)
+    if ('yetze') in transcript:
+        print(transcript)
+        assert(False)
     t = len(wave)/sr
     #intervals at the utterance level
     tg_main =  tg_header.format(xmax=round(t,6),name='utt',interval_size=1)
@@ -92,9 +95,9 @@ def process_row(row):
 
 def main():
     data = utils.load_datasets_kab()
-    global DICTS
-    DICTS = utils.load_dicts()
-    cur =  concatenate_datasets([data['common_voice_22_0'],data['kabyle_asr']])
+    #global DICTS
+    #DICTS = utils.load_dicts()
+    cur =  concatenate_datasets([data['common_voice_22_0']])
     # Remove rows with annoying cases
     cur = cur.filter(lambda x: not bool(re.search(r'(\d+|%|p|P|o|O|_|v|V|\(|\)|σ)',x['text'])))
     print(f'{"-"*10}Generating textgrid/wav files...{"-"*10}')
