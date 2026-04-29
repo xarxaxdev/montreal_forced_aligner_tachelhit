@@ -278,7 +278,7 @@ def main():
         words = re.sub(r"[?.,!\":;\'\t\*\n\“”’‘«»]", "", row["text"]).lower().split(" ")
         for w in words:
             if (
-                bool(re.search(r"(\d+|…|é|ğ|ï|ⵒ|ⵠ|%|o|_|v|p|\(|\)|σ|\[|\])", w))
+                bool(re.search(r"(\d+|e-|…|é|ğ|ï|ⵒ|ⵠ|%|o|_|v|p|\(|\)|σ|\[|\])", w))
                 or len(w) == 0
                 or w == "-"
             ):
@@ -295,6 +295,7 @@ def main():
                     vocab[w_std_lat] = set()
                 vocab[w_std_lat].add(pron)
 
+    vocab.pop('e-',None)#edge case
     print("-" * 15)
     print("SAVING DICTS")
     print("-" * 15)
