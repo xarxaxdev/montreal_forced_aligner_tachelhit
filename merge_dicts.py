@@ -2,7 +2,7 @@
 # Using probability to keep zgh words non-used during training on kab, and to not use kab words when adjusting the model to zgh
 
 def add_prob(line, x):
-    return line.sub('\t',f'\t{x}\t',count=1)
+    return line.replace('\t',f'\t{x}\t',1)#replace only 1st
 
 
 with open("./dicts/kab_vocab.dict") as f1, open("./dicts/zgh_vocab.dict") as f2:

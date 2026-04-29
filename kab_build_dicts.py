@@ -277,7 +277,6 @@ def main():
         row["text"] = row["text"].replace("[]-", "")
         words = re.sub(r"[?.,!\":;\'\t\*\n\“”’‘«»]", "", row["text"]).lower().split(" ")
         for w in words:
-            print(w)
             if (
                 bool(re.search(r"(\d+|…|é|ğ|ï|ⵒ|ⵠ|%|o|_|v|p|\(|\)|σ|\[|\])", w))
                 or len(w) == 0
