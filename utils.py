@@ -52,7 +52,8 @@ def load_datasets_kab():
 
 
     # Don't want 500+ hours of data downloading
-    dataset = load_dataset("fsicoli/common_voice_22_0", "kab", trust_remote_code=True, cache_dir=CACHE_DIR, streaming=True)
+    #dataset = load_dataset("fsicoli/common_voice_22_0", "kab", trust_remote_code=True, cache_dir=CACHE_DIR, streaming=True)
+    dataset = load_dataset("fsicoli/common_voice_22_0", "kab", trust_remote_code=True, streaming=True)
     # average sentence duration is 3.341
     # I want 30 hours, so 40k random samples should suffice
     samples = 40000
@@ -63,10 +64,11 @@ def load_datasets_kab():
     dataset = dataset.rename_column("sentence","text")
     #dataset = dataset.map(cleanup_text)
     print("Calculating per-transcrition text length...")
-    dataset = dataset.map(lambda x : {"text_len":len(x['text'])},num_proc=NUM_PROC)
+    dataset = dataset.map(lambda x : {"text_len":len(x['text'])},num_proc=NUM_PROC, batch_size=BATCH_SIZE)
     dataset = dataset.sort(['text_len','text'],reverse=True) #text added as a column for determinism order
     print("Localizing ids...")
-    dataset = dataset.map(lambda x, i: {**x, "id": i}, with_indices=True,num_proc=NUM_PROC,batch_size=BATCH_SIZE)
+    dataset = dataset.add_column("id", np.arange(len(dataset))) 
+    #dataset = dataset.map(lambda x, i: {**x, "id": i}, with_indices=True,num_proc=NUM_PROC,batch_size=BATCH_SIZE)
     offset = len(dataset) #so we know which id to begin on next dataset
     dataset = dataset.select_columns(columns_relevant)
     print("Casting dataset types...")

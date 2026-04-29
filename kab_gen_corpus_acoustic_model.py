@@ -14,6 +14,7 @@ from tqdm import tqdm
 
 # TODO make filenames shorter
 from utils import dataset_alias as dataset_alias
+from utils import NUM_PROC, BATCH_SIZE
 
 
 data = {}
@@ -48,9 +49,6 @@ intervals: size = {interval_size}"""
 # One annotation = one utterance
 def gen_naive_textgrid(wave,sr,transcript):
     #transcript= latin2ipa(transcript)
-    if ('yetze') in transcript:
-        print(transcript)
-        assert(False)
     t = len(wave)/sr
     #intervals at the utterance level
     tg_main =  tg_header.format(xmax=round(t,6),name='utt',interval_size=1)
@@ -99,9 +97,10 @@ def main():
     #DICTS = utils.load_dicts()
     cur =  concatenate_datasets([data['common_voice_22_0']])
     # Remove rows with annoying cases
-    cur = cur.filter(lambda x: not bool(re.search(r'(\d+|%|p|P|o|O|_|v|V|\(|\)|σ)',x['text'])))
+    cur.map(lambda row:{"text":re.sub(r"[?.,!\":;\'\t\*\n\“”’‘«»]", "", row["text"]).lower()},num_proc=NUM_PROC, batch_size=BATCH_SIZE)
+    cur = cur.filter(lambda x: not bool(re.search(r"(\d+|…|é|ğ|ï|ⵒ|ⵠ|%|o|_|v|p|\(|\)|σ|\[|\])",x['text'])))
     print(f'{"-"*10}Generating textgrid/wav files...{"-"*10}')
-    cur.map(process_row)
+    cur.map(process_row,num_proc=NUM_PROC, batch_size=BATCH_SIZE)
 
 
 

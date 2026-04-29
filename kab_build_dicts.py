@@ -87,6 +87,7 @@ std_lat = {
     "qᵒ": "qʷ",
     "â": "ɛ",
     "Σ":"ɛ",
+    "ԑ":"ɛ",
     "ε":"ɛ",# Greek epsylon (not IPA epsylon)
     "Γ":"ɣ",# Greek gammas
     "γ":"ɣ",
@@ -94,6 +95,16 @@ std_lat = {
     "dt":"ţ", # Technically an old writing
     #"ss":"ţ", # Native speaker did not recognize this
     "zz":"z̧",
+    "ṛ":"ṛ",
+    "ṛ":"ṛ",
+    "ẓ":"ẓ",
+    "ṣ":"ṣ",
+    "ḍ":"ḍ",
+    "ṭ":"ṭ",
+    "ḥ": "ḥ",  # CONSENSUS 1,2,3
+    "ﬀ":"ff",
+    "‑":"-",
+    "f̣":"f",
 
 }
 
@@ -186,7 +197,6 @@ lat2ipa['ny'] = 'y:'
 lat2ipa['ww'] = ['bʷ:','w:'] 
 lat2ipa['yy'] = ['y:','g:']
 lat2ipa['ɣɣ'] = ['ʁ:','q:']
-    #"ɣ": "ʁ"
 
 """
 From: 
@@ -208,7 +218,22 @@ lat2ipa['cc']=f'ʃ:'
 lat2ipa['jj']=f'ʒ:'
 lat2ipa['xx']=f'χ:'
 lat2ipa['ḥḥ']=f'ħ:'
+lat2ipa['ṣṣ']=f'sˤ:'
+lat2ipa['ẓẓ']=f'zˤ:'
+lat2ipa['ṭṭ']=f'tˤ:'
+lat2ipa['ḍḍ']=f'dˤ:'
+lat2ipa['ţţ']=f'ts:'
+lat2ipa['z̧z̧']=f'dz:'
+lat2ipa['ṛṛ']=f'rˤ:'
+lat2ipa['ḍḍ']=f'dˤ:'
+lat2ipa['čč']=f'tʃˤ:'
+lat2ipa['ǧǧ']=f'dʒˤ:'
+lat2ipa['ḥḥ']=f'ħˤ:'
 lat2ipa['ɛɛ']=f'ʕ:'
+
+# Suspicious that in common voice we cannot see emphatic:
+# b,m,g,k,x,ɣ,q
+ 
 
 
 def transliterate(text, my_dict):
@@ -250,10 +275,11 @@ def main():
     vocab = {}
     for row in cur:
         row["text"] = row["text"].replace("[]-", "")
-        words = re.sub(r"[?.,!\":;\'\t\*\n]", "", row["text"]).lower().split(" ")
+        words = re.sub(r"[?.,!\":;\'\t\*\n\“”’‘«»]", "", row["text"]).lower().split(" ")
         for w in words:
+            print(w)
             if (
-                bool(re.search(r"(\d+|ⵒ|ⵠ|%|o|_|v|p|\(|\)|σ|\[|\])", w))
+                bool(re.search(r"(\d+|…|é|ğ|ï|ⵒ|ⵠ|%|o|_|v|p|\(|\)|σ|\[|\])", w))
                 or len(w) == 0
                 or w == "-"
             ):
