@@ -1,120 +1,121 @@
--
-  - a
--
-  - i
-  - j
-  - j:
--
-  - u
-  - w
-  - w:
--
-  - ə
--
-  - b
-  - b:
-  - β
-  - bʷ #lumping these together because no clear differentiation in kab spelling
-  - bʷ:
-- 
-  - m
-  - mʷ #lumping these together because no clear differentiation in kab spelling
-  - m:
-  - mʷ:
--
-  - f
-  - f:
--
-  - n
-  - n:
--
-  - s
-  - s:
--
-  - sˤ
-  - sˤ:
--
-  - z
-  - z:
--
-  - zˤ
-  - zˤ:
--
-  - t
-  - t:
-  - θ
--
-  - tˤ
-  - tˤ:
--
-  - ts
-  - ts:
--
-  - d
-  - ð
-  - d:
-  #- ð:
--
-  - dˤ
-  #- ðˤ
-  - dˤ:
-  #- ðˤ:
--
-  - dz
-  - dz:
--
-  - l
-  - l:
--
-  - r
-  - r:
--
-  - rˤ
-  - rˤ:
--
-  - ʃ
-  - ʃ:
--
-  - tʃ
-  - tʃ:
--
-  - ʒ
-  - ʒ:
--
-  - dʒ
-  - dʒ:
--
-  - g
-  - g:
-  - ʝ
-  - gʷ #lumping these together because no clear differentiation in kab spelling
-  - gʷ:
--
-  - k
-  - k:
-  - kʷ #lumping these together because no clear differentiation in kab spelling
-  - kʷ:
--
-  - χ
-  - χ:
-  - χʷ #lumping these together because no clear differentiation in kab spelling
-  - χʷ:
--
-  - ʁ
-  - ʁ:
-  - ʁʷ #lumping these together because no clear differentiation in kab spelling
-  - ʁʷ:
--
-  - q
-  - q:
-  - qʷ #lumping these together because no clear differentiation in kab spelling
-  - qʷ:
--
-  - ħ
-  - ħ:
--
-  - ʕ
-  - ʕ:
--
-  - h
-  - h:
+phone_groups:
+  vow_a:
+    - "a"
+  vow_i:
+    - "i"
+    - "j"
+    - "j:"
+  vow_u:
+    - "u"
+    - "w"
+    - "w:"
+  vow_e:
+    - "ə"
+  con_b:
+    - "b"
+    - "b:"
+    - "β"
+    - "bʷ" #lumping these together because no clear differentiation in kab spelling
+    - "bʷ:"
+  con_m:
+    - "m"
+    - "mʷ" #lumping these together because no clear differentiation in kab spelling
+    - "m:"
+    - "mʷ:"
+  con_f:
+    - "f"
+    - "f:"
+  con_n:
+    - "n"
+    - "n:"
+  con_s:
+    - "s"
+    - "s:"
+  con_s2:
+    - "sˤ"
+    - "sˤ:"
+  con_z:
+    - "z"
+    - "z:"
+  con_z2:
+    - "zˤ"
+    - "zˤ:"
+  con_t:
+    - "t"
+    - "t:"
+    - "θ"
+  con_t2:
+    - "tˤ"
+    - "tˤ:"
+  con_ts:
+    - "ts"
+    - "ts:"
+  con_d:
+    - "d"
+    - "ð"
+    - "d:"
+    #- ð:
+  con_d2:
+    - "dˤ"
+    #- ðˤ
+    - "dˤ:"
+    #- ðˤ:
+  con_dz:
+    - "dz"
+    - "dz:"
+  con_l:
+    - "l"
+    - "l:"
+  con_r:
+    - "r"
+    - "r:"
+  con_r2:
+    - "rˤ"
+    - "rˤ:"
+  con_sh:
+    - "ʃ"
+    - "ʃ:"
+  con_tsh:
+    - "tʃ"
+    - "tʃ:"
+  con_dj:
+    - "ʒ"
+    - "ʒ:"
+  con_dj2:
+    - "dʒ"
+    - "dʒ:"
+  con_g:
+    - "g"
+    - "g:"
+    - "ʝ"
+    - "gʷ" #lumping these together because no clear differentiation in kab spelling
+    - "gʷ:"
+  con_k:
+    - "k"
+    - "k:"
+    - "kʷ" #lumping these together because no clear differentiation in kab spelling
+    - "kʷ:"
+  con_ha:
+    - "χ"
+    - "χ:"
+    - "χʷ" #lumping these together because no clear differentiation in kab spelling
+    - "χʷ:"
+  con_gha:
+    - "ʁ"
+    - "ʁ:"
+    - "ʁʷ" #lumping these together because no clear differentiation in kab spelling
+    - "ʁʷ:"
+  con_q:
+    - "q"
+    - "q:"
+    - "qʷ" #lumping these together because no clear differentiation in kab spelling
+    - "qʷ:"
+  con_h2:
+    - "ħ"
+    - "ħ:"
+  con_a2:
+    - "ʕ"
+    - "ʕ:"
+  con_h:
+    - "h"
+    - "h:"

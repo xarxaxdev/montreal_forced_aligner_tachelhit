@@ -190,7 +190,7 @@ lat2ipa[f'ck'] = [f'ʃ k']
 for c in 'lmn':
     lat2ipa[f'{c}t'] = [f'{c} t']
 
-lat2ipa['nw']= ['nw','nbw','npw']
+lat2ipa['nw']= ['n w','n b w','n p w']
 lat2ipa['ny'] = 'y:'
 
 ## GEMINATES

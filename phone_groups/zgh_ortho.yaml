@@ -1,126 +1,121 @@
--
-  - a
--
-  - i
-  - j
-  - j:
--
-  - u
-  - w
-  - w:
--
-  - ə
--
-  - b
-  - b:
-  - β
--
-  - bʷ 
-  - bʷ:
-- 
-  - m
-  - m:
--
-  - mʷ
-  - mʷ:
--
-  - f
-  - f:
--
-  - n
-  - n:
--
-  - s
-  - s:
--
-  - sˤ
-  - sˤ:
--
-  - z
-  - z:
--
-  - zˤ
-  - zˤ:
--
-  - t
-  - t:
-  - θ
--
-  - tˤ
-  - tˤ:
--
-  - ts
-  - ts:
--
-  - d
-  - ð
-  - d:
--
-  - dˤ
-  #- ðˤ
-  - dˤ:
-  #- ðˤ:
--
-  - dz
-  - dz:
--
-  - l
-  - l:
--
-  - r
-  - r:
--
-  - rˤ
-  - rˤ:
--
-  - ʃ
-  - ʃ:
--
-  - tʃ
-  - tʃ:
--
-  - ʒ
-  - ʒ:
--
-  - dʒ
-  - dʒ:
--
-  - g
-  - g:
-  - ʝ
--
-  - gʷ 
-  - gʷ:
--
-  - k
-  - k:
--
-  - kʷ 
-  - kʷ:
--
-  - χ
-  - χ:
--
-  - χʷ 
-  - χʷ:
--
-  - ʁ
-  - ʁ:
--
-  - ʁʷ 
-  - ʁʷ:
--
-  - q
-  - q:
--
-  - qʷ 
-  - qʷ:
--
-  - ħ
-  - ħ:
--
-  - ʕ
-  - ʕ:
--
-  - h
-  - h:
+phone_groups:
+  a:
+    - a
+  i:
+    - i
+    - j
+    - j:
+  u:
+    - u
+    - w
+    - w:
+  e:
+    - ə
+  b:
+    - b
+    - b:
+    - β
+    - bʷ #lumping these together because no clear differentiation in kab spelling
+    - bʷ:
+  m:
+    - m
+    - mʷ #lumping these together because no clear differentiation in kab spelling
+    - m:
+    - mʷ:
+  f:
+    - f
+    - f:
+  n:
+    - n
+    - n:
+  s:
+    - s
+    - s:
+  s2:
+    - sˤ
+    - sˤ:
+  z:
+    - z
+    - z:
+  z2:
+    - zˤ
+    - zˤ:
+  t:
+    - t
+    - t:
+    - θ
+  t2:
+    - tˤ
+    - tˤ:
+  ts:
+    - ts
+    - ts:
+  d:
+    - d
+    - ð
+    - d:
+    #- ð:
+  d2:
+    - dˤ
+    #- ðˤ
+    - dˤ:
+    #- ðˤ:
+  dz:
+    - dz
+    - dz:
+  l:
+    - l
+    - l:
+  r:
+    - r
+    - r:
+  r2:
+    - rˤ
+    - rˤ:
+  sh:
+    - ʃ
+    - ʃ:
+  tsh:
+    - tʃ
+    - tʃ:
+  dj:
+    - ʒ
+    - ʒ:
+  dj2:
+    - dʒ
+    - dʒ:
+      g:
+  g:
+    - g:
+    - ʝ
+    - gʷ #lumping these together because no clear differentiation in kab spelling
+    - gʷ:
+  k:
+    - k
+    - k:
+    - kʷ #lumping these together because no clear differentiation in kab spelling
+    - kʷ:
+  ha:
+    - χ
+    - χ:
+    - χʷ #lumping these together because no clear differentiation in kab spelling
+    - χʷ:
+  gha:
+    - ʁ
+    - ʁ:
+    - ʁʷ #lumping these together because no clear differentiation in kab spelling
+    - ʁʷ:
+  q:
+    - q
+    - q:
+    - qʷ #lumping these together because no clear differentiation in kab spelling
+    - qʷ:
+  h2:
+    - ħ
+    - ħ:
+  a2:
+    - ʕ
+    - ʕ:
+  h:
+    - h
+    - h:

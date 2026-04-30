@@ -68,11 +68,11 @@ alias mfa_align='mfa align --clean --single_speaker -j 12 --overwrite'
 
 # train kabyle model
 # mfa train [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH OUTPUT_MODEL_PATH
-mfa_train ./corpus/kab ./dicts/kab_all.dict ./output/kab_model.zip --output_directory ./output/kab_corpus
+mfa_train --phone_groups_path ./phone_groups/kab_ortho.yaml ./corpus/kab ./dicts/kab_all.dict ./output/kab_model.zip --output_directory ./output/kab_corpus
 
 # train zgh model based on kabyl model
 # mfa adapt [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH ACOUSTIC_MODEL_PATH  OUTPUT_MODEL_PATH
-mfa_adapt ./corpus/zgh ./dicts/zgh_all.dict ./output/kab_model.zip ./output/zgh_model.zip --output_directory ./output/zgh_corpus
+mfa_adapt --phone_groups_path .phone_groups_path/kab_ortho.yaml ./corpus/zgh ./dicts/zgh_all.dict ./output/kab_model.zip ./output/zgh_model.zip --output_directory ./output/zgh_corpus
 
 # attempt align on shi corpus using zgh model
 # mfa align [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH ACOUSTIC_MODEL_PATH OUTPUT_DIRECTORY    

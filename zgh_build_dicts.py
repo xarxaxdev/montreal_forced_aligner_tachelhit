@@ -444,10 +444,10 @@ def main():
     # "Syllables in tashlhiyt berber and in moroccan arabic" p.48
     # (R)AD's final consonant: sometimes /ad/ or /rad/ drop (or assimilates)
     # the d at the end of the word
-    vocab['ⴰⴷ'] = {'ad','a'}
-    vocab['ⵔⴰⴷ'] = {'rad','ra'}
-    vocab['ad'] = {'ad','a'}
-    vocab['rad'] = {'rad','ra'}
+    vocab['ⴰⴷ'] = {'a d','a'}
+    vocab['ⵔⴰⴷ'] = {'r a d','r a'}
+    vocab['ad'] = {'a d','a'}
+    vocab['rad'] = {'r a d','r a'}
 
 
     # "Syllables in tashlhiyt berber and in moroccan arabic" p.59
