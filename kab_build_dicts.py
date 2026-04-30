@@ -191,7 +191,7 @@ for c in 'lmn':
     lat2ipa[f'{c}t'] = [f'{c} t']
 
 lat2ipa['nw']= ['n w','n b w','n p w']
-lat2ipa['ny'] = 'y:'
+lat2ipa['ny'] = 'j:'
 
 ## GEMINATES
 
@@ -206,7 +206,7 @@ for c in 'mfnsṣzẓḍṭlrṛcjxqḥɛh':
     lat2ipa[f'{c}{c}'] = [f'{lat2ipa[c]}:'] 
 
 lat2ipa['ww'] = ['bʷ:','w:'] 
-lat2ipa['yy'] = ['y:','g:']
+lat2ipa['yy'] = ['j:','g:']
 lat2ipa['bb']='b:' # fricative becomes stop
 lat2ipa['dd']='d:' # fricative becomes stop
 lat2ipa['ţţ']='ts:'# on natural text it is written 'tttt'
