@@ -56,6 +56,7 @@ python tzm_gen_corpus_acoustic_model.py
 
 alias mfa_train='mfa train  --clean --single_speaker -j 12 --overwrite'
 alias mfa_adapt='mfa adapt --clean --single_speaker -j 12 --overwrite'
+alias mfa_align='mfa align --clean --single_speaker -j 12 --overwrite'
 
 # Heavy computational work. Beware.
 # mfa train [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH OUTPUT_MODEL_PATH 
@@ -67,19 +68,19 @@ alias mfa_adapt='mfa adapt --clean --single_speaker -j 12 --overwrite'
 
 # train kabyle model
 # mfa train [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH OUTPUT_MODEL_PATH
-mfa_train ./corpus/kab ./dicts/all.dict ./output/kab_model.zip --output_directory ./output/kab_corpus
+mfa_train ./corpus/kab ./dicts/kab_all.dict ./output/kab_model.zip --output_directory ./output/kab_corpus
 
 # train zgh model based on kabyl model
 # mfa adapt [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH ACOUSTIC_MODEL_PATH  OUTPUT_MODEL_PATH
-mfa_adapt ./corpus/zgh ./dicts/all.dict ./output/kab_model.zip ./output/zgh_model.zip --output_directory ./output/zgh_corpus
+mfa_adapt ./corpus/zgh ./dicts/zgh_all.dict ./output/kab_model.zip ./output/zgh_model.zip --output_directory ./output/zgh_corpus
 
-# train shi model based on zgh model
-# mfa adapt [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH ACOUSTIC_MODEL_PATH  OUTPUT_MODEL_PATH
-mfa_adapt ./corpus/shi ./dicts/all.dict ./output/zgh_model.zip ./output/shi_model.zip --output_directory ./output/shi_corpus
+# attempt align on shi corpus using zgh model
+# mfa align [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH ACOUSTIC_MODEL_PATH OUTPUT_DIRECTORY    
+mfa_align ./corpus/shi ./dicts/zgh_all.dict ./output/zgh_model.zip ./output/shi_model.zip --output_directory ./output/shi_corpus
 
-# train tzm model based on zgh model
-# mfa adapt [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH ACOUSTIC_MODEL_PATH  OUTPUT_MODEL_PATH
-mfa_adapt ./corpus/tzm ./dicts/all.dict ./output/zgh_model.zip ./output/tzm_model.zip --output_directory ./output/tzm_corpus
+# attempt align on tzm using zgh model
+# mfa align [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH ACOUSTIC_MODEL_PATH OUTPUT_DIRECTORY    
+mfa_align ./corpus/tzm ./dicts/zgh_all.dict ./output/zgh_model.zip ./output/tzm_model.zip --output_directory ./output/tzm_corpus
 
 
 ```

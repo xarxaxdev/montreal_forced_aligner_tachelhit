@@ -194,44 +194,30 @@ lat2ipa['nw']= ['nw','nbw','npw']
 lat2ipa['ny'] = 'y:'
 
 ## GEMINATES
-lat2ipa['ww'] = ['bʷ:','w:'] 
-lat2ipa['yy'] = ['y:','g:']
-lat2ipa['ɣɣ'] = ['ʁ:','q:']
 
 """
 From: 
 - https://en.wikipedia.org/wiki/Kabyle_language#Fricatives_vs._stops
 "note that gemination turns fricatives into stops)."
 - not true for tt (becomes affricate /ts/)
-- not true for most geminates (checked dataset manually)
-
-
+- not true for most geminates (checked dataset manually) so I will hope it refers only to the table
 """
-lat2ipa[f'bb'] = [f'b:'] # True for b
-lat2ipa[f'dd'] = [f'd:'] # True for d
-lat2ipa[f'gg'] = [f'g:'] # True for g
-lat2ipa[f'kk'] = [f'k:'] # True for g
-# normal gemminates (do not change from affricate to stop)
-for c in 'mfnszlrqh':
-    lat2ipa[f'{c}{c}'] = [f'{c}:'] 
-lat2ipa['cc']=f'ʃ:'
-lat2ipa['jj']=f'ʒ:'
-lat2ipa['xx']=f'χ:'
-lat2ipa['ḥḥ']=f'ħ:'
-lat2ipa['ṣṣ']=f'sˤ:'
-lat2ipa['ẓẓ']=f'zˤ:'
-lat2ipa['ṭṭ']=f'tˤ:'
-lat2ipa['ḍḍ']=f'dˤ:'
-lat2ipa['ţţ']=f'ts:'
-lat2ipa['z̧z̧']=f'dz:'
-lat2ipa['ṛṛ']=f'rˤ:'
-lat2ipa['ḍḍ']=f'dˤ:'
-lat2ipa['čč']=f'tʃˤ:'
-lat2ipa['ǧǧ']=f'dʒˤ:'
-lat2ipa['ḥḥ']=f'ħˤ:'
-lat2ipa['ɛɛ']=f'ʕ:'
+for c in 'mfnsṣzẓḍṭlrṛcjxqḥɛh':
+    lat2ipa[f'{c}{c}'] = [f'{lat2ipa[c]}:'] 
 
-# Suspicious that in common voice we cannot see emphatic:
+lat2ipa['ww'] = ['bʷ:','w:'] 
+lat2ipa['yy'] = ['y:','g:']
+lat2ipa['bb']='b:' # fricative becomes stop
+lat2ipa['dd']='d:' # fricative becomes stop
+lat2ipa['ţţ']='ts:'# on natural text it is written 'tttt'
+lat2ipa['z̧z̧']='dz:'# does not exist, but lets keep it just in case
+lat2ipa['čč']='tʃ:'# 99% of times 'č' appears as 'čč'(remaining 1% is 'cč')
+lat2ipa['ǧǧ']='dʒ:'# both 'ǧ' and 'ǧǧ' appear often
+lat2ipa['gg']='g:' # fricative becomes stop
+lat2ipa['kk']='k:' # fricative becomes stop
+lat2ipa['ɣɣ']=['ʁ:','q:']
+
+# Suspicious that in common_voice/kab we cannot see emphatic:
 # b,m,g,k,x,ɣ,q
  
 
