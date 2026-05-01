@@ -13,8 +13,8 @@ from tqdm import tqdm
 
 
 # TODO make filenames shorter
-from utils import dataset_alias as dataset_alias
 from utils import trim_trailing_silence
+from utils import NUM_PROC,BATCH_SIZE,SAMPLES_TESTING
 
 
 data = {}
@@ -43,11 +43,12 @@ def gen_naive_textgrid(wave,sr,transcript):
     return tg_main
 
 
-def transform_row(origin, waveform, sr, text, row_id):
+def transform_row(origin, waveform, sr, old_path,text):
     cur_path = utils.get_curr_folder()# must be run before huggingface
-    ext = 'wav'
-    filename = f'{origin}_{row_id}.{ext}'
-    new_path = os.path.join(cur_path,'corpus','tzm',filename)
+    filename = os.path.split(old_path)[-1]
+    ext = filename.split('.')[-1]
+    filename = f'{origin}_{filename}'
+    new_path = os.path.join(cur_path,'corpus','zgh',filename)
 
     ### EXTRACT WAV ###
     new_sr=16000
@@ -65,27 +66,19 @@ def transform_row(origin, waveform, sr, text, row_id):
     tg.write(raw_tg)
     tg.close()
 
+def process_row(row):
+    audio = row['audio']
+    audio['path'] = f'{row["id"]}.wav'
+    transform_row(origin=row['origin'], waveform = audio['array'],sr = audio['sampling_rate'], old_path = audio['path'], text = row['text'])
+
 def main():
     print('Loading datasets and assigning ids...')
     data = utils.load_datasets_tzm()
     print('Loaded.')
     cur =  concatenate_datasets([data['common_voice_22_0']])
+    cur = cur.select(range(SAMPLES_TESTING))
     print(f'{"-"*10}Generating textgrid/wav files...{"-"*10}')
-    for row in cur:
-        row['text']= row['text'].replace('[]-','')
-        words = re.sub(r"[?.,!\":;\'\t\*\n]",'', row['text']).lower().split(' ')
-        text = " ".join(words)
-
-
-        words = re.sub(r"[?.,!\":«»;\'\t\*]",'', text).split(' ')
-        text = ' '.join(words)
-        if bool(re.search(r'(\d+|%|p|o|_|v|\(|\)|σ)',text)):
-            #skip rows with invalid symbols
-            continue
-
-        audio = row['audio']
-
-        transform_row(origin=row['origin'], waveform = audio['array'],sr = audio['sampling_rate'], text = text, row_id=row["id"])
+    cur.map(process_row,num_proc=NUM_PROC, batch_size=BATCH_SIZE)
 
 
 

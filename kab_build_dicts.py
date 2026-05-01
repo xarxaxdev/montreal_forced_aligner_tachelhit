@@ -260,14 +260,9 @@ def main():
     cur = concatenate_datasets([data["common_voice_22_0"]])
     vocab = {}
     for row in cur:
-        row["text"] = row["text"].replace("[]-", "")
-        words = re.sub(r"[?.,!\":;\'\t\*\n\“”’‘«»]", "", row["text"]).lower().split(" ")
+        words = row["text"].split(" ")
         for w in words:
-            if (
-                bool(re.search(r"(\d+|e-|…|é|ğ|ï|ⵒ|ⵠ|%|o|_|v|p|\(|\)|σ|\[|\])", w))
-                or len(w) == 0
-                or w == "-"
-            ):
+            if len(w) == 0 or w == "-":
                 continue  # skip ambiguous pronunciation cases
 
             w_std_lat = standardize(w, std_lat)

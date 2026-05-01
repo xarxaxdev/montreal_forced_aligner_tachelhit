@@ -399,14 +399,9 @@ def main():
     )
     vocab = {}
     for row in cur:
-        row["text"] = row["text"].replace("[]-", "")
-        words = re.sub(r"[?.,!\":;\'\t\*\n\“”’‘«»]", "", row["text"]).lower().split(" ")
+        words = row["text"].split(" ")
         for w in words:
-            if (
-                bool(re.search(r"(\d+|…|é|ğ|ï|ⵒ|ⵠ|%|o|_|v|p|\(|\)|σ|\[|\])", w))
-                or len(w) == 0
-                or w == "-"
-            ):
+            if len(w) == 0 or w == "-":
                 continue  # skip ambiguous pronunciation cases
             
 
@@ -501,9 +496,6 @@ def main():
 
     #p. 160 regressive devoicing exists (across word boundaries too)
     # Kernel(syllable) dependant, so not implementing this.
-    #
-
-
 
 
     print("-" * 15)

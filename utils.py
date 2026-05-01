@@ -17,15 +17,11 @@ DICTS = {}
 random.seed(SEED)
 np.random.seed(SEED)
 torch.manual_seed(SEED)
-dataset_alias={
-    'common_voice_22_0':'cv22',
-    'kabyle_asr':'tfnlab',
-    'moroccan_amazigh_asr':'tfnlab',
-}
 
 NUM_PROC= max(os.cpu_count()-4,2)
 BATCH_SIZE=500
 # 8 threads are using 60~80GB of ram for me, beware
+SAMPLES_TESTING=20
 
 
 
@@ -34,11 +30,19 @@ def get_curr_folder():
 
 CACHE_DIR=os.path.join(get_curr_folder(),'.cache/huggingface/datasets')
 
-regex = re.compile(r'[^\x00-\x7Fɣz̧ţṛḍṭḥṣẓčǧ]+')
-def cleanup_text(row):
-    return {"text":regex.sub('',unicodedata.normalize("NFC",row['text']))}
-
 columns_relevant= ['text','audio','id']
+
+def text_cleanup(row):
+    text = row['text']
+    text = text.replace("[]-", "")
+    removable_chars = r"[?.,!\":;\'\t\*\n\“”’‘«»]"
+    row['text'] = re.sub(removable_chars, "", text).lower()
+    return row
+
+
+def characters_valid(row):
+    excluded_chars = r"(\d+|e-|…|é|ğ|ï|ⵒ|ⵠ|%|o|_|v|p|\(|\)|σ|\[|\])"
+    return not bool(re.search(excluded_chars,row['text'].lower()))
 
 def load_datasets_kab():
     data = {}
@@ -62,14 +66,7 @@ def load_datasets_kab():
     #print(f)
     dataset = Dataset.from_generator(lambda: (row for row in subset_dataset),features=f)
     dataset = dataset.rename_column("sentence","text")
-    #dataset = dataset.map(cleanup_text)
-    print("Calculating per-transcrition text length...")
-    dataset = dataset.map(lambda x : {"text_len":len(x['text'])},num_proc=NUM_PROC, batch_size=BATCH_SIZE)
-    dataset = dataset.sort(['text_len','text'],reverse=True) #text added as a column for determinism order
-    print("Localizing ids...")
     dataset = dataset.add_column("id", np.arange(len(dataset))) 
-    #dataset = dataset.map(lambda x, i: {**x, "id": i}, with_indices=True,num_proc=NUM_PROC,batch_size=BATCH_SIZE)
-    offset = len(dataset) #so we know which id to begin on next dataset
     dataset = dataset.select_columns(columns_relevant)
     print("Casting dataset types...")
     new_features = Features({
@@ -78,27 +75,22 @@ def load_datasets_kab():
         "id":Value("int64"),
     })
     dataset = dataset.cast(new_features)
+    print("Cleaning up text...")
+    dataset = dataset.filter(characters_valid,num_proc=NUM_PROC, batch_size=BATCH_SIZE)
+    dataset = dataset.map(text_cleanup,num_proc=NUM_PROC, batch_size=BATCH_SIZE)
+    print("Calculating per-transcrition text length...")
+    dataset = dataset.map(lambda x : {"text_len":len(x['text'])},num_proc=NUM_PROC, batch_size=BATCH_SIZE)
+    dataset = dataset.sort(['text_len','text'],reverse=True) #text added as a column for determinism order
+    print("Localizing ids...")
+    dataset = dataset.remove_columns("id")
+    dataset = dataset.add_column("id", np.arange(len(dataset))) 
+    dataset = dataset.select_columns(columns_relevant)
     dataset = dataset.map(lambda x: {"origin":"common_voice_22_0"},num_proc=NUM_PROC)
     data['common_voice_22_0'] = dataset
     print('Loaded common_voice_22_0/kab dataset.')
 
- 
-    #print('Loading kabyle_asr dataset...')
-    #dataset = load_dataset("TutlaytAI/kabyle_asr",cache_dir=CACHE_DIR)
-    #print(type(dataset['train']), type(dataset['test']))
+    #offset = len(dataset) #so we know which id to begin on next dataset
 
-    #dataset = concatenate_datasets([dataset['train'],dataset['test']])
-    #dataset = dataset.rename_column("Text","text")
-    #dataset = dataset.map(cleanup_text)
-    ## Adding an id that depends on text length 
-    ##dataset = dataset.cast_column("audio", Audio(decode=False)) # We dont want to decode 10k+ audios while non-streaming
-    #dataset = dataset.map(lambda x : {"text_len":len(x['text'])})
-    #dataset =  dataset.sort(['text_len','text'],reverse=True) #text added as a column for determinism order
-    #dataset = dataset.map(lambda x, i: {"id": i + offset}, with_indices=True)
-    ##dataset = dataset.select_columns(columns_relevant)
-    #dataset = dataset.map(lambda x: {"origin":"kabyle_asr"})
-    #data['kabyle_asr'] = dataset
-    #print('Loaded kabyle_asr dataset...')
     return data
 
 
@@ -106,48 +98,19 @@ def load_datasets_kab():
 def load_datasets_zgh():
     # Load each dataset (would be normally under ~/.cache/huggingface/datasets)
     data ={}
+    shi = load_datasets_shi()['common_voice_22_0']
+    len_shi = len(shi)
+    shi = shi.select(range(SAMPLES_TESTING, len_shi))
+    tzm = load_datasets_tzm()['common_voice_22_0']
+    len_tzm = len(tzm)
+    tzm = tzm.select(range(SAMPLES_TESTING, len_tzm))
+    dataset = concatenate_datasets([tzm,shi])
 
-    ### TIFINAGH DATASET 
-    dataset = load_dataset("fsicoli/common_voice_22_0", "zgh",      trust_remote_code=True, cache_dir=CACHE_DIR)
-    dataset = concatenate_datasets([dataset['train'],dataset['validation'],dataset['test']])
-    dataset = dataset.rename_column("sentence","text")
-    # Deterministic ID assignment
-    dataset = dataset.map(lambda x : {"text_len":len(x['text'])})
-    dataset =  dataset.sort(['text_len','text'],reverse=True)
-    dataset = dataset.map(lambda x, i: {**x, "id": i}, with_indices=True)
-    offset = len(dataset) #so we know which id to begin on next dataset
-    dataset = dataset.select_columns(columns_relevant)
-    # Use the Audio's sampling rate rather than the
-    # Dataset's schema for future concatenate_datasets()
-    new_features = Features({
-        "audio": Audio(sampling_rate=None),
-        "text": Value("string"),
-        "id":Value("int64"),
-    })
-    dataset = dataset.cast(new_features)
-    dataset = dataset.map(lambda x: {"origin":"common_voice_22_0"})
     data['common_voice_22_0'] = dataset
 
 
-    ### LATINSCRIPT DATASET
-    # https://aclanthology.org/2025.icnlsp-1.37.pdf#:~:text=We%20have%20also%20applied%20and%20validated%20the,of%20the%20utilized%20dataset%20for%20benchmarking%20and
-    #dataset = load_dataset("TutlaytAI/moroccan_amazigh_asr",cache_dir=CACHE_DIR)
-    #dataset = concatenate_datasets([dataset['train'],dataset['test']])
-    #dataset = dataset.rename_column("transcription","text")
-    #dataset = dataset.map(cleanup_text)
-    ## Deterministic ID assignment
-    #dataset = dataset.map(lambda x : {"text_len":len(x['text'])})
-    #dataset =  dataset.sort(['text_len','text'],reverse=True)
-    #dataset = dataset.map(lambda x, i: {"id": i + offset}, with_indices=True)
-    ##dataset = dataset.select_columns(columns_relevant)
-    #dataset = dataset.map(lambda x: {"origin":"moroccan_amazigh_asr"})
-    #data['moroccan_amazigh_asr'] = dataset
-
     return data
 
-
-# TODO:
-# have to filter according to https://huggingface.co/datasets/fsicoli/common_voice_22_0/raw/main/transcript/zgh/validated.tsv
 
 def load_datasets_shi():
     # Load each dataset (would be normally under ~/.cache/huggingface/datasets)
@@ -157,25 +120,30 @@ def load_datasets_shi():
     dataset = load_dataset("fsicoli/common_voice_22_0", "zgh",      trust_remote_code=True, cache_dir=CACHE_DIR)
     dataset = concatenate_datasets([dataset['train'],dataset['validation'],dataset['test']])
     dataset = dataset.rename_column("sentence","text")
-    # Deterministic ID assignment matching zgh
-    dataset = dataset.map(lambda x : {"text_len":len(x['text'])})
-    dataset =  dataset.sort(['text_len','text'],reverse=True)
-    dataset = dataset.map(lambda x, i: {"id": i }, with_indices=True)
     print(len(dataset))
     dataset = dataset.filter(lambda r: 'Tachelhit' in r['variant'])
     print(len(dataset))
+    dataset = dataset.add_column("id", np.arange(len(dataset))) 
     dataset = dataset.select_columns(columns_relevant)
-    # Use the Audio's sampling rate rather than the
-    # Dataset's schema for future concatenate_datasets()
+    print("Casting dataset types...")
     new_features = Features({
         "audio": Audio(sampling_rate=None),
         "text": Value("string"),
         "id":Value("int64"),
     })
     dataset = dataset.cast(new_features)
-    dataset = dataset.map(lambda x: {"origin":"common_voice_22_0"})
+    print("Cleaning up text...")
+    dataset = dataset.filter(characters_valid,num_proc=NUM_PROC, batch_size=BATCH_SIZE)
+    dataset = dataset.map(text_cleanup,num_proc=NUM_PROC, batch_size=BATCH_SIZE)
+    print("Calculating per-transcrition text length...")
+    dataset = dataset.map(lambda x : {"text_len":len(x['text'])},num_proc=NUM_PROC, batch_size=BATCH_SIZE)
+    dataset = dataset.sort(['text_len','text'],reverse=True) #text added as a column for determinism order
+    print("Localizing ids...")
+    dataset = dataset.remove_columns("id")
+    dataset = dataset.add_column("id", np.arange(len(dataset))) 
+    dataset = dataset.select_columns(columns_relevant)
+    dataset = dataset.map(lambda x: {"origin":"common_voice_22_0"},num_proc=NUM_PROC)
     data['common_voice_22_0'] = dataset
-
 
     return data
 
@@ -185,29 +153,33 @@ def load_datasets_tzm():
 
     dataset = load_dataset("fsicoli/common_voice_22_0", "zgh",      trust_remote_code=True, cache_dir=CACHE_DIR)
     dataset = concatenate_datasets([dataset['train'],dataset['validation'],dataset['test']])
-
     dataset = dataset.rename_column("sentence","text")
-    # Deterministic ID assignment matching zgh
-    dataset = dataset.map(lambda x : {"text_len":len(x['text'])})
-    dataset =  dataset.sort(['text_len','text'],reverse=True)
-    dataset = dataset.map(lambda x, i: {"id": i }, with_indices=True)
     print(len(dataset))
     dataset = dataset.filter(lambda r: 'Central Atlas Tamazight' in r['variant'])
     print(len(dataset))
+    dataset = dataset.add_column("id", np.arange(len(dataset))) 
     dataset = dataset.select_columns(columns_relevant)
-    # Use the Audio's sampling rate rather than the
-    # Dataset's schema for future concatenate_datasets()
+    print("Casting dataset types...")
     new_features = Features({
         "audio": Audio(sampling_rate=None),
         "text": Value("string"),
-        "id":Value("string"),
+        "id":Value("int64"),
     })
     dataset = dataset.cast(new_features)
-    dataset = dataset.map(lambda x: {"origin":"common_voice_22_0"})
+    print("Cleaning up text...")
+    dataset = dataset.filter(characters_valid,num_proc=NUM_PROC, batch_size=BATCH_SIZE)
+    dataset = dataset.map(text_cleanup,num_proc=NUM_PROC, batch_size=BATCH_SIZE)
+    print("Calculating per-transcrition text length...")
+    dataset = dataset.map(lambda x : {"text_len":len(x['text'])},num_proc=NUM_PROC, batch_size=BATCH_SIZE)
+    dataset = dataset.sort(['text_len','text'],reverse=True) #text added as a column for determinism order
+    print("Localizing ids...")
+    dataset = dataset.remove_columns("id")
+    dataset = dataset.add_column("id", np.arange(len(dataset))) 
+    dataset = dataset.select_columns(columns_relevant)
+    dataset = dataset.map(lambda x: {"origin":"common_voice_22_0"},num_proc=NUM_PROC)
     data['common_voice_22_0'] = dataset
 
     return data
-
 
 
 

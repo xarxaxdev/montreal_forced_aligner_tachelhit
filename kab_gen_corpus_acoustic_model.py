@@ -13,7 +13,6 @@ from tqdm import tqdm
 
 
 # TODO make filenames shorter
-from utils import dataset_alias as dataset_alias
 from utils import trim_trailing_silence
 from utils import NUM_PROC, BATCH_SIZE
 
@@ -36,20 +35,9 @@ xmax = {xmax}
 intervals: size = {interval_size}"""
 
  
-## All kabyle data is in latinscript 
-#def latin2ipa(text):
-#    transcript= []
-#    for w in text.split(' '):
-#        try:
-#            transcript.append(DICTS['kab_latin2ipa'][w].replace(' ',''))
-#        except:
-#            print(f'word "{w}" not found in dictionary "latin2ipa_kab"')
-#            transcript.append(w)
-#    return ' '.join(transcript)
-#
+
 # One annotation = one utterance
 def gen_naive_textgrid(wave,sr,transcript):
-    #transcript= latin2ipa(transcript)
     t = len(wave)/sr
     #intervals at the utterance level
     tg_main =  tg_header.format(xmax=round(t,6),name='utt',interval_size=1)
@@ -80,27 +68,17 @@ def transform_row(origin, waveform, sr, old_path,text):
     tg = open(new_path.replace(ext, 'TextGrid'), 'w')
     tg.write(raw_tg)
     tg.close()
-    #print(f'row {utt}: written TG in "{new_path}"')
 
 def process_row(row):
-    text = row['text'].lower()
-    text = re.sub(r"[?.,!\":«»;\'\t\*]",'', text)
-
     audio = row['audio']
-
     audio['path'] = f'{row["id"]}.wav'
-
-    transform_row(origin=row['origin'], waveform = audio['array'],sr = audio['sampling_rate'], old_path = audio['path'], text = text)
+    transform_row(origin=row['origin'], waveform = audio['array'],sr = audio['sampling_rate'], old_path = audio['path'], text = row['text'])
 
 
 def main():
     data = utils.load_datasets_kab()
-    #global DICTS
-    #DICTS = utils.load_dicts()
     cur =  concatenate_datasets([data['common_voice_22_0']])
     # Remove rows with annoying cases
-    cur.map(lambda row:{"text":re.sub(r"[?.,!\":;\'\t\*\n\“”’‘«»]", "", row["text"]).lower()},num_proc=NUM_PROC, batch_size=BATCH_SIZE)
-    cur = cur.filter(lambda x: not bool(re.search(r"(\d+|…|é|ğ|ï|ⵒ|ⵠ|%|o|_|v|p|\(|\)|σ|\[|\])",x['text'])))
     print(f'{"-"*10}Generating textgrid/wav files...{"-"*10}')
     cur.map(process_row,num_proc=NUM_PROC, batch_size=BATCH_SIZE)
 

@@ -39,7 +39,6 @@ python kab_build_dicts.py
 python zgh_build_dicts.py # we will consider shi/tzm as one
 python merge_dicts.py # generate all.dict 
 
-
 python kab_gen_corpus_acoustic_model.py 
 python zgh_gen_corpus_acoustic_model.py 
 python shi_gen_corpus_acoustic_model.py 
@@ -51,8 +50,6 @@ python tzm_gen_corpus_acoustic_model.py
 # Train aligners
 
 ```
-# Optionally validate:
-# mfa validate DICTIONARY_PATH CORPUS_DIRECTORY 
 
 alias mfa_train='mfa train  --clean --single_speaker -j 12 --overwrite'
 alias mfa_adapt='mfa adapt --clean --single_speaker -j 12 --overwrite'
@@ -68,19 +65,19 @@ alias mfa_align='mfa align --clean --single_speaker -j 12 --overwrite'
 
 # train kabyle model
 # mfa train [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH OUTPUT_MODEL_PATH
-mfa_train --phone_groups_path ./phone_groups/kab_ortho.yaml ./corpus/kab ./dicts/kab_all.dict ./output/kab_model.zip --output_directory ./output/kab_corpus
+mfa_train --phone_groups_path ./phone_groups/kab_ortho.yaml ./corpus/kab ./dicts/kab_all.dict ./output/kab_model.zip --output_directory ./output/kab
 
 # train zgh model based on kabyl model
 # mfa adapt [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH ACOUSTIC_MODEL_PATH  OUTPUT_MODEL_PATH
-mfa_adapt --phone_groups_path .phone_groups_path/kab_ortho.yaml ./corpus/zgh ./dicts/zgh_all.dict ./output/kab_model.zip ./output/zgh_model.zip --output_directory ./output/zgh_corpus
+mfa_adapt ./corpus/zgh ./dicts/zgh_all.dict ./output/kab_model.zip ./output/zgh_model.zip --output_directory ./output/zgh
 
 # attempt align on shi corpus using zgh model
 # mfa align [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH ACOUSTIC_MODEL_PATH OUTPUT_DIRECTORY    
-mfa_align ./corpus/shi ./dicts/zgh_all.dict ./output/zgh_model.zip ./output/shi_model.zip --output_directory ./output/shi_corpus
+mfa_align ./corpus/shi ./dicts/zgh_all.dict ./output/zgh_model.zip ./output/shi_model.zip --output_directory ./output/shi
 
 # attempt align on tzm using zgh model
 # mfa align [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH ACOUSTIC_MODEL_PATH OUTPUT_DIRECTORY    
-mfa_align ./corpus/tzm ./dicts/zgh_all.dict ./output/zgh_model.zip ./output/tzm_model.zip --output_directory ./output/tzm_corpus
+mfa_align ./corpus/tzm ./dicts/zgh_all.dict ./output/zgh_model.zip ./output/tzm_model.zip --output_directory ./output/tzm
 
 
 ```
