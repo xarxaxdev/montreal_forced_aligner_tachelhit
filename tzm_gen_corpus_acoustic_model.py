@@ -48,7 +48,7 @@ def transform_row(origin, waveform, sr, old_path,text):
     filename = os.path.split(old_path)[-1]
     ext = filename.split('.')[-1]
     filename = f'{origin}_{filename}'
-    new_path = os.path.join(cur_path,'corpus','zgh',filename)
+    new_path = os.path.join(cur_path,'corpus','tzm',filename)
 
     ### EXTRACT WAV ###
     new_sr=16000
