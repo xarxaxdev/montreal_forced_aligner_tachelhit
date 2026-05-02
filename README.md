@@ -83,8 +83,4 @@ mfa_align ./corpus/tzm ./dicts/zgh_all.dict ./output/zgh_model.zip ./output/tzm_
 ```
 
 
-## TODO
-# --rules_path
-# --phone_groups_path
-# --phone_groups_path phone_groups/IPA_only.yaml
 
