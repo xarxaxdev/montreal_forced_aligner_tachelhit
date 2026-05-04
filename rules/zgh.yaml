@@ -289,15 +289,7 @@ rules:
     segment: 'h'
   # According to "Syllables in tashlhiyt berber and in moroccan arabic" p.156 
   # "tt t" or "t tt" may be realized as /tt + t/ or /ttt/
-  # this happens for d and k as well.
-  #  - following_context: $ #end of word
-  #    preceding_context: ''
-  #    replacement: ''
-  #    segment: 's'
-  #  - following_context: '[^aiouejw]' #middle of the word not followed by vowel or glide
-  #    preceding_context: ''
-  #    replacement: 'h'
-  #    segment: 's'
+  # this happens for d,m and k as well.
 
 #@article{ridouane2010geminates,
 #  title={Geminates at the junction of phonetics and phonology},

@@ -73,11 +73,11 @@ mfa_adapt ./corpus/zgh ./dicts/zgh_all.dict ./output/kab_model.zip ./output/zgh_
 
 # attempt align on shi corpus using zgh model
 # mfa align [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH ACOUSTIC_MODEL_PATH OUTPUT_DIRECTORY    
-mfa_align ./corpus/shi ./dicts/zgh_all.dict ./output/zgh_model.zip ./output/shi_model.zip --output_directory ./output/shi
+mfa_align ./corpus/shi ./dicts/zgh_all.dict ./output/zgh_model.zip ./output/shi
 
 # attempt align on tzm using zgh model
 # mfa align [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH ACOUSTIC_MODEL_PATH OUTPUT_DIRECTORY    
-mfa_align ./corpus/tzm ./dicts/zgh_all.dict ./output/zgh_model.zip ./output/tzm_model.zip --output_directory ./output/tzm
+mfa_align ./corpus/tzm ./dicts/zgh_all.dict ./output/zgh_model.zip ./output/tzm
 
 
 ```
