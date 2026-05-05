@@ -16,7 +16,7 @@ would be nice to know which are global and which are not. Or at
 least some source.
 
 Given these, I contacted a native speaker of Kabyle from Tizi_Ouzou
-and asked him how he would pronounce (or if he had heard other 
+(Artist Massyl Aïta https://www.youtube.com/watch?v=5ybKRwBu96w )and asked him how he would pronounce (or if he had heard other 
 pronunciations) of different assimilations. 
 I will summarize my findings here:
 

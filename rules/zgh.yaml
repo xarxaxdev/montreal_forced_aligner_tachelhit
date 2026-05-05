@@ -374,7 +374,7 @@ rules:
     preceding_context: ''
     replacement: 'w'
     segment: 'u'
-  - following_context: 
+  - following_context: ''
     preceding_context: ^
     replacement: 'w'
     segment: 'u'
@@ -382,7 +382,7 @@ rules:
     preceding_context: ''
     replacement: ''
     segment: 'a'
-  - following_context: 
+  - following_context: ''
     preceding_context: ^
     replacement: 'a:'
     segment: 'a'

@@ -65,7 +65,7 @@ alias mfa_align='mfa align --clean --single_speaker -j 12 --overwrite'
 
 # train kabyle model
 # mfa train [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH OUTPUT_MODEL_PATH
-mfa_train --phone_groups_path ./phone_groups/kab_ortho.yaml --rules_path ./rules/zgh_yaml ./corpus/kab ./dicts/kab_all.dict ./output/kab_model.zip --output_directory ./output/kab
+mfa_train --phone_groups_path ./phone_groups/kab_ortho.yaml --rules_path ./rules/zgh.yaml ./corpus/kab ./dicts/kab_all.dict ./output/kab_model.zip --output_directory ./output/kab
 
 # train zgh model based on kabyl model
 # mfa adapt [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH ACOUSTIC_MODEL_PATH  OUTPUT_MODEL_PATH
