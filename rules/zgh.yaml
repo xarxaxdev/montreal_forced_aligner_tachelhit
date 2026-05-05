@@ -62,11 +62,11 @@ rules:
   - following_context: $
     preceding_context: ''
     replacement: ''
-    segment: 'sʷ'
+    segment: 'sˤ'
   - following_context: ''
     preceding_context: ^
-    replacement: 'sʷ:'
-    segment: 'sʷ'
+    replacement: 'sˤ:'
+    segment: 'sˤ'
   - following_context: $ 
     preceding_context: ''
     replacement: ''
@@ -78,11 +78,11 @@ rules:
   - following_context: $
     preceding_context: ''
     replacement: ''
-    segment: 'zʷ'
+    segment: 'zˤ'
   - following_context: ''
     preceding_context: ^
-    replacement: 'zʷ:'
-    segment: 'zʷ'
+    replacement: 'zˤ:'
+    segment: 'zˤ'
   - following_context: $ 
     preceding_context: ''
     replacement: ''
@@ -98,11 +98,11 @@ rules:
   - following_context: $
     preceding_context: ''
     replacement: ''
-    segment: 'tʷ'
+    segment: 'tˤ'
   - following_context: ''
     preceding_context: ^
-    replacement: 'tʷ:'
-    segment: 'tʷ'
+    replacement: 'tˤ:'
+    segment: 'tˤ'
   - following_context: $ 
     preceding_context: ''
     replacement: ''
@@ -118,11 +118,11 @@ rules:
   - following_context: $
     preceding_context: ''
     replacement: ''
-    segment: 'dʷ'
+    segment: 'dˤ'
   - following_context: ''
     preceding_context: ^
-    replacement: 'dʷ:'
-    segment: 'dʷ'
+    replacement: 'dˤ:'
+    segment: 'dˤ'
   - following_context: $ 
     preceding_context: ''
     replacement: ''
@@ -134,11 +134,11 @@ rules:
   - following_context: $
     preceding_context: ''
     replacement: ''
-    segment: 'rʷ'
+    segment: 'rˤ'
   - following_context: ''
     preceding_context: ^
-    replacement: 'rʷ:'
-    segment: 'rʷ'
+    replacement: 'rˤ:'
+    segment: 'rˤ'
   - following_context: $ 
     preceding_context: ''
     replacement: ''
