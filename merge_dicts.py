@@ -6,7 +6,7 @@ def add_prob(line, x):
 
 
 with open("./dicts/kab_vocab.dict") as f1, open("./dicts/zgh_vocab.dict") as f2:
-    kab = f1.readlines()
+    kab = f1.readlines()[1:] 
     zgh = f2.readlines()[1:]
      
     combined = f1.read() + "".join(f2.readlines()[1:])#No need replicating line 1

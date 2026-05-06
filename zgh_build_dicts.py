@@ -394,8 +394,12 @@ def standardize(text, std_dict):
 
 def main():
     data = utils.load_datasets_zgh()
+    data2 = utils.load_datasets_shi()
+    data3 = utils.load_datasets_tzm()
     cur = concatenate_datasets(
-        [data["common_voice_22_0"]]
+        [data["common_voice_22_0"],
+         data2["common_voice_22_0"],
+         data3["common_voice_22_0"]]
     )
     vocab = {}
     for row in cur:
@@ -414,17 +418,17 @@ def main():
             #    w_std_tif = ''.join(transliterate(w_std_lat, lat2tif)[0])
             #    trans = transliterate(w_std_lat, lat2ipa)
 
+            if not (w in vocab):
+                vocab[w] = set()
+            if not (w_std_tif in vocab):
+                vocab[w_std_tif] = set()
+            if not (w_std_lat in vocab):
+                vocab[w_std_lat] = set()
 
             for t in trans:  # e may be 'ə',''
                 pron = " ".join(t).replace('  ',' ')       #e being '' causes double spacing
-                if not (w in vocab):
-                    vocab[w] = set()
                 vocab[w].add(pron)
-                if not (w_std_tif in vocab):
-                    vocab[w_std_tif] = set()
                 vocab[w_std_tif].add(pron)
-                if not (w_std_lat in vocab):
-                    vocab[w_std_lat] = set()
                 vocab[w_std_lat].add(pron)
     #  "Syllables in tashlhiyt berber and in moroccan arabic" p. 46
     # says "the genitive preposition /n/ completely assimilates to the initial segment of the following word"
@@ -505,7 +509,7 @@ def main():
     # Write all-spelling to ipa dict
     with open(os.path.join(cur_path, "dicts", "zgh_vocab.dict"), "w") as f:
         f.write("<unk>\tspn\n")
-        for w in vocab:
+        for w in sorted(vocab.keys()):
             for pron in vocab[w]:
                 f.write(f"{w}\t{pron}\n")
         f.close()
