@@ -1,105 +1,179 @@
-def interval_overlap(interval1, interval2):
-    """Check if two intervals overlap and return overlap ratio."""
-    start1, end1 = interval1
-    start2, end2 = interval2
-    
-    overlap_start = max(start1, start2)
-    overlap_end = min(end1, end2)
-    
-    if overlap_start >= overlap_end:
-        return 0.0
-    
-    overlap = overlap_end - overlap_start
-    len1 = end1 - start1
-    len2 = end2 - start2
-    avg_len = (len1 + len2) / 2
-    
-    return overlap / avg_len if avg_len > 0 else 0.0
+import tgt
+import chardet
+from pprint import pprint
+
+from collections import defaultdict
+from utils import SAMPLES_TESTING
+import pandas as pd
+
+def confusion_to_df(confusion):
+    df = pd.DataFrame([
+        {"ref": k[0], "hyp": k[1], "time": v}
+        for k, v in confusion.items()
+    ])
+    return df
+
+def to_matrix(df):
+    matrix = df.pivot_table(
+        index="ref",
+        columns="hyp",
+        values="time",
+        aggfunc="sum",
+        fill_value=0
+    )
+    return matrix
+
+import matplotlib.pyplot as plt
+
+def plot_confusion(matrix, iso):
+    plt.figure(figsize=(10, 8))
+    plt.imshow(matrix, aspect="auto")
+
+    plt.xticks(range(len(matrix.columns)), matrix.columns, rotation=90)
+    plt.yticks(range(len(matrix.index)), matrix.index)
+
+    plt.colorbar(label="total time (s)")
+    plt.title(f"Confusion Matrix {iso.upper()} (Golden label X/Misslabeled as Y)")
+    plt.tight_layout()
+    plt.show()
+
+def remove_diagonal(matrix):
+    m = matrix.copy()
+    for i in m.index:
+        if i in m.columns:
+            m.loc[i, i] = 0
+    return m
 
 
-def labeled_interval_levenshtein(seq1, seq2, overlap_threshold=0.5, label_weight=0.5):
-    """
-    Levenshtein distance for sequences of labeled intervals with float support.
-    
-    Args:
-        seq1, seq2: Lists of tuples (start, end, label) representing labeled intervals
-                    start and end can be floats
-        overlap_threshold: Minimum overlap ratio to consider intervals matching (0-1)
-        label_weight: Weight for label mismatch (0=ignore labels, 1=labels must match)
-    
-    Returns:
-        Float edit distance between labeled interval sequences
-    """
-    m, n = len(seq1), len(seq2)
-    dp = [[0.0] * (n + 1) for _ in range(m + 1)]
-    
-    # Initialize base cases (float costs)
-    for i in range(m + 1):
-        dp[i][0] = float(i)
-    for j in range(n + 1):
-        dp[0][j] = float(j)
-    
-    # Fill DP table
-    for i in range(1, m + 1):
-        for j in range(1, n + 1):
-            start1, end1, label1 = seq1[i-1]
-            start2, end2, label2 = seq2[j-1]
-            
-            overlap = interval_overlap((start1, end1), (start2, end2))
-            label_match = 1.0 if label1 == label2 else 0.0
-            
-            # Combined cost: overlap penalty + label penalty
-            if overlap >= overlap_threshold and label1 == label2:
-                # Both intervals overlap and labels match
-                substitution_cost = (1.0 - overlap) * (1.0 - label_weight) + (1.0 - label_match) * label_weight
-            elif overlap >= overlap_threshold:
-                # Intervals overlap but labels differ
-                substitution_cost = (1.0 - overlap) * (1.0 - label_weight) + label_weight
-            else:
-                # No sufficient overlap - full substitution cost
-                substitution_cost = 1.0
-            
-            dp[i][j] = min(
-                dp[i-1][j] + 1.0,              # Deletion
-                dp[i][j-1] + 1.0,              # Insertion
-                dp[i-1][j-1] + substitution_cost  # Substitution/match
-            )
-    
-    return dp[m][n]
+
+def load_intervals(filepath):
+    intervals = []
+
+    with open(filepath, 'rb') as f:
+        encoding = chardet.detect(f.read())['encoding']
+    tg = tgt.read_textgrid(filepath,encoding=encoding)
+    tier = tg.get_tier_by_name('phones')  
+
+    for interval in tier:
+        intervals.append({
+            'start':round(interval.start_time,3),
+            'end':round(interval.end_time,3),
+            'text':interval.text})
+    return intervals
+
+def sentence_overlap(seq1, seq2):
+    # returns time where symbols match between seq1 and seq2
+    time_correct = 0.0
+    time_total = 0.0
+    index1=index2=0
+
+    while index1 < len(seq1) and index2 < len(seq2):
+        el1 = seq1[index1]
+        el2 = seq2[index2]
+        # Find overlap
+        overlap_start = max(el1['start'], el2['start'])
+        overlap_end = min(el1['end'], el2['end'])
+
+        if overlap_start < overlap_end:
+            overlap_duration = overlap_end - overlap_start
+            time_total += overlap_duration
+            if el1['text']== el2['text']:
+                time_correct += overlap_duration
+
+        # Advance whichever interval ends first
+        if el1['end']<= el2['end']:
+            time_total += el1['end']- el1['start']
+            index1 += 1
+        else:
+            time_total += el2['end']- el2['start']
+            index2 += 1
+
+    return time_correct, time_total
 
 
-# Example usage
+def confusion_matrix(seq1, seq2):
+    """Returns confusion matrix as dict of (sym1, sym2) -> time"""
+
+    confusion = defaultdict(float)   # default 0.0
+    index1 = index2 = 0
+    print(seq1)
+    while index1 < len(seq1) and index2 < len(seq2):
+        el1 = seq1[index1]
+        el2 = seq2[index2]
+        overlap_start = max(el1['start'], el2['start'])
+        overlap_end = min(el1['end'], el2['end'])
+
+        if overlap_start < overlap_end:
+            confusion[(el1['text'], el2['text'])] += overlap_end - overlap_start
+
+        if el1['end'] <= el2['end']:
+            confusion[(el1['text'], "UNK")] += el1['end']- el1['start']
+            index1 += 1
+        else:
+            confusion[(el2['text'], "UNK")] += el2['end']- el2['start']
+            index2 += 1
+
+    return dict(confusion)
+
+
+def main():
+    # Read golden alignemnts + curr alignments
+    data = {}
+
+    for orig in ['output','output_verified']:
+        data[orig] = {} 
+        for iso in ['shi','tzm']:
+            data[orig][iso] = []
+            for i in range(SAMPLES_TESTING):
+                if i == 5 and iso == 'tzm':
+                    continue
+                filepath = f'./{orig}/{iso}/common_voice_22_0_{i}.TextGrid'
+                data[orig][iso].append(load_intervals(filepath=filepath))
+
+    def add_offset(interval,offset):
+        interval['start'] += offset
+        interval['end'] += offset
+        return interval
+
+    # Run per-character eval
+    for iso in ['shi','tzm']:
+        # We concatenate all sentences
+        all_test = []
+        all_pred = []
+        offset = 0.
+        for i in range(SAMPLES_TESTING - int(iso=='tzm')):
+            test = data['output_verified'][iso][i]
+            test = [add_offset(j,offset) for j in test]
+            all_test += test
+            pred = data['output'][iso][i]
+            pred = [add_offset(j,offset) for j in pred]
+            all_pred += pred
+            # add offset last interval's end
+            offset = max(all_test[-1]['end'],all_pred[-1]['end'])
+        # We calculate confusion matrixes 
+        pprint(confusion_matrix(all_test,all_pred))
+        conf = confusion_matrix(all_test, all_pred )
+        df = confusion_to_df(conf)
+        matrix = to_matrix(df)
+        matrix = matrix.drop(columns="UNK", errors="ignore")
+        matrix = remove_diagonal(matrix)
+        plot_confusion(matrix,iso)
+        #pprint(all_test)
+        #pprint(all_pred)
+    assert(False)
+
+
+
+    # Run per-sentence eval
+    output = "iso,sentence,time_total,time_corr_abs,time_corr_perc\n"
+    for orig in ['output','output_verified']:
+        for iso in ['shi','tzm']:
+            for i in range(SAMPLES_TESTING):
+                correct,total = sentence_overlap(seq1, seq2)
+                output += ",".join(iso,f"common_voice_22_0_{i}",total, correct, round(correct/total,3 ))
+
+
+
+
 if __name__ == "__main__":
-    # Example: comparing labeled intervals (e.g., annotated events)
-    seq1 = [(0, 5, 'A'), (6, 10, 'B'), (12, 15, 'A')]
-    seq2 = [(0, 4, 'A'), (5, 11, 'B'), (13, 16, 'C')]
-    
-    distance = labeled_interval_levenshtein(seq1, seq2)
-    print(f"Labeled interval distance: {distance}")
-    
-    # Example with exact matches
-    seq3 = [(0, 5, 'X'), (10, 15, 'Y')]
-    seq4 = [(0, 5, 'X'), (10, 15, 'Y')]
-    print(f"Exact match distance: {labeled_interval_levenshtein(seq3, seq4)}")
-    
-    # Example: same intervals, different labels
-    seq5 = [(0, 5, 'A'), (10, 15, 'B')]
-    seq6 = [(0, 5, 'X'), (10, 15, 'Y')]
-    print(f"Same intervals, different labels: {labeled_interval_levenshtein(seq5, seq6)}")
-    
-    # Example: overlapping intervals with matching vs mismatching labels
-    seq7 = [(0, 10, 'A')]
-    seq8 = [(2, 8, 'A')]
-    seq9 = [(2, 8, 'B')]
-    print(f"Overlap + same label: {labeled_interval_levenshtein(seq7, seq8)}")
-    print(f"Overlap + diff label: {labeled_interval_levenshtein(seq7, seq9)}")
-    
-    # Example with float intervals (e.g., continuous time ranges)
-    seq10 = [(0.0, 2.5, 'A'), (3.7, 8.2, 'B'), (9.1, 12.3, 'C')]
-    seq11 = [(0.1, 2.4, 'A'), (3.8, 8.0, 'B'), (10.0, 12.5, 'C')]
-    print(f"\nFloat intervals distance: {labeled_interval_levenshtein(seq10, seq11)}")
-    
-    # Example with fractional overlaps
-    seq12 = [(0.0, 1.0, 'X'), (2.5, 3.5, 'Y')]
-    seq13 = [(0.3, 0.9, 'X'), (2.7, 3.3, 'Y')]
-    print(f"Fractional overlaps: {labeled_interval_levenshtein(seq12, seq13)}")
+    main()
