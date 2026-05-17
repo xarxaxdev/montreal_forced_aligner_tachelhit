@@ -19,7 +19,6 @@ Transliteration relevant links:
 - (Phon1) https://en.wikipedia.org/wiki/Shilha_language#Phonology
 - (Phon2) https://en.wikipedia.org/wiki/Central_Atlas_Tamazight#Phonology
 - (Phon3) https://en.wikipedia.org/wiki/Tarifit#Phonology (An Introduction To Tarifiyt Berber)
-- (Phon4) https://en.wikipedia.org/wiki/Kabyle_language#Phonology
 
 Note that:
 - shi & tzm are similar
