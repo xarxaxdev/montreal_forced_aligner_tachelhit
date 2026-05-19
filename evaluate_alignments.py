@@ -107,7 +107,7 @@ def sentence_overlap(seq1, seq2):
 def confusion_matrix(seq1, seq2):
     """Returns confusion matrix as dict of (sym1, sym2) -> time"""
 
-    confusion = defaultdict(float)   # default 0.0
+    confusion = defaultdict(list)   # default 0.0
     index1 = index2 = 0
     while index1 < len(seq1) and index2 < len(seq2):
         el1 = seq1[index1]
@@ -117,13 +117,13 @@ def confusion_matrix(seq1, seq2):
         overlap_end = min(el1['end'], el2['end'])
 
         if overlap_start < overlap_end:
-            confusion[(el1['text'], el2['text'])] += overlap_end - overlap_start
+            confusion[(el1['text'], el2['text'])].append(overlap_end - overlap_start)
 
         if el1['end'] <= el2['end']:
-            confusion[(el1['text'], "UNK")] += el1['end']- el1['start']
+            confusion[(el1['text'], "UNK")].append(el1['end']- el1['start'])
             index1 += 1
         else:
-            confusion[(el2['text'], "UNK")] += el2['end']- el2['start']
+            confusion[("UNK",el2['text'])].append(el2['end']- el2['start'])
             index2 += 1
 
     return dict(confusion)
@@ -207,6 +207,8 @@ def main():
 
         # We calculate confusion matrix golden2prediction 
         conf = confusion_matrix(all_test, all_pred)
+        for k in conf.keys():
+            conf[k] = sum(conf[k])
         conf = prepare_matrix(conf)
         title = f"Confusion Matrix {iso.upper()} (Golden label X/Misslabeled as Y)"
         filename = f"conf_phone_g2p.png"
@@ -214,19 +216,69 @@ def main():
 
         # We calculate confusion matrix golden2prediction 
         conf = confusion_matrix(all_test, all_pred)
+        for k in conf.keys():
+            conf[k] = sum(conf[k])
         conf = prepare_matrix(conf)
         title = f"Confusion Matrix {iso.upper()} (Misslabeled X/ as Goldn label Y)"
         filename = f"conf_phone_p2g.png"
         plot_matrix_heatmap(conf, title = title, filename=filename)
 
-        #pprint(all_test)
-        #pprint(all_pred)
-    #assert(False)
+        # Top 15
+        conf = confusion_matrix(all_test, all_pred)
+        conf = [(gold,pred,f"{sum(conf[(gold,pred)]):3f}",f"{len(conf[(gold,pred)]):3f}",f"{np.average(conf[(gold,pred)]):3f}",f"{np.var(conf[(gold,pred)]):3f}") for (gold,pred) in conf.keys()]
+        conf = list(sorted(conf,key=lambda x: float(x[3]),reverse=True))#[:15]
+        with open(f"./plots/{iso}_top_g2p.csv", "w") as f:
+            output = "gold,pred,time_sec,support,avg_time,var_time\n"
+            output += '\n'.join([','.join(l) for l in conf])
+            print(output)
+            f.write(output)
+    
+        # Top 15
+        conf = confusion_matrix(all_pred, all_test)
+        conf = [(gold,pred,f"{sum(conf[(gold,pred)]):3f}",f"{len(conf[(gold,pred)]):3f}",f"{np.average(conf[(gold,pred)]):3f}",f"{np.var(conf[(gold,pred)]):3f}") for (gold,pred) in conf.keys()]
+        conf = list(sorted(conf,key=lambda x: float(x[3]),reverse=True))#[:15]
+        with open(f"./plots/{iso}_top_p2g.csv", "w") as f:
+            output = "gold,pred,time_sec,support,avg_time,var_time\n"
+            output += '\n'.join([','.join(l) for l in conf])
+            print(output)
+            f.write(output)
+        
+        # Top 15 no UNK
+        conf = confusion_matrix(all_test, all_pred)
+        unk_labels = [(x,y) for (x,y) in conf.keys() if y=='UNK']
+        unk_labels += [(x,y) for (x,y) in conf.keys() if x=='UNK']
+        for l in unk_labels:
+            del conf[l]
+        cor_labels = [(x,y) for (x,y) in conf.keys() if x==y]
+        for l in cor_labels:
+            del conf[l]
+
+        conf = [(gold,pred,f"{sum(conf[(gold,pred)]):3f}",f"{len(conf[(gold,pred)]):3f}",f"{np.average(conf[(gold,pred)]):3f}",f"{np.var(conf[(gold,pred)]):3f}") for (gold,pred) in conf.keys()]
+        conf = list(sorted(conf,key=lambda x: float(x[3]),reverse=True))#[:15]
+        with open(f"./plots/{iso}_top_nounk_g2p.csv", "w") as f:
+            output = "gold,pred,time_sec,support,avg_time,var_time\n"
+            output += '\n'.join([','.join(l) for l in conf])
+            print(output)
+            f.write(output)
 
 
-
-
-
+        # Top 15 no UNK
+        conf = confusion_matrix(all_pred, all_test)
+        unk_labels = [(x,y) for (x,y) in conf.keys() if y=='UNK']
+        unk_labels += [(x,y) for (x,y) in conf.keys() if x=='UNK']
+        for l in unk_labels:
+            del conf[l]
+        cor_labels = [(x,y) for (x,y) in conf.keys() if x==y]
+        for l in cor_labels:
+            del conf[l]
+        
+        conf = [(gold,pred,f"{sum(conf[(gold,pred)]):3f}",f"{len(conf[(gold,pred)]):3f}",f"{np.average(conf[(gold,pred)]):3f}",f"{np.var(conf[(gold,pred)]):3f}") for (gold,pred) in conf.keys()]
+        conf = list(sorted(conf,key=lambda x: float(x[3]),reverse=True))#[:15]
+        with open(f"./plots/{iso}_top_nounk_p2g.csv", "w") as f:
+            output = "gold,pred,time_sec,support,avg_time,var_time\n"
+            output += '\n'.join([','.join(l) for l in conf])
+            print(output)
+            f.write(output)
 
 
 if __name__ == "__main__":
