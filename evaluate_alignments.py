@@ -14,6 +14,19 @@ from numpy import median as median
 
 MIN_SUPPORT = 8 # Min. Threshold of occurrances, to consider a pattern
 
+def plot_histogram(data,filename):
+    #pprint(data)
+    data = [1000*x for x in data] #making things easier to compare with  https://aclanthology.org/2025.computel-main.11.pdf
+    color_main = "steelblue"
+    color_line = "red"
+    plt.hist(data, bins=30, edgecolor='black',color=color_main )
+    plt.axvline(0, color=color_line, linestyle='--', linewidth=2)
+    plt.xlim(-200, 200)   # zoom in here
+    plt.xlabel('Difference (gold labels-pred labels) in ms')
+    plt.ylabel('Frequency')
+    plt.savefig(f"./plots/{filename}_histogram_onset_dif.png")
+    plt.clf()   # clear figure
+
 def plot_barchart_persample(data):
     # Extract fields
     labels = [f"{iso.upper()}_{sample.split('_')[-1]}" for iso, sample, _, _, _ in data]
@@ -41,6 +54,7 @@ def plot_barchart_persample(data):
     plt.tight_layout()
     #plt.show()
     plt.savefig(f"./plots/per_sample/{filename}_succes_per_sample.png")
+    plt.clf()   # clear figure
 
 
 
@@ -57,6 +71,7 @@ def plot_matrix_heatmap(matrix,title = 'no_title',label='nolabel',filename='no_f
     plt.tight_layout()
     #plt.show()
     plt.savefig(f"./plots/conf_mat/{filename}")
+    plt.clf()   # clear figure
 
 
 
@@ -82,6 +97,7 @@ def sentence_overlap(seq1, seq2):
     # returns time where symbols match between seq1 and seq2
     time_correct = 0.0
     time_total = 0.0
+    difs = []
     index1=index2=0
 
     while index1 < len(seq1) and index2 < len(seq2):
@@ -96,6 +112,7 @@ def sentence_overlap(seq1, seq2):
             time_total += overlap_duration
             if el1['text']== el2['text']:
                 time_correct += overlap_duration
+                difs.append(el1['start']-el2['start'])
         else :
             if el1['end']<= el2['end']:
                 time_total += el1['end']- el1['start']
@@ -108,7 +125,7 @@ def sentence_overlap(seq1, seq2):
         else:
             index2 += 1
 
-    return time_correct, time_total
+    return time_correct, time_total, difs
 
 
 def confusion_matrix(seq1, seq2):
@@ -185,33 +202,53 @@ def main():
                 data_word[orig][iso].append(load_intervals(filepath=filepath,word_level=True))
     
 
-    # Run per-sentence(phone-level) eval
+    # Run per-sentence eval(and global)
     output = "iso,sentence,time_total,time_corr_abs,time_corr_perc\n"
     barchartdata = []
+    histogramdata = {}
+    histogramdata_nostop = {}
     for iso in ['shi','tzm']:
+        histogramdata[iso]= {}
+        histogramdata_nostop[iso]= {}
         for i in range(SAMPLES_TESTING - int(iso=='tzm')): # we have one less sample in tzm
-        #for i in range(9,10):# we have one less sample in tzm
             if(iso == 'tzm' and i == 5):
                 i+=1
+
+            # Getting per-sentence metrics
             gold = data['output_verified'][iso][i]
             pred = data['output'][iso][i]
             sample = f"common_voice_22_0_{i}"
-            correct,total = sentence_overlap(gold, pred)
+
+
+            correct,total,difs = sentence_overlap(gold, pred)
             perc = round(correct/total,3)
             output += ",".join([f'{iso}_phon',sample,str(total), str(correct), str(perc)]) + '\n'
             barchartdata.append((f'{iso}_phon',sample,total, correct, round(correct/total,3)))
 
-            correct,total = sentence_overlap(gold, pred)
+            correct,total,difs = sentence_overlap(gold, pred)
             perc = round(correct/total,3)
             output += ",".join([f'{iso}_word',sample,str(total), str(correct), str(perc)]) + '\n'
             barchartdata.append((f'{iso}_word',sample,total, correct, round(correct/total,3)))
+            histogramdata[iso][i]= difs
 
-            gold = [ x for x  in data_word['output_verified'][iso][i] if len(x['text']) > 2]
-            pred = [ x for x  in data_word['output'][iso][i] if len(x['text']) > 2]
-            correct,total = sentence_overlap(gold, pred)
+            gold_nostop = [ x for x  in data_word['output_verified'][iso][i] if len(x['text']) > 2]
+            pred_nostop = [ x for x  in data_word['output'][iso][i] if len(x['text']) > 2]
+            correct,total,difs = sentence_overlap(gold_nostop, pred_nostop)
             perc = round(correct/total,3)
             output += ",".join([f'{iso}_word_nostop',sample,str(total), str(correct), str(perc)]) + '\n'
             barchartdata.append((f'{iso}_word_nostop',sample,total, correct, round(correct/total,3)))
+            histogramdata_nostop[iso][i] = difs
+    for iso in ['shi', 'tzm']:
+        tmp = []
+        for k in histogramdata[iso]:
+            tmp += histogramdata[iso][k] 
+        plot_histogram(tmp, filename=f'{iso}_all')
+        tmp = []
+        for k in histogramdata_nostop[iso]:
+            tmp += histogramdata_nostop[iso][k] 
+        plot_histogram(tmp, filename=f'{iso}_nostop')
+
+    
 
 
     with open("./plots/per_sample/all.csv", "w") as f:
@@ -246,14 +283,6 @@ def main():
             # new offset is last interval's end
             offset = max(all_test[-1]['end'],all_pred[-1]['end'])
 
-        # We calculate confusion matrix gold2pred
-        #all_test = all_test[:2000]
-        #all_pred = all_pred[:2000]
-        #for i in range(len(all_pred)):
-            #print('-'*20)
-            #print(all_test[i])
-            #print(all_pred[i])
-        #assert(False)
 
         for func_name in ["size","mean","median","var"]:
             conf = confusion_matrix(all_test, all_pred)
@@ -279,11 +308,10 @@ def main():
         # Pairs descending by variance
         conf = confusion_matrix(all_test, all_pred)
         conf = [(gold,pred,f"{sum(conf[(gold,pred)]):3f}",f"{len(conf[(gold,pred)]):3f}",f"{mean(conf[(gold,pred)]):3f}",f"{var(conf[(gold,pred)]):3f}") for (gold,pred) in conf.keys()]
-        conf = list(sorted(conf,key=lambda x: int(x[3]),reverse=True))#[:15]
-        with open(f"./plots/{iso}_unfiltered.csv", "w") as f:
+        conf = list(sorted(conf,key=lambda x: int(float(x[3])),reverse=True))#[:15]
+        with open(f"./plots/conf_mat/{iso}_unfiltered.csv", "w") as f:
             output = "gold,pred,time_sec,support,mean, median,variance\n"
             output += '\n'.join([','.join(l) for l in conf])
-            print(output)
             f.write(output)
     
 
