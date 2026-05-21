@@ -8,10 +8,17 @@ from utils import SAMPLES_TESTING
 import pandas as pd
 
 import matplotlib.pyplot as plt
+from numpy import var as var
+from numpy import average as mean
+from numpy import median as median
 
-def plot_barchart_persample(iso, data):
+MIN_SUPPORT = 8 # Min. Threshold of occurrances, to consider a pattern
+
+def plot_barchart_persample(data):
     # Extract fields
     labels = [f"{iso.upper()}_{sample.split('_')[-1]}" for iso, sample, _, _, _ in data]
+    filename = labels[0].split('_')[:-1]
+    filename = '_'.join(filename)
     correct = [c for _, _, _, c, _ in data]
     total = [t for _, _, t, _, _ in data]
     pct = [p for _, _, _, _, p in data]
@@ -30,42 +37,39 @@ def plot_barchart_persample(iso, data):
         plt.text(i, c/2, f"{p:.1%}", ha='center', va='center')
     plt.xticks(x, labels, rotation=45, ha='right')
     plt.xlabel('')  # optional: remove x-axis label if any
-    plt.title(f"Success % per sample (avg= {avg_pct:.1%}, var={var_pct})")
+    plt.title(f"Success % of seconds per sample (avg= {avg_pct:.1%}, var={var_pct})")
     plt.tight_layout()
     #plt.show()
-    plt.savefig(f"./plots/{iso}_succes_per_sample.png")
+    plt.savefig(f"./plots/per_sample/{filename}_succes_per_sample.png")
 
 
 
-def plot_matrix_heatmap(matrix,title = 'no_title',filename='no_filename.png'):
+def plot_matrix_heatmap(matrix,title = 'no_title',label='nolabel',filename='no_filename.png'):
+
     plt.figure(figsize=(10, 8))
     plt.imshow(matrix, aspect="auto")
 
     plt.xticks(range(len(matrix.columns)), matrix.columns, rotation=90)
     plt.yticks(range(len(matrix.index)), matrix.index)
 
-    plt.colorbar(label="total time (s)")
+    plt.colorbar(label=label)
     plt.title(title)
     plt.tight_layout()
     #plt.show()
-    plt.savefig(f"./plots/{filename}")
-
-def remove_diagonal(matrix):
-    m = matrix.copy()
-    for i in m.index:
-        if i in m.columns:
-            m.loc[i, i] = 0
-    return m
+    plt.savefig(f"./plots/conf_mat/{filename}")
 
 
 
-def load_intervals(filepath):
+def load_intervals(filepath, word_level = False):
     intervals = []
 
     with open(filepath, 'rb') as f:
         encoding = chardet.detect(f.read())['encoding']
     tg = tgt.read_textgrid(filepath,encoding=encoding)
-    tier = tg.get_tier_by_name('phones')  
+    if word_level:
+        tier = tg.get_tier_by_name('words')  
+    else:
+        tier = tg.get_tier_by_name('phones')  
 
     for interval in tier:
         intervals.append({
@@ -92,13 +96,16 @@ def sentence_overlap(seq1, seq2):
             time_total += overlap_duration
             if el1['text']== el2['text']:
                 time_correct += overlap_duration
+        else :
+            if el1['end']<= el2['end']:
+                time_total += el1['end']- el1['start']
+            else: 
+                time_total += el2['end']- el2['start']
 
         # Advance whichever interval ends first
         if el1['end']<= el2['end']:
-            time_total += el1['end']- el1['start']
             index1 += 1
         else:
-            time_total += el2['end']- el2['start']
             index2 += 1
 
     return time_correct, time_total
@@ -118,19 +125,20 @@ def confusion_matrix(seq1, seq2):
 
         if overlap_start < overlap_end:
             confusion[(el1['text'], el2['text'])].append(overlap_end - overlap_start)
-
-        if el1['end'] <= el2['end']:
+        elif el1['end'] <= el2['end']:
             confusion[(el1['text'], "UNK")].append(el1['end']- el1['start'])
-            index1 += 1
         else:
             confusion[("UNK",el2['text'])].append(el2['end']- el2['start'])
+
+        if el1['end'] <= el2['end']:
+            index1 += 1
+        else:
             index2 += 1
 
     return dict(confusion)
 
 
-def prepare_matrix(conf):
-    #pprint(confusion_matrix(all_test,all_pred))
+def prepare_matrix(conf,remove_zeros = True, normalize = False,drop_unk=False):
     df = pd.DataFrame([
         {"ref": k[0], "hyp": k[1], "time": v}
         for k, v in conf.items()
@@ -143,44 +151,76 @@ def prepare_matrix(conf):
         aggfunc="sum",
         fill_value=0
     )
+
+    if drop_unk:
+        matrix = matrix.drop(index='UNK', columns='UNK')
+
+    if remove_zeros:
+        matrix = matrix.loc[~(matrix == 0).all(1), ~(matrix == 0).all(0)]
+
+    if normalize == 'row':
+        matrix = matrix.div(matrix.sum(axis=1), axis=0)
+    elif normalize == 'col':
+        matrix = matrix.div(matrix.sum(axis=0), axis=1)
+
     return matrix
 
-
-def top_n(matrix,n):
-    coords = sorted(((i, j, matrix[i][j]) for i in range(len(matrix)) for j in range(len(matrix[i]))),
-                key=lambda x: x[2], reverse=True)[:n]
-    return coords
 
 def main():
     # Read golden alignemnts + curr alignments
     data = {}
+    data_word= {}
 
     for orig in ['output','output_verified']:
         data[orig] = {} 
+        data_word[orig] = {}
         for iso in ['shi','tzm']:
             data[orig][iso] = []
+            data_word[orig][iso] = []
             for i in range(SAMPLES_TESTING):
                 if i == 5 and iso == 'tzm':
                     continue
                 filepath = f'./{orig}/{iso}/common_voice_22_0_{i}.TextGrid'
                 data[orig][iso].append(load_intervals(filepath=filepath))
+                data_word[orig][iso].append(load_intervals(filepath=filepath,word_level=True))
     
 
-    # Run per-sentence eval
+    # Run per-sentence(phone-level) eval
     output = "iso,sentence,time_total,time_corr_abs,time_corr_perc\n"
     barchartdata = []
     for iso in ['shi','tzm']:
         for i in range(SAMPLES_TESTING - int(iso=='tzm')): # we have one less sample in tzm
+        #for i in range(9,10):# we have one less sample in tzm
             if(iso == 'tzm' and i == 5):
                 i+=1
-            correct,total = sentence_overlap(data['output_verified'][iso][i], data['output'][iso][i])
+            gold = data['output_verified'][iso][i]
+            pred = data['output'][iso][i]
+            sample = f"common_voice_22_0_{i}"
+            correct,total = sentence_overlap(gold, pred)
             perc = round(correct/total,3)
-            output += ",".join([iso,f"common_voice_22_0_{i}",str(total), str(correct), str(perc)]) + '\n'
-            barchartdata.append((iso,f"common_voice_22_0_{i}",total, correct, round(correct/total,3)))
-    with open("./plots/per-sentence.csv", "w") as f:
+            output += ",".join([f'{iso}_phon',sample,str(total), str(correct), str(perc)]) + '\n'
+            barchartdata.append((f'{iso}_phon',sample,total, correct, round(correct/total,3)))
+
+            correct,total = sentence_overlap(gold, pred)
+            perc = round(correct/total,3)
+            output += ",".join([f'{iso}_word',sample,str(total), str(correct), str(perc)]) + '\n'
+            barchartdata.append((f'{iso}_word',sample,total, correct, round(correct/total,3)))
+
+            gold = [ x for x  in data_word['output_verified'][iso][i] if len(x['text']) > 2]
+            pred = [ x for x  in data_word['output'][iso][i] if len(x['text']) > 2]
+            correct,total = sentence_overlap(gold, pred)
+            perc = round(correct/total,3)
+            output += ",".join([f'{iso}_word_nostop',sample,str(total), str(correct), str(perc)]) + '\n'
+            barchartdata.append((f'{iso}_word_nostop',sample,total, correct, round(correct/total,3)))
+
+
+    with open("./plots/per_sample/all.csv", "w") as f:
         f.write(output)
-    plot_barchart_persample(iso='shi',data=[(iso,a,b,c,d) for (iso,a,b,c,d) in barchartdata if iso =='shi'])
-    plot_barchart_persample(iso='tzm',data=[(iso,a,b,c,d) for (iso,a,b,c,d) in barchartdata if iso =='tzm'])
+    for iso in ['shi','tzm']:
+        for cat in ['phon','word','word_nostop']:
+            label = f'{iso}_{cat}'
+            subset_data = [(l,a,b,c,d) for (l,a,b,c,d) in barchartdata if l ==label]
+            plot_barchart_persample(data=subset_data)
 
 
     # Defining it here since I use it as a lambda function
@@ -189,7 +229,8 @@ def main():
         interval['end'] += offset
         return interval
 
-    # Run per-character eval
+
+    # Run per-phone eval
     for iso in ['shi','tzm']:
         # We concatenate all sentences
         all_test = []
@@ -202,83 +243,49 @@ def main():
             pred = data['output'][iso][i]
             pred = [add_offset(j,offset) for j in pred]
             all_pred += pred
-            # add offset last interval's end
+            # new offset is last interval's end
             offset = max(all_test[-1]['end'],all_pred[-1]['end'])
 
-        # We calculate confusion matrix golden2prediction 
-        conf = confusion_matrix(all_test, all_pred)
-        for k in conf.keys():
-            conf[k] = sum(conf[k])
-        conf = prepare_matrix(conf)
-        title = f"Confusion Matrix {iso.upper()} (Golden label X/Misslabeled as Y)"
-        filename = f"conf_phone_g2p.png"
-        plot_matrix_heatmap(conf, title = title, filename=filename)
+        # We calculate confusion matrix gold2pred
+        #all_test = all_test[:2000]
+        #all_pred = all_pred[:2000]
+        #for i in range(len(all_pred)):
+            #print('-'*20)
+            #print(all_test[i])
+            #print(all_pred[i])
+        #assert(False)
 
-        # We calculate confusion matrix golden2prediction 
-        conf = confusion_matrix(all_test, all_pred)
-        for k in conf.keys():
-            conf[k] = sum(conf[k])
-        conf = prepare_matrix(conf)
-        title = f"Confusion Matrix {iso.upper()} (Misslabeled X/ as Goldn label Y)"
-        filename = f"conf_phone_p2g.png"
-        plot_matrix_heatmap(conf, title = title, filename=filename)
+        for func_name in ["size","mean","median","var"]:
+            conf = confusion_matrix(all_test, all_pred)
+            for k in conf.keys():
+                #print(conf[k])
+                if len(conf[k]) < MIN_SUPPORT:
+                    conf[k]= 0
+                else:
+                    conf[k] = getattr(np, func_name)(conf[k])
+            for drop_unk in False,True:
+                for normalize in ['row','col',False]:
+                    df = prepare_matrix(conf, drop_unk=drop_unk,normalize=normalize)
+                    title = f"Confusion Matrix {iso.upper()} (Golden label X/Pred Y)"
+                    label = "%(of seconds)" if normalize else 'time(seconds)'
+                    if func_name == "size":
+                        label =  "Amount"
+                    unk_txt = 'nounk' if drop_unk else 'unk'
+                    norm_txt = f'norm{normalize}' if normalize else 'normnone'
+                    filename = f"{iso}_{func_name}_{unk_txt}_{norm_txt}.png"
+                    plot_matrix_heatmap(df, title = title, label=label, filename=filename)
 
-        # Top 15
+
+        # Pairs descending by variance
         conf = confusion_matrix(all_test, all_pred)
-        conf = [(gold,pred,f"{sum(conf[(gold,pred)]):3f}",f"{len(conf[(gold,pred)]):3f}",f"{np.average(conf[(gold,pred)]):3f}",f"{np.var(conf[(gold,pred)]):3f}") for (gold,pred) in conf.keys()]
-        conf = list(sorted(conf,key=lambda x: float(x[3]),reverse=True))#[:15]
-        with open(f"./plots/{iso}_top_g2p.csv", "w") as f:
-            output = "gold,pred,time_sec,support,avg_time,var_time\n"
+        conf = [(gold,pred,f"{sum(conf[(gold,pred)]):3f}",f"{len(conf[(gold,pred)]):3f}",f"{mean(conf[(gold,pred)]):3f}",f"{var(conf[(gold,pred)]):3f}") for (gold,pred) in conf.keys()]
+        conf = list(sorted(conf,key=lambda x: int(x[3]),reverse=True))#[:15]
+        with open(f"./plots/{iso}_unfiltered.csv", "w") as f:
+            output = "gold,pred,time_sec,support,mean, median,variance\n"
             output += '\n'.join([','.join(l) for l in conf])
             print(output)
             f.write(output)
     
-        # Top 15
-        conf = confusion_matrix(all_pred, all_test)
-        conf = [(gold,pred,f"{sum(conf[(gold,pred)]):3f}",f"{len(conf[(gold,pred)]):3f}",f"{np.average(conf[(gold,pred)]):3f}",f"{np.var(conf[(gold,pred)]):3f}") for (gold,pred) in conf.keys()]
-        conf = list(sorted(conf,key=lambda x: float(x[3]),reverse=True))#[:15]
-        with open(f"./plots/{iso}_top_p2g.csv", "w") as f:
-            output = "gold,pred,time_sec,support,avg_time,var_time\n"
-            output += '\n'.join([','.join(l) for l in conf])
-            print(output)
-            f.write(output)
-        
-        # Top 15 no UNK
-        conf = confusion_matrix(all_test, all_pred)
-        unk_labels = [(x,y) for (x,y) in conf.keys() if y=='UNK']
-        unk_labels += [(x,y) for (x,y) in conf.keys() if x=='UNK']
-        for l in unk_labels:
-            del conf[l]
-        cor_labels = [(x,y) for (x,y) in conf.keys() if x==y]
-        for l in cor_labels:
-            del conf[l]
-
-        conf = [(gold,pred,f"{sum(conf[(gold,pred)]):3f}",f"{len(conf[(gold,pred)]):3f}",f"{np.average(conf[(gold,pred)]):3f}",f"{np.var(conf[(gold,pred)]):3f}") for (gold,pred) in conf.keys()]
-        conf = list(sorted(conf,key=lambda x: float(x[3]),reverse=True))#[:15]
-        with open(f"./plots/{iso}_top_nounk_g2p.csv", "w") as f:
-            output = "gold,pred,time_sec,support,avg_time,var_time\n"
-            output += '\n'.join([','.join(l) for l in conf])
-            print(output)
-            f.write(output)
-
-
-        # Top 15 no UNK
-        conf = confusion_matrix(all_pred, all_test)
-        unk_labels = [(x,y) for (x,y) in conf.keys() if y=='UNK']
-        unk_labels += [(x,y) for (x,y) in conf.keys() if x=='UNK']
-        for l in unk_labels:
-            del conf[l]
-        cor_labels = [(x,y) for (x,y) in conf.keys() if x==y]
-        for l in cor_labels:
-            del conf[l]
-        
-        conf = [(gold,pred,f"{sum(conf[(gold,pred)]):3f}",f"{len(conf[(gold,pred)]):3f}",f"{np.average(conf[(gold,pred)]):3f}",f"{np.var(conf[(gold,pred)]):3f}") for (gold,pred) in conf.keys()]
-        conf = list(sorted(conf,key=lambda x: float(x[3]),reverse=True))#[:15]
-        with open(f"./plots/{iso}_top_nounk_p2g.csv", "w") as f:
-            output = "gold,pred,time_sec,support,avg_time,var_time\n"
-            output += '\n'.join([','.join(l) for l in conf])
-            print(output)
-            f.write(output)
 
 
 if __name__ == "__main__":
