@@ -11,12 +11,20 @@ import matplotlib.pyplot as plt
 from numpy import var as var
 from numpy import average as mean
 from numpy import median as median
+from scipy.stats import skew, kurtosis
 
 MIN_SUPPORT = 8 # Min. Threshold of occurrances, to consider a pattern
 
 def plot_histogram(data,filename):
     #pprint(data)
     data = [1000*x for x in data] #making things easier to compare with  https://aclanthology.org/2025.computel-main.11.pdf
+
+    # statistics
+    mean_val = np.mean(data)
+    var_val = np.var(data)
+    skew_val = skew(data)
+    kurt_val = kurtosis(data)
+
     color_main = "steelblue"
     color_line = "red"
     plt.hist(data, bins=30, edgecolor='black',color=color_main )
@@ -24,6 +32,26 @@ def plot_histogram(data,filename):
     plt.xlim(-200, 200)   # zoom in here
     plt.xlabel('Difference (gold labels-pred labels) in ms')
     plt.ylabel('Frequency')
+
+    # stats text box
+    stats_text = (
+        f"Mean: {mean_val:.2f} ms\n"
+        f"Variance: {var_val:.2f}\n"
+        f"Skewness: {skew_val:.2f}\n"
+        f"Kurtosis: {kurt_val:.2f}"
+    )
+    # place OUTSIDE graph
+    plt.text(
+        0.95, 0.95,
+        stats_text,
+        transform=plt.gca().transAxes,
+        fontsize=10,
+        verticalalignment='top',
+        horizontalalignment='right',
+        bbox=dict(boxstyle='round', facecolor='white', alpha=0.8)
+    )
+
+
     plt.savefig(f"./plots/{filename}_histogram_onset_dif.png")
     plt.clf()   # clear figure
 
