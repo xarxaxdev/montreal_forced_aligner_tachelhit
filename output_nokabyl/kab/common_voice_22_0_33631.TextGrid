@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1.511437 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 1.511437 
+        intervals: size = 3 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.16 
+            text = "ur" 
+        intervals [2]:
+            xmin = 0.16 
+            xmax = 1.48 
+            text = "ken-ttɛettibeɣ" 
+        intervals [3]:
+            xmin = 1.48 
+            xmax = 1.511437 
+            text = "" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 1.511437 
+        intervals: size = 13 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.16 
+            text = "w" 
+        intervals [2]:
+            xmin = 0.16 
+            xmax = 0.21 
+            text = "ç" 
+        intervals [3]:
+            xmin = 0.21 
+            xmax = 0.35 
+            text = "ə" 
+        intervals [4]:
+            xmin = 0.35 
+            xmax = 0.43 
+            text = "n" 
+        intervals [5]:
+            xmin = 0.43 
+            xmax = 0.67 
+            text = "ts" 
+        intervals [6]:
+            xmin = 0.67 
+            xmax = 0.8 
+            text = "ʕ" 
+        intervals [7]:
+            xmin = 0.8 
+            xmax = 0.87 
+            text = "ə" 
+        intervals [8]:
+            xmin = 0.87 
+            xmax = 1.06 
+            text = "ts" 
+        intervals [9]:
+            xmin = 1.06 
+            xmax = 1.15 
+            text = "i" 
+        intervals [10]:
+            xmin = 1.15 
+            xmax = 1.27 
+            text = "β" 
+        intervals [11]:
+            xmin = 1.27 
+            xmax = 1.31 
+            text = "ə" 
+        intervals [12]:
+            xmin = 1.31 
+            xmax = 1.48 
+            text = "ʁ" 
+        intervals [13]:
+            xmin = 1.48 
+            xmax = 1.511437 
+            text = "" 

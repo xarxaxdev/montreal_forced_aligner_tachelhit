@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1.932438 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 1.932438 
+        intervals: size = 3 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.56 
+            text = "" 
+        intervals [2]:
+            xmin = 0.56 
+            xmax = 0.98 
+            text = "telliḍ" 
+        intervals [3]:
+            xmin = 0.98 
+            xmax = 1.932438 
+            text = "tetteccḍeḍ" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 1.932438 
+        intervals: size = 13 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.56 
+            text = "" 
+        intervals [2]:
+            xmin = 0.56 
+            xmax = 0.61 
+            text = "θ" 
+        intervals [3]:
+            xmin = 0.61 
+            xmax = 0.68 
+            text = "ə" 
+        intervals [4]:
+            xmin = 0.68 
+            xmax = 0.79 
+            text = "l:" 
+        intervals [5]:
+            xmin = 0.79 
+            xmax = 0.88 
+            text = "i" 
+        intervals [6]:
+            xmin = 0.88 
+            xmax = 0.98 
+            text = "dˤ" 
+        intervals [7]:
+            xmin = 0.98 
+            xmax = 1.28 
+            text = "θ" 
+        intervals [8]:
+            xmin = 1.28 
+            xmax = 1.36 
+            text = "ts" 
+        intervals [9]:
+            xmin = 1.36 
+            xmax = 1.4 
+            text = "ə" 
+        intervals [10]:
+            xmin = 1.4 
+            xmax = 1.56 
+            text = "ʃ:" 
+        intervals [11]:
+            xmin = 1.56 
+            xmax = 1.68 
+            text = "dˤ" 
+        intervals [12]:
+            xmin = 1.68 
+            xmax = 1.79 
+            text = "ə" 
+        intervals [13]:
+            xmin = 1.79 
+            xmax = 1.932438 
+            text = "dˤ" 

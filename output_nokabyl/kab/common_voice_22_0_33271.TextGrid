@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1.241937 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 1.241937 
+        intervals: size = 4 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.2 
+            text = "ẓer" 
+        intervals [2]:
+            xmin = 0.2 
+            xmax = 0.23 
+            text = "" 
+        intervals [3]:
+            xmin = 0.23 
+            xmax = 0.48 
+            text = "deg" 
+        intervals [4]:
+            xmin = 0.48 
+            xmax = 1.241937 
+            text = "leǧyub-ik" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 1.241937 
+        intervals: size = 12 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.2 
+            text = "zˤ" 
+        intervals [2]:
+            xmin = 0.2 
+            xmax = 0.23 
+            text = "" 
+        intervals [3]:
+            xmin = 0.23 
+            xmax = 0.35 
+            text = "ð" 
+        intervals [4]:
+            xmin = 0.35 
+            xmax = 0.39 
+            text = "ə" 
+        intervals [5]:
+            xmin = 0.39 
+            xmax = 0.48 
+            text = "ʝ" 
+        intervals [6]:
+            xmin = 0.48 
+            xmax = 0.56 
+            text = "l" 
+        intervals [7]:
+            xmin = 0.56 
+            xmax = 0.66 
+            text = "dʒ" 
+        intervals [8]:
+            xmin = 0.66 
+            xmax = 0.73 
+            text = "j" 
+        intervals [9]:
+            xmin = 0.73 
+            xmax = 0.81 
+            text = "u" 
+        intervals [10]:
+            xmin = 0.81 
+            xmax = 0.88 
+            text = "β" 
+        intervals [11]:
+            xmin = 0.88 
+            xmax = 1.02 
+            text = "i" 
+        intervals [12]:
+            xmin = 1.02 
+            xmax = 1.241937 
+            text = "ç" 

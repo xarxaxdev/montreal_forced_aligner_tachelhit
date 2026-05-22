@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1.609563 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 1.609563 
+        intervals: size = 4 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.08 
+            text = "mi" 
+        intervals [2]:
+            xmin = 0.08 
+            xmax = 0.35 
+            text = "ara" 
+        intervals [3]:
+            xmin = 0.35 
+            xmax = 0.85 
+            text = "n-ɛenniɣ" 
+        intervals [4]:
+            xmin = 0.85 
+            xmax = 1.609563 
+            text = "ɣur-k" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 1.609563 
+        intervals: size = 12 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.08 
+            text = "m" 
+        intervals [2]:
+            xmin = 0.08 
+            xmax = 0.18 
+            text = "a" 
+        intervals [3]:
+            xmin = 0.18 
+            xmax = 0.25 
+            text = "r" 
+        intervals [4]:
+            xmin = 0.25 
+            xmax = 0.35 
+            text = "a" 
+        intervals [5]:
+            xmin = 0.35 
+            xmax = 0.45 
+            text = "n:" 
+        intervals [6]:
+            xmin = 0.45 
+            xmax = 0.66 
+            text = "ʕ" 
+        intervals [7]:
+            xmin = 0.66 
+            xmax = 0.76 
+            text = "n:" 
+        intervals [8]:
+            xmin = 0.76 
+            xmax = 0.85 
+            text = "i" 
+        intervals [9]:
+            xmin = 0.85 
+            xmax = 0.98 
+            text = "ʁ" 
+        intervals [10]:
+            xmin = 0.98 
+            xmax = 1.21 
+            text = "u" 
+        intervals [11]:
+            xmin = 1.21 
+            xmax = 1.32 
+            text = "r" 
+        intervals [12]:
+            xmin = 1.32 
+            xmax = 1.609563 
+            text = "ç" 

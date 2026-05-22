@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1.513437 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 1.513437 
+        intervals: size = 3 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.29 
+            text = "ziɣ" 
+        intervals [2]:
+            xmin = 0.29 
+            xmax = 0.74 
+            text = "ul-im" 
+        intervals [3]:
+            xmin = 0.74 
+            xmax = 1.513437 
+            text = "yeqseḥ" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 1.513437 
+        intervals: size = 13 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.11 
+            text = "z" 
+        intervals [2]:
+            xmin = 0.11 
+            xmax = 0.23 
+            text = "i" 
+        intervals [3]:
+            xmin = 0.23 
+            xmax = 0.29 
+            text = "ʁ" 
+        intervals [4]:
+            xmin = 0.29 
+            xmax = 0.46 
+            text = "w" 
+        intervals [5]:
+            xmin = 0.46 
+            xmax = 0.56 
+            text = "l" 
+        intervals [6]:
+            xmin = 0.56 
+            xmax = 0.64 
+            text = "i" 
+        intervals [7]:
+            xmin = 0.64 
+            xmax = 0.74 
+            text = "m" 
+        intervals [8]:
+            xmin = 0.74 
+            xmax = 0.85 
+            text = "j" 
+        intervals [9]:
+            xmin = 0.85 
+            xmax = 0.91 
+            text = "ə" 
+        intervals [10]:
+            xmin = 0.91 
+            xmax = 1.02 
+            text = "q" 
+        intervals [11]:
+            xmin = 1.02 
+            xmax = 1.16 
+            text = "s" 
+        intervals [12]:
+            xmin = 1.16 
+            xmax = 1.19 
+            text = "ə" 
+        intervals [13]:
+            xmin = 1.19 
+            xmax = 1.513437 
+            text = "ħ" 
