@@ -211,6 +211,11 @@ def prepare_matrix(conf,remove_zeros = True, normalize = False,drop_unk=False):
     return matrix
 
 
+
+def f2s(x):
+    return f"{x:.4f}"
+
+
 def main():
     # Read golden alignemnts + curr alignments
     data = {}
@@ -246,16 +251,16 @@ def main():
             gold = data['output_verified'][iso][i]
             pred = data['output'][iso][i]
             sample = f"common_voice_22_0_{i}"
-
+            
 
             correct,total,difs = sentence_overlap(gold, pred)
             perc = round(correct/total,3)
-            output += ",".join([f'{iso}_phon',sample,str(total), str(correct), str(perc)]) + '\n'
+            output += ",".join([f'{iso}_phon',sample,f2s(total), f2s(correct), f2s(perc)]) + '\n'
             barchartdata.append((f'{iso}_phon',sample,total, correct, round(correct/total,3)))
 
             correct,total,difs = sentence_overlap(gold, pred)
             perc = round(correct/total,3)
-            output += ",".join([f'{iso}_word',sample,str(total), str(correct), str(perc)]) + '\n'
+            output += ",".join([f'{iso}_word',sample,f2s(total), f2s(correct), f2s(perc)]) + '\n'
             barchartdata.append((f'{iso}_word',sample,total, correct, round(correct/total,3)))
             histogramdata[iso][i]= difs
 
@@ -263,7 +268,7 @@ def main():
             pred_nostop = [ x for x  in data_word['output'][iso][i] if len(x['text']) > 2]
             correct,total,difs = sentence_overlap(gold_nostop, pred_nostop)
             perc = round(correct/total,3)
-            output += ",".join([f'{iso}_word_nostop',sample,str(total), str(correct), str(perc)]) + '\n'
+            output += ",".join([f'{iso}_word_nostop',sample,f2s(total), f2s(correct), f2s(perc)]) + '\n'
             barchartdata.append((f'{iso}_word_nostop',sample,total, correct, round(correct/total,3)))
             histogramdata_nostop[iso][i] = difs
     for iso in ['shi', 'tzm']:
@@ -337,7 +342,7 @@ def main():
 
         # Pairs descending by variance
         conf = confusion_matrix(all_test, all_pred)
-        conf = [(gold,pred,f"{sum(conf[(gold,pred)]):3f}",f"{len(conf[(gold,pred)]):3f}",f"{mean(conf[(gold,pred)]):3f}",f"{var(conf[(gold,pred)]):3f}") for (gold,pred) in conf.keys()]
+        conf = [(gold,pred,f2s(sum(conf[(gold,pred)])),f2s(len(conf[(gold,pred)])),f2s(mean(conf[(gold,pred)])),f2s(var(conf[(gold,pred)]))) for (gold,pred) in conf.keys()]
         conf = list(sorted(conf,key=lambda x: int(float(x[3])),reverse=True))#[:15]
         with open(f"./plots/conf_mat/{iso}_unfiltered.csv", "w") as f:
             output = "gold,pred,time_sec,support,mean, median,variance\n"
