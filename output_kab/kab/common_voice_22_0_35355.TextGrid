@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1.235313 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 1.235313 
+        intervals: size = 3 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.37 
+            text = "anida" 
+        intervals [2]:
+            xmin = 0.37 
+            xmax = 0.74 
+            text = "bɣun" 
+        intervals [3]:
+            xmin = 0.74 
+            xmax = 1.235313 
+            text = "alin" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 1.235313 
+        intervals: size = 13 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.1 
+            text = "a" 
+        intervals [2]:
+            xmin = 0.1 
+            xmax = 0.15 
+            text = "n" 
+        intervals [3]:
+            xmin = 0.15 
+            xmax = 0.24 
+            text = "i" 
+        intervals [4]:
+            xmin = 0.24 
+            xmax = 0.29 
+            text = "ð" 
+        intervals [5]:
+            xmin = 0.29 
+            xmax = 0.37 
+            text = "a" 
+        intervals [6]:
+            xmin = 0.37 
+            xmax = 0.45 
+            text = "β" 
+        intervals [7]:
+            xmin = 0.45 
+            xmax = 0.58 
+            text = "ʁ" 
+        intervals [8]:
+            xmin = 0.58 
+            xmax = 0.68 
+            text = "u" 
+        intervals [9]:
+            xmin = 0.68 
+            xmax = 0.74 
+            text = "n" 
+        intervals [10]:
+            xmin = 0.74 
+            xmax = 0.84 
+            text = "a" 
+        intervals [11]:
+            xmin = 0.84 
+            xmax = 0.92 
+            text = "l" 
+        intervals [12]:
+            xmin = 0.92 
+            xmax = 1.03 
+            text = "i" 
+        intervals [13]:
+            xmin = 1.03 
+            xmax = 1.235313 
+            text = "n" 

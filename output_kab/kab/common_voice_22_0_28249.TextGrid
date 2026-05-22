@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1.649812 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 1.649812 
+        intervals: size = 3 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.54 
+            text = "asemt-d" 
+        intervals [2]:
+            xmin = 0.54 
+            xmax = 0.7 
+            text = "ad" 
+        intervals [3]:
+            xmin = 0.7 
+            xmax = 1.649812 
+            text = "iyi-teẓṛemt" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 1.649812 
+        intervals: size = 13 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.13 
+            text = "a" 
+        intervals [2]:
+            xmin = 0.13 
+            xmax = 0.21 
+            text = "s" 
+        intervals [3]:
+            xmin = 0.21 
+            xmax = 0.26 
+            text = "ə" 
+        intervals [4]:
+            xmin = 0.26 
+            xmax = 0.32 
+            text = "m" 
+        intervals [5]:
+            xmin = 0.32 
+            xmax = 0.45 
+            text = "t" 
+        intervals [6]:
+            xmin = 0.45 
+            xmax = 0.54 
+            text = "ð" 
+        intervals [7]:
+            xmin = 0.54 
+            xmax = 0.63 
+            text = "a" 
+        intervals [8]:
+            xmin = 0.63 
+            xmax = 0.7 
+            text = "ð" 
+        intervals [9]:
+            xmin = 0.7 
+            xmax = 0.83 
+            text = "j" 
+        intervals [10]:
+            xmin = 0.83 
+            xmax = 0.84 
+            text = "j" 
+        intervals [11]:
+            xmin = 0.84 
+            xmax = 0.87 
+            text = "i" 
+        intervals [12]:
+            xmin = 0.87 
+            xmax = 0.93 
+            text = "θ" 
+        intervals [13]:
+            xmin = 0.93 
+            xmax = 1.649812 
+            text = "ə" 

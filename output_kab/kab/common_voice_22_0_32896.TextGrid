@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1.232563 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 1.232563 
+        intervals: size = 3 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.43 
+            text = "fell-ak" 
+        intervals [2]:
+            xmin = 0.43 
+            xmax = 0.69 
+            text = "ara" 
+        intervals [3]:
+            xmin = 0.69 
+            xmax = 1.232563 
+            text = "cennuɣ" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 1.232563 
+        intervals: size = 13 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.06 
+            text = "f" 
+        intervals [2]:
+            xmin = 0.06 
+            xmax = 0.11 
+            text = "ə" 
+        intervals [3]:
+            xmin = 0.11 
+            xmax = 0.24 
+            text = "l:" 
+        intervals [4]:
+            xmin = 0.24 
+            xmax = 0.34 
+            text = "a" 
+        intervals [5]:
+            xmin = 0.34 
+            xmax = 0.43 
+            text = "ç" 
+        intervals [6]:
+            xmin = 0.43 
+            xmax = 0.51 
+            text = "a" 
+        intervals [7]:
+            xmin = 0.51 
+            xmax = 0.56 
+            text = "r" 
+        intervals [8]:
+            xmin = 0.56 
+            xmax = 0.69 
+            text = "a" 
+        intervals [9]:
+            xmin = 0.69 
+            xmax = 0.82 
+            text = "ʃ:" 
+        intervals [10]:
+            xmin = 0.82 
+            xmax = 0.9 
+            text = "ə" 
+        intervals [11]:
+            xmin = 0.9 
+            xmax = 1.03 
+            text = "n:" 
+        intervals [12]:
+            xmin = 1.03 
+            xmax = 1.19 
+            text = "u" 
+        intervals [13]:
+            xmin = 1.19 
+            xmax = 1.232563 
+            text = "ʁ" 

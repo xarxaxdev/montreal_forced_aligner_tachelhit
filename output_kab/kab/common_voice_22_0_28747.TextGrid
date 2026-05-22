@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1.115687 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 1.115687 
+        intervals: size = 3 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.29 
+            text = "tettesseḍ" 
+        intervals [2]:
+            xmin = 0.29 
+            xmax = 0.78 
+            text = "akeffay" 
+        intervals [3]:
+            xmin = 0.78 
+            xmax = 1.115687 
+            text = "naɣ" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 1.115687 
+        intervals: size = 13 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.03 
+            text = "θ" 
+        intervals [2]:
+            xmin = 0.03 
+            xmax = 0.06 
+            text = "ts" 
+        intervals [3]:
+            xmin = 0.06 
+            xmax = 0.18 
+            text = "s:" 
+        intervals [4]:
+            xmin = 0.18 
+            xmax = 0.22 
+            text = "ə" 
+        intervals [5]:
+            xmin = 0.22 
+            xmax = 0.29 
+            text = "dˤ" 
+        intervals [6]:
+            xmin = 0.29 
+            xmax = 0.35 
+            text = "a" 
+        intervals [7]:
+            xmin = 0.35 
+            xmax = 0.41 
+            text = "ç" 
+        intervals [8]:
+            xmin = 0.41 
+            xmax = 0.62 
+            text = "f:" 
+        intervals [9]:
+            xmin = 0.62 
+            xmax = 0.72 
+            text = "a" 
+        intervals [10]:
+            xmin = 0.72 
+            xmax = 0.78 
+            text = "j" 
+        intervals [11]:
+            xmin = 0.78 
+            xmax = 0.86 
+            text = "n" 
+        intervals [12]:
+            xmin = 0.86 
+            xmax = 0.98 
+            text = "a" 
+        intervals [13]:
+            xmin = 0.98 
+            xmax = 1.115687 
+            text = "ʁ" 

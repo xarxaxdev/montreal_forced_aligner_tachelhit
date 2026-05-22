@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1.398187 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 1.398187 
+        intervals: size = 4 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.22 
+            text = "yugi" 
+        intervals [2]:
+            xmin = 0.22 
+            xmax = 0.55 
+            text = "yuba" 
+        intervals [3]:
+            xmin = 0.55 
+            xmax = 0.87 
+            text = "ad" 
+        intervals [4]:
+            xmin = 0.87 
+            xmax = 1.398187 
+            text = "yenheṛ" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 1.398187 
+        intervals: size = 12 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.12 
+            text = "j:" 
+        intervals [2]:
+            xmin = 0.12 
+            xmax = 0.22 
+            text = "w" 
+        intervals [3]:
+            xmin = 0.22 
+            xmax = 0.39 
+            text = "j:" 
+        intervals [4]:
+            xmin = 0.39 
+            xmax = 0.46 
+            text = "u" 
+        intervals [5]:
+            xmin = 0.46 
+            xmax = 0.55 
+            text = "β" 
+        intervals [6]:
+            xmin = 0.55 
+            xmax = 0.86 
+            text = "a:" 
+        intervals [7]:
+            xmin = 0.86 
+            xmax = 0.87 
+            text = "d" 
+        intervals [8]:
+            xmin = 0.87 
+            xmax = 0.9 
+            text = "j" 
+        intervals [9]:
+            xmin = 0.9 
+            xmax = 0.96 
+            text = "n" 
+        intervals [10]:
+            xmin = 0.96 
+            xmax = 1.05 
+            text = "h" 
+        intervals [11]:
+            xmin = 1.05 
+            xmax = 1.24 
+            text = "ə" 
+        intervals [12]:
+            xmin = 1.24 
+            xmax = 1.398187 
+            text = "rˤ" 

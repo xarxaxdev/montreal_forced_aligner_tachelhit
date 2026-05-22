@@ -1,0 +1,88 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1.028812 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 1.028812 
+        intervals: size = 4 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.29 
+            text = "tufiḍ" 
+        intervals [2]:
+            xmin = 0.29 
+            xmax = 0.41 
+            text = "akk" 
+        intervals [3]:
+            xmin = 0.41 
+            xmax = 0.45 
+            text = "" 
+        intervals [4]:
+            xmin = 0.45 
+            xmax = 1.028812 
+            text = "iman-im" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 1.028812 
+        intervals: size = 13 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.03 
+            text = "θ" 
+        intervals [2]:
+            xmin = 0.03 
+            xmax = 0.08 
+            text = "u" 
+        intervals [3]:
+            xmin = 0.08 
+            xmax = 0.17 
+            text = "f" 
+        intervals [4]:
+            xmin = 0.17 
+            xmax = 0.23 
+            text = "i" 
+        intervals [5]:
+            xmin = 0.23 
+            xmax = 0.29 
+            text = "dˤ" 
+        intervals [6]:
+            xmin = 0.29 
+            xmax = 0.41 
+            text = "a" 
+        intervals [7]:
+            xmin = 0.41 
+            xmax = 0.45 
+            text = "" 
+        intervals [8]:
+            xmin = 0.45 
+            xmax = 0.54 
+            text = "j:" 
+        intervals [9]:
+            xmin = 0.54 
+            xmax = 0.62 
+            text = "m" 
+        intervals [10]:
+            xmin = 0.62 
+            xmax = 0.71 
+            text = "a" 
+        intervals [11]:
+            xmin = 0.71 
+            xmax = 0.78 
+            text = "n" 
+        intervals [12]:
+            xmin = 0.78 
+            xmax = 0.89 
+            text = "i" 
+        intervals [13]:
+            xmin = 0.89 
+            xmax = 1.028812 
+            text = "m" 

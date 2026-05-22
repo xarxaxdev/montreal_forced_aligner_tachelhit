@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1.71875 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 1.71875 
+        intervals: size = 2 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.97 
+            text = "ttɛeddayen" 
+        intervals [2]:
+            xmin = 0.97 
+            xmax = 1.71875 
+            text = "wakuden" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 1.71875 
+        intervals: size = 14 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.12 
+            text = "ts" 
+        intervals [2]:
+            xmin = 0.12 
+            xmax = 0.35 
+            text = "ʕ" 
+        intervals [3]:
+            xmin = 0.35 
+            xmax = 0.49 
+            text = "ə" 
+        intervals [4]:
+            xmin = 0.49 
+            xmax = 0.61 
+            text = "d:" 
+        intervals [5]:
+            xmin = 0.61 
+            xmax = 0.72 
+            text = "a" 
+        intervals [6]:
+            xmin = 0.72 
+            xmax = 0.89 
+            text = "j" 
+        intervals [7]:
+            xmin = 0.89 
+            xmax = 0.97 
+            text = "n" 
+        intervals [8]:
+            xmin = 0.97 
+            xmax = 1.08 
+            text = "w" 
+        intervals [9]:
+            xmin = 1.08 
+            xmax = 1.13 
+            text = "a" 
+        intervals [10]:
+            xmin = 1.13 
+            xmax = 1.37 
+            text = "ç" 
+        intervals [11]:
+            xmin = 1.37 
+            xmax = 1.49 
+            text = "u" 
+        intervals [12]:
+            xmin = 1.49 
+            xmax = 1.58 
+            text = "ð" 
+        intervals [13]:
+            xmin = 1.58 
+            xmax = 1.67 
+            text = "ə" 
+        intervals [14]:
+            xmin = 1.67 
+            xmax = 1.71875 
+            text = "n" 

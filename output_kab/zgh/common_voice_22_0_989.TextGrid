@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1.12 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 1.12 
+        intervals: size = 3 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.59 
+            text = "ⴰⵎⴰⴹⴰⵍ" 
+        intervals [2]:
+            xmin = 0.59 
+            xmax = 0.62 
+            text = "ⵏ" 
+        intervals [3]:
+            xmin = 0.62 
+            xmax = 1.12 
+            text = "ⵉⵎⵓⴷⴰⵔ" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 1.12 
+        intervals: size = 13 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.09 
+            text = "a" 
+        intervals [2]:
+            xmin = 0.09 
+            xmax = 0.15 
+            text = "m" 
+        intervals [3]:
+            xmin = 0.15 
+            xmax = 0.24 
+            text = "a" 
+        intervals [4]:
+            xmin = 0.24 
+            xmax = 0.34 
+            text = "dˤ" 
+        intervals [5]:
+            xmin = 0.34 
+            xmax = 0.43 
+            text = "a" 
+        intervals [6]:
+            xmin = 0.43 
+            xmax = 0.59 
+            text = "l" 
+        intervals [7]:
+            xmin = 0.59 
+            xmax = 0.62 
+            text = "r" 
+        intervals [8]:
+            xmin = 0.62 
+            xmax = 0.65 
+            text = "i" 
+        intervals [9]:
+            xmin = 0.65 
+            xmax = 0.75 
+            text = "m" 
+        intervals [10]:
+            xmin = 0.75 
+            xmax = 0.81 
+            text = "u" 
+        intervals [11]:
+            xmin = 0.81 
+            xmax = 0.93 
+            text = "d" 
+        intervals [12]:
+            xmin = 0.93 
+            xmax = 0.99 
+            text = "a" 
+        intervals [13]:
+            xmin = 0.99 
+            xmax = 1.12 
+            text = "r" 

@@ -1,0 +1,112 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1.351813 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 1.351813 
+        intervals: size = 5 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.14 
+            text = "ur" 
+        intervals [2]:
+            xmin = 0.14 
+            xmax = 0.38 
+            text = "llint" 
+        intervals [3]:
+            xmin = 0.38 
+            xmax = 0.82 
+            text = "qebblent" 
+        intervals [4]:
+            xmin = 0.82 
+            xmax = 1.28 
+            text = "isefka" 
+        intervals [5]:
+            xmin = 1.28 
+            xmax = 1.351813 
+            text = "" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 1.351813 
+        intervals: size = 18 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.08 
+            text = "u" 
+        intervals [2]:
+            xmin = 0.08 
+            xmax = 0.14 
+            text = "r" 
+        intervals [3]:
+            xmin = 0.14 
+            xmax = 0.25 
+            text = "l:" 
+        intervals [4]:
+            xmin = 0.25 
+            xmax = 0.29 
+            text = "i" 
+        intervals [5]:
+            xmin = 0.29 
+            xmax = 0.34 
+            text = "n" 
+        intervals [6]:
+            xmin = 0.34 
+            xmax = 0.38 
+            text = "t" 
+        intervals [7]:
+            xmin = 0.38 
+            xmax = 0.52 
+            text = "q:" 
+        intervals [8]:
+            xmin = 0.52 
+            xmax = 0.61 
+            text = "b:" 
+        intervals [9]:
+            xmin = 0.61 
+            xmax = 0.66 
+            text = "l" 
+        intervals [10]:
+            xmin = 0.66 
+            xmax = 0.72 
+            text = "ə" 
+        intervals [11]:
+            xmin = 0.72 
+            xmax = 0.76 
+            text = "n" 
+        intervals [12]:
+            xmin = 0.76 
+            xmax = 0.82 
+            text = "t" 
+        intervals [13]:
+            xmin = 0.82 
+            xmax = 0.86 
+            text = "i" 
+        intervals [14]:
+            xmin = 0.86 
+            xmax = 0.91 
+            text = "s" 
+        intervals [15]:
+            xmin = 0.91 
+            xmax = 1.04 
+            text = "f" 
+        intervals [16]:
+            xmin = 1.04 
+            xmax = 1.16 
+            text = "k" 
+        intervals [17]:
+            xmin = 1.16 
+            xmax = 1.28 
+            text = "a" 
+        intervals [18]:
+            xmin = 1.28 
+            xmax = 1.351813 
+            text = "" 

@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1.345875 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 1.345875 
+        intervals: size = 7 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.09 
+            text = "tessneḍ" 
+        intervals [2]:
+            xmin = 0.09 
+            xmax = 0.12 
+            text = "" 
+        intervals [3]:
+            xmin = 0.12 
+            xmax = 0.4 
+            text = "meqqar" 
+        intervals [4]:
+            xmin = 0.4 
+            xmax = 0.48 
+            text = "" 
+        intervals [5]:
+            xmin = 0.48 
+            xmax = 1.16 
+            text = "ad" 
+        intervals [6]:
+            xmin = 1.16 
+            xmax = 1.32 
+            text = "" 
+        intervals [7]:
+            xmin = 1.32 
+            xmax = 1.345875 
+            text = "tεummeḍ" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 1.345875 
+        intervals: size = 9 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.06 
+            text = "θ" 
+        intervals [2]:
+            xmin = 0.06 
+            xmax = 0.09 
+            text = "s:" 
+        intervals [3]:
+            xmin = 0.09 
+            xmax = 0.12 
+            text = "" 
+        intervals [4]:
+            xmin = 0.12 
+            xmax = 0.37 
+            text = "m:" 
+        intervals [5]:
+            xmin = 0.37 
+            xmax = 0.4 
+            text = "q:" 
+        intervals [6]:
+            xmin = 0.4 
+            xmax = 0.48 
+            text = "" 
+        intervals [7]:
+            xmin = 0.48 
+            xmax = 1.16 
+            text = "a:" 
+        intervals [8]:
+            xmin = 1.16 
+            xmax = 1.32 
+            text = "" 
+        intervals [9]:
+            xmin = 1.32 
+            xmax = 1.345875 
+            text = "θ" 

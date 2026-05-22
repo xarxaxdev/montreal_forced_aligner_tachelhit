@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1.801813 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 1.801813 
+        intervals: size = 3 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.23 
+            text = "ur" 
+        intervals [2]:
+            xmin = 0.23 
+            xmax = 1.57 
+            text = "awent-d-ɣɣareɣ" 
+        intervals [3]:
+            xmin = 1.57 
+            xmax = 1.801813 
+            text = "" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 1.801813 
+        intervals: size = 13 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.15 
+            text = "u" 
+        intervals [2]:
+            xmin = 0.15 
+            xmax = 0.23 
+            text = "r" 
+        intervals [3]:
+            xmin = 0.23 
+            xmax = 0.34 
+            text = "a" 
+        intervals [4]:
+            xmin = 0.34 
+            xmax = 0.51 
+            text = "w" 
+        intervals [5]:
+            xmin = 0.51 
+            xmax = 0.56 
+            text = "ə" 
+        intervals [6]:
+            xmin = 0.56 
+            xmax = 0.73 
+            text = "n" 
+        intervals [7]:
+            xmin = 0.73 
+            xmax = 0.79 
+            text = "t" 
+        intervals [8]:
+            xmin = 0.79 
+            xmax = 0.86 
+            text = "ð" 
+        intervals [9]:
+            xmin = 0.86 
+            xmax = 1.16 
+            text = "q:" 
+        intervals [10]:
+            xmin = 1.16 
+            xmax = 1.37 
+            text = "a" 
+        intervals [11]:
+            xmin = 1.37 
+            xmax = 1.43 
+            text = "r" 
+        intervals [12]:
+            xmin = 1.43 
+            xmax = 1.57 
+            text = "ʁ" 
+        intervals [13]:
+            xmin = 1.57 
+            xmax = 1.801813 
+            text = "" 

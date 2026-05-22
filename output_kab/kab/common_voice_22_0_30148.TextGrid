@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1.208312 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 1.208312 
+        intervals: size = 3 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.18 
+            text = "kecc" 
+        intervals [2]:
+            xmin = 0.18 
+            xmax = 0.28 
+            text = "ur" 
+        intervals [3]:
+            xmin = 0.28 
+            xmax = 1.208312 
+            text = "tettkeyyifed" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 1.208312 
+        intervals: size = 13 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.11 
+            text = "ç" 
+        intervals [2]:
+            xmin = 0.11 
+            xmax = 0.18 
+            text = "ʃ:" 
+        intervals [3]:
+            xmin = 0.18 
+            xmax = 0.24 
+            text = "u" 
+        intervals [4]:
+            xmin = 0.24 
+            xmax = 0.28 
+            text = "r" 
+        intervals [5]:
+            xmin = 0.28 
+            xmax = 0.38 
+            text = "θ" 
+        intervals [6]:
+            xmin = 0.38 
+            xmax = 0.44 
+            text = "ts" 
+        intervals [7]:
+            xmin = 0.44 
+            xmax = 0.57 
+            text = "ç" 
+        intervals [8]:
+            xmin = 0.57 
+            xmax = 0.73 
+            text = "ə" 
+        intervals [9]:
+            xmin = 0.73 
+            xmax = 0.76 
+            text = "j:" 
+        intervals [10]:
+            xmin = 0.76 
+            xmax = 0.79 
+            text = "i" 
+        intervals [11]:
+            xmin = 0.79 
+            xmax = 0.91 
+            text = "f" 
+        intervals [12]:
+            xmin = 0.91 
+            xmax = 0.94 
+            text = "ə" 
+        intervals [13]:
+            xmin = 0.94 
+            xmax = 1.208312 
+            text = "ð" 

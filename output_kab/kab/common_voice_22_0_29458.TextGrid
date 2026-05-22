@@ -1,0 +1,96 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1.197313 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 1.197313 
+        intervals: size = 5 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.44 
+            text = "ḥebseɣ" 
+        intervals [2]:
+            xmin = 0.44 
+            xmax = 0.56 
+            text = "ucci" 
+        intervals [3]:
+            xmin = 0.56 
+            xmax = 0.67 
+            text = "n" 
+        intervals [4]:
+            xmin = 0.67 
+            xmax = 0.71 
+            text = "" 
+        intervals [5]:
+            xmin = 0.71 
+            xmax = 1.197313 
+            text = "weksum" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 1.197313 
+        intervals: size = 14 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.06 
+            text = "ħ" 
+        intervals [2]:
+            xmin = 0.06 
+            xmax = 0.1 
+            text = "ə" 
+        intervals [3]:
+            xmin = 0.1 
+            xmax = 0.16 
+            text = "β" 
+        intervals [4]:
+            xmin = 0.16 
+            xmax = 0.28 
+            text = "s" 
+        intervals [5]:
+            xmin = 0.28 
+            xmax = 0.31 
+            text = "ə" 
+        intervals [6]:
+            xmin = 0.31 
+            xmax = 0.44 
+            text = "ʁ" 
+        intervals [7]:
+            xmin = 0.44 
+            xmax = 0.48 
+            text = "w" 
+        intervals [8]:
+            xmin = 0.48 
+            xmax = 0.56 
+            text = "ʃ:" 
+        intervals [9]:
+            xmin = 0.56 
+            xmax = 0.67 
+            text = "w" 
+        intervals [10]:
+            xmin = 0.67 
+            xmax = 0.71 
+            text = "" 
+        intervals [11]:
+            xmin = 0.71 
+            xmax = 0.72 
+            text = "w:" 
+        intervals [12]:
+            xmin = 0.72 
+            xmax = 0.83 
+            text = "ç" 
+        intervals [13]:
+            xmin = 0.83 
+            xmax = 0.95 
+            text = "s" 
+        intervals [14]:
+            xmin = 0.95 
+            xmax = 1.197313 
+            text = "u" 

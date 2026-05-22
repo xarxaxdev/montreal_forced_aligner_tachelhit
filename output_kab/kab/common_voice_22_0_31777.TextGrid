@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1.460875 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 1.460875 
+        intervals: size = 2 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.04 
+            text = "ad" 
+        intervals [2]:
+            xmin = 0.04 
+            xmax = 1.460875 
+            text = "asen-t-id-tawimt" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 1.460875 
+        intervals: size = 14 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.04 
+            text = "a:" 
+        intervals [2]:
+            xmin = 0.04 
+            xmax = 0.24 
+            text = "a" 
+        intervals [3]:
+            xmin = 0.24 
+            xmax = 0.38 
+            text = "s" 
+        intervals [4]:
+            xmin = 0.38 
+            xmax = 0.45 
+            text = "ə" 
+        intervals [5]:
+            xmin = 0.45 
+            xmax = 0.56 
+            text = "n" 
+        intervals [6]:
+            xmin = 0.56 
+            xmax = 0.64 
+            text = "θ" 
+        intervals [7]:
+            xmin = 0.64 
+            xmax = 0.69 
+            text = "i" 
+        intervals [8]:
+            xmin = 0.69 
+            xmax = 0.77 
+            text = "ð" 
+        intervals [9]:
+            xmin = 0.77 
+            xmax = 0.8 
+            text = "θ" 
+        intervals [10]:
+            xmin = 0.8 
+            xmax = 0.88 
+            text = "a" 
+        intervals [11]:
+            xmin = 0.88 
+            xmax = 1.02 
+            text = "w" 
+        intervals [12]:
+            xmin = 1.02 
+            xmax = 1.12 
+            text = "i" 
+        intervals [13]:
+            xmin = 1.12 
+            xmax = 1.33 
+            text = "m" 
+        intervals [14]:
+            xmin = 1.33 
+            xmax = 1.460875 
+            text = "t" 

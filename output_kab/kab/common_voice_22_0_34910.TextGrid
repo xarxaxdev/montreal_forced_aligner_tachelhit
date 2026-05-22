@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1.405188 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 1.405188 
+        intervals: size = 3 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.42 
+            text = "imir-a" 
+        intervals [2]:
+            xmin = 0.42 
+            xmax = 0.79 
+            text = "sɛiɣ" 
+        intervals [3]:
+            xmin = 0.79 
+            xmax = 1.405188 
+            text = "akud" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 1.405188 
+        intervals: size = 13 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.1 
+            text = "i" 
+        intervals [2]:
+            xmin = 0.1 
+            xmax = 0.18 
+            text = "m" 
+        intervals [3]:
+            xmin = 0.18 
+            xmax = 0.29 
+            text = "i" 
+        intervals [4]:
+            xmin = 0.29 
+            xmax = 0.36 
+            text = "r" 
+        intervals [5]:
+            xmin = 0.36 
+            xmax = 0.42 
+            text = "a" 
+        intervals [6]:
+            xmin = 0.42 
+            xmax = 0.53 
+            text = "s" 
+        intervals [7]:
+            xmin = 0.53 
+            xmax = 0.56 
+            text = "ʕ" 
+        intervals [8]:
+            xmin = 0.56 
+            xmax = 0.72 
+            text = "i" 
+        intervals [9]:
+            xmin = 0.72 
+            xmax = 0.79 
+            text = "ʁ" 
+        intervals [10]:
+            xmin = 0.79 
+            xmax = 0.89 
+            text = "a" 
+        intervals [11]:
+            xmin = 0.89 
+            xmax = 1.02 
+            text = "ç" 
+        intervals [12]:
+            xmin = 1.02 
+            xmax = 1.2 
+            text = "u" 
+        intervals [13]:
+            xmin = 1.2 
+            xmax = 1.405188 
+            text = "ð" 

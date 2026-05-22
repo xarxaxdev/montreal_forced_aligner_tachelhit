@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1.485125 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 1.485125 
+        intervals: size = 3 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.09 
+            text = "" 
+        intervals [2]:
+            xmin = 0.09 
+            xmax = 0.58 
+            text = "meẓẓey" 
+        intervals [3]:
+            xmin = 0.58 
+            xmax = 1.485125 
+            text = "uxxam-nneɣ" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 1.485125 
+        intervals: size = 13 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.09 
+            text = "" 
+        intervals [2]:
+            xmin = 0.09 
+            xmax = 0.19 
+            text = "m:" 
+        intervals [3]:
+            xmin = 0.19 
+            xmax = 0.24 
+            text = "ə" 
+        intervals [4]:
+            xmin = 0.24 
+            xmax = 0.44 
+            text = "zˤ:" 
+        intervals [5]:
+            xmin = 0.44 
+            xmax = 0.48 
+            text = "ə" 
+        intervals [6]:
+            xmin = 0.48 
+            xmax = 0.58 
+            text = "j" 
+        intervals [7]:
+            xmin = 0.58 
+            xmax = 0.7 
+            text = "w:" 
+        intervals [8]:
+            xmin = 0.7 
+            xmax = 0.89 
+            text = "χ:" 
+        intervals [9]:
+            xmin = 0.89 
+            xmax = 0.96 
+            text = "a" 
+        intervals [10]:
+            xmin = 0.96 
+            xmax = 1.05 
+            text = "m" 
+        intervals [11]:
+            xmin = 1.05 
+            xmax = 1.21 
+            text = "n:" 
+        intervals [12]:
+            xmin = 1.21 
+            xmax = 1.27 
+            text = "ə" 
+        intervals [13]:
+            xmin = 1.27 
+            xmax = 1.485125 
+            text = "ʁ" 

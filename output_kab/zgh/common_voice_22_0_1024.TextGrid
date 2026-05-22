@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1.16125 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 1.16125 
+        intervals: size = 5 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.42 
+            text = "ⴰⵃⵃ" 
+        intervals [2]:
+            xmin = 0.42 
+            xmax = 0.46 
+            text = "ⴰ" 
+        intervals [3]:
+            xmin = 0.46 
+            xmax = 0.76 
+            text = "ⵡⴰⵔ" 
+        intervals [4]:
+            xmin = 0.76 
+            xmax = 1.1 
+            text = "ⴰⴼⵓⴷ" 
+        intervals [5]:
+            xmin = 1.1 
+            xmax = 1.16125 
+            text = "" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 1.16125 
+        intervals: size = 11 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.15 
+            text = "a" 
+        intervals [2]:
+            xmin = 0.15 
+            xmax = 0.42 
+            text = "ħ:" 
+        intervals [3]:
+            xmin = 0.42 
+            xmax = 0.46 
+            text = "a" 
+        intervals [4]:
+            xmin = 0.46 
+            xmax = 0.6 
+            text = "w" 
+        intervals [5]:
+            xmin = 0.6 
+            xmax = 0.67 
+            text = "a" 
+        intervals [6]:
+            xmin = 0.67 
+            xmax = 0.76 
+            text = "r" 
+        intervals [7]:
+            xmin = 0.76 
+            xmax = 0.83 
+            text = "a" 
+        intervals [8]:
+            xmin = 0.83 
+            xmax = 0.93 
+            text = "f" 
+        intervals [9]:
+            xmin = 0.93 
+            xmax = 0.99 
+            text = "u" 
+        intervals [10]:
+            xmin = 0.99 
+            xmax = 1.1 
+            text = "d" 
+        intervals [11]:
+            xmin = 1.1 
+            xmax = 1.16125 
+            text = "" 

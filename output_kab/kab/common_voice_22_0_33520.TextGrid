@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1.334563 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 1.334563 
+        intervals: size = 4 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.18 
+            text = "ur" 
+        intervals [2]:
+            xmin = 0.18 
+            xmax = 0.21 
+            text = "" 
+        intervals [3]:
+            xmin = 0.21 
+            xmax = 0.77 
+            text = "ttṛebbiɣ" 
+        intervals [4]:
+            xmin = 0.77 
+            xmax = 1.334563 
+            text = "yiwen" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 1.334563 
+        intervals: size = 12 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.01 
+            text = "w:" 
+        intervals [2]:
+            xmin = 0.01 
+            xmax = 0.18 
+            text = "r" 
+        intervals [3]:
+            xmin = 0.18 
+            xmax = 0.21 
+            text = "" 
+        intervals [4]:
+            xmin = 0.21 
+            xmax = 0.29 
+            text = "ts" 
+        intervals [5]:
+            xmin = 0.29 
+            xmax = 0.49 
+            text = "rˤ" 
+        intervals [6]:
+            xmin = 0.49 
+            xmax = 0.62 
+            text = "b:" 
+        intervals [7]:
+            xmin = 0.62 
+            xmax = 0.69 
+            text = "i" 
+        intervals [8]:
+            xmin = 0.69 
+            xmax = 0.77 
+            text = "ʁ" 
+        intervals [9]:
+            xmin = 0.77 
+            xmax = 0.84 
+            text = "j:" 
+        intervals [10]:
+            xmin = 0.84 
+            xmax = 0.96 
+            text = "i" 
+        intervals [11]:
+            xmin = 0.96 
+            xmax = 1.02 
+            text = "w" 
+        intervals [12]:
+            xmin = 1.02 
+            xmax = 1.334563 
+            text = "n" 

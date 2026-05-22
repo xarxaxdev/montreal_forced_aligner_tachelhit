@@ -89,7 +89,7 @@ mfa_align ./corpus/tzm ./dicts/zgh_all.dict ./output/zgh_model.zip ./output/tzm
 ```
 
 
-# FULL run for the delivery/reproduceability (training with/without kabyl)
+# FULL run for dissertation/reproduceability (training with/without kabyl)
 
 ```
 
@@ -148,16 +148,16 @@ mfa_train --phone_groups_path ./phone_groups/kab_ortho.yaml --rules_path ./rules
 ######### ADJUSTING #########
 # train zgh model based on kabyl model
 # mfa adapt [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH ACOUSTIC_MODEL_PATH  OUTPUT_MODEL_PATH
-mfa_adapt ./corpus/zgh ./dicts/zgh_all.dict ./output_kab/kab_model.zip ./output_kab/zgh_model.zip --output_kab_directory ./output_kab/zgh
+mfa_adapt ./corpus/zgh ./dicts/zgh_all.dict ./output_kab/kab_model.zip ./output_kab/zgh_model.zip --output_directory ./output_kab/zgh
 
 ######### ALIGNING #########
 # attempt align on shi corpus using zgh model
 # mfa align [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH ACOUSTIC_MODEL_PATH OUTPUT_DIRECTORY    
-mfa_align ./corpus/shi ./dicts/zgh_all.dict ./output_kab/zgh_model.zip ./output/shi
+mfa_align ./corpus/shi ./dicts/zgh_all.dict ./output_kab/zgh_model.zip ./output_kab/shi
 
 # attempt align on tzm using zgh model
 # mfa align [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH ACOUSTIC_MODEL_PATH OUTPUT_DIRECTORY    
-mfa_align ./corpus/tzm ./dicts/zgh_all.dict ./output_kab/zgh_model.zip ./output/tzm
+mfa_align ./corpus/tzm ./dicts/zgh_all.dict ./output_kab/zgh_model.zip ./output_kab/tzm
 
 
 #####################################################
@@ -172,11 +172,11 @@ mfa_train --phone_groups_path ./phone_groups/kab_ortho.yaml --rules_path ./rules
 ######### ALIGNING #########
 # attempt align on shi corpus using zgh model
 # mfa align [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH ACOUSTIC_MODEL_PATH OUTPUT_DIRECTORY    
-mfa_align ./corpus/shi ./dicts/zgh_vocab.dict ./output_nokab/zgh_model.zip ./output/shi
+mfa_align ./corpus/shi ./dicts/zgh_vocab.dict ./output_nokab/zgh_model.zip ./output_nokab/shi
 
 # attempt align on tzm using zgh model
 # mfa align [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH ACOUSTIC_MODEL_PATH OUTPUT_DIRECTORY    
-mfa_align ./corpus/tzm ./dicts/zgh_vocab.dict ./output_nokab/zgh_model.zip ./output/tzm
+mfa_align ./corpus/tzm ./dicts/zgh_vocab.dict ./output_nokab/zgh_model.zip ./output_nokab/tzm
 
 
 #####################################################

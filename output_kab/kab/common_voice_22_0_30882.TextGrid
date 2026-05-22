@@ -1,0 +1,88 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1.527 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 1.527 
+        intervals: size = 3 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.57 
+            text = "ugadeɣ" 
+        intervals [2]:
+            xmin = 0.57 
+            xmax = 0.71 
+            text = "ad" 
+        intervals [3]:
+            xmin = 0.71 
+            xmax = 1.527 
+            text = "iyi-tettu" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 1.527 
+        intervals: size = 14 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.17 
+            text = "u" 
+        intervals [2]:
+            xmin = 0.17 
+            xmax = 0.27 
+            text = "ʝ" 
+        intervals [3]:
+            xmin = 0.27 
+            xmax = 0.35 
+            text = "a" 
+        intervals [4]:
+            xmin = 0.35 
+            xmax = 0.41 
+            text = "ð" 
+        intervals [5]:
+            xmin = 0.41 
+            xmax = 0.48 
+            text = "ə" 
+        intervals [6]:
+            xmin = 0.48 
+            xmax = 0.57 
+            text = "ʁ" 
+        intervals [7]:
+            xmin = 0.57 
+            xmax = 0.64 
+            text = "a" 
+        intervals [8]:
+            xmin = 0.64 
+            xmax = 0.71 
+            text = "ð" 
+        intervals [9]:
+            xmin = 0.71 
+            xmax = 0.88 
+            text = "j" 
+        intervals [10]:
+            xmin = 0.88 
+            xmax = 0.89 
+            text = "j" 
+        intervals [11]:
+            xmin = 0.89 
+            xmax = 0.96 
+            text = "i" 
+        intervals [12]:
+            xmin = 0.96 
+            xmax = 1.17 
+            text = "θ" 
+        intervals [13]:
+            xmin = 1.17 
+            xmax = 1.32 
+            text = "ts" 
+        intervals [14]:
+            xmin = 1.32 
+            xmax = 1.527 
+            text = "u" 

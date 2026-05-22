@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1.321187 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 1.321187 
+        intervals: size = 3 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.33 
+            text = "tenger" 
+        intervals [2]:
+            xmin = 0.33 
+            xmax = 0.42 
+            text = "ɣef" 
+        intervals [3]:
+            xmin = 0.42 
+            xmax = 1.321187 
+            text = "tikelt" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 1.321187 
+        intervals: size = 13 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.06 
+            text = "θ" 
+        intervals [2]:
+            xmin = 0.06 
+            xmax = 0.1 
+            text = "ə" 
+        intervals [3]:
+            xmin = 0.1 
+            xmax = 0.22 
+            text = "n" 
+        intervals [4]:
+            xmin = 0.22 
+            xmax = 0.27 
+            text = "ʝ" 
+        intervals [5]:
+            xmin = 0.27 
+            xmax = 0.33 
+            text = "r" 
+        intervals [6]:
+            xmin = 0.33 
+            xmax = 0.34 
+            text = "ʁ:" 
+        intervals [7]:
+            xmin = 0.34 
+            xmax = 0.42 
+            text = "ə" 
+        intervals [8]:
+            xmin = 0.42 
+            xmax = 0.65 
+            text = "θ" 
+        intervals [9]:
+            xmin = 0.65 
+            xmax = 0.73 
+            text = "i" 
+        intervals [10]:
+            xmin = 0.73 
+            xmax = 0.87 
+            text = "ç" 
+        intervals [11]:
+            xmin = 0.87 
+            xmax = 0.94 
+            text = "ə" 
+        intervals [12]:
+            xmin = 0.94 
+            xmax = 1.08 
+            text = "l" 
+        intervals [13]:
+            xmin = 1.08 
+            xmax = 1.321187 
+            text = "t" 

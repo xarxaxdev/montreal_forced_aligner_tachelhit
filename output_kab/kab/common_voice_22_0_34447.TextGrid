@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1.0195 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 1.0195 
+        intervals: size = 4 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.03 
+            text = "d" 
+        intervals [2]:
+            xmin = 0.03 
+            xmax = 0.3 
+            text = "acu" 
+        intervals [3]:
+            xmin = 0.3 
+            xmax = 0.37 
+            text = "ay" 
+        intervals [4]:
+            xmin = 0.37 
+            xmax = 1.0195 
+            text = "d-terriḍ" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 1.0195 
+        intervals: size = 12 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.03 
+            text = "ð" 
+        intervals [2]:
+            xmin = 0.03 
+            xmax = 0.1 
+            text = "a" 
+        intervals [3]:
+            xmin = 0.1 
+            xmax = 0.2 
+            text = "ʃ" 
+        intervals [4]:
+            xmin = 0.2 
+            xmax = 0.3 
+            text = "w" 
+        intervals [5]:
+            xmin = 0.3 
+            xmax = 0.34 
+            text = "a" 
+        intervals [6]:
+            xmin = 0.34 
+            xmax = 0.37 
+            text = "j" 
+        intervals [7]:
+            xmin = 0.37 
+            xmax = 0.43 
+            text = "ð" 
+        intervals [8]:
+            xmin = 0.43 
+            xmax = 0.55 
+            text = "θ" 
+        intervals [9]:
+            xmin = 0.55 
+            xmax = 0.64 
+            text = "ə" 
+        intervals [10]:
+            xmin = 0.64 
+            xmax = 0.71 
+            text = "r:" 
+        intervals [11]:
+            xmin = 0.71 
+            xmax = 0.85 
+            text = "i" 
+        intervals [12]:
+            xmin = 0.85 
+            xmax = 1.0195 
+            text = "dˤ" 
