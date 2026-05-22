@@ -89,7 +89,7 @@ mfa_align ./corpus/tzm ./dicts/zgh_all.dict ./output/zgh_model.zip ./output/tzm
 ```
 
 
-# FULL run for the disseration (training with/without kabyl)
+# FULL run for the delivery/reproduceability (training with/without kabyl)
 
 ```
 
