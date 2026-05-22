@@ -30,7 +30,7 @@ def plot_histogram(data,filename):
     plt.hist(data, bins=30, edgecolor='black',color=color_main )
     plt.axvline(0, color=color_line, linestyle='--', linewidth=2)
     plt.xlim(-200, 200)   # zoom in here
-    plt.xlabel('Difference (gold labels-pred labels) in ms')
+    plt.xlabel(f'{filename.upper()} Difference (gold labels-pred labels) in ms')
     plt.ylabel('Frequency')
 
     # stats text box
@@ -324,6 +324,8 @@ def main():
                 for normalize in ['row','col',False]:
                     df = prepare_matrix(conf, drop_unk=drop_unk,normalize=normalize)
                     title = f"Confusion Matrix {iso.upper()} (Golden label X/Pred Y)"
+                    if normalize:
+                        title += f" normalized by {normalize}"
                     label = "%(of seconds)" if normalize else 'time(seconds)'
                     if func_name == "size":
                         label =  "Amount"
