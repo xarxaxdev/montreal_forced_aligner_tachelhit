@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1.14425 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 1.14425 
+        intervals: size = 4 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.2 
+            text = "anda" 
+        intervals [2]:
+            xmin = 0.2 
+            xmax = 0.25 
+            text = "i" 
+        intervals [3]:
+            xmin = 0.25 
+            xmax = 0.68 
+            text = "tt-greɣ" 
+        intervals [4]:
+            xmin = 0.68 
+            xmax = 1.14425 
+            text = "teqquṛ" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 1.14425 
+        intervals: size = 12 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.06 
+            text = "a" 
+        intervals [2]:
+            xmin = 0.06 
+            xmax = 0.14 
+            text = "n" 
+        intervals [3]:
+            xmin = 0.14 
+            xmax = 0.2 
+            text = "d" 
+        intervals [4]:
+            xmin = 0.2 
+            xmax = 0.25 
+            text = "i" 
+        intervals [5]:
+            xmin = 0.25 
+            xmax = 0.37 
+            text = "ts" 
+        intervals [6]:
+            xmin = 0.37 
+            xmax = 0.49 
+            text = "ʝ" 
+        intervals [7]:
+            xmin = 0.49 
+            xmax = 0.58 
+            text = "r" 
+        intervals [8]:
+            xmin = 0.58 
+            xmax = 0.68 
+            text = "ʁ" 
+        intervals [9]:
+            xmin = 0.68 
+            xmax = 0.77 
+            text = "θ" 
+        intervals [10]:
+            xmin = 0.77 
+            xmax = 0.98 
+            text = "q:" 
+        intervals [11]:
+            xmin = 0.98 
+            xmax = 1.01 
+            text = "u" 
+        intervals [12]:
+            xmin = 1.01 
+            xmax = 1.14425 
+            text = "rˤ" 

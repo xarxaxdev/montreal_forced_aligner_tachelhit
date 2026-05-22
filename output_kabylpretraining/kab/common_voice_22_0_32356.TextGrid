@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1.111938 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 1.111938 
+        intervals: size = 2 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.33 
+            text = "teẓriḍ" 
+        intervals [2]:
+            xmin = 0.33 
+            xmax = 1.111938 
+            text = "ḥemmleɣ-kem" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 1.111938 
+        intervals: size = 14 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.03 
+            text = "θ" 
+        intervals [2]:
+            xmin = 0.03 
+            xmax = 0.16 
+            text = "zˤ" 
+        intervals [3]:
+            xmin = 0.16 
+            xmax = 0.24 
+            text = "r" 
+        intervals [4]:
+            xmin = 0.24 
+            xmax = 0.28 
+            text = "i" 
+        intervals [5]:
+            xmin = 0.28 
+            xmax = 0.33 
+            text = "dˤ" 
+        intervals [6]:
+            xmin = 0.33 
+            xmax = 0.44 
+            text = "ħ" 
+        intervals [7]:
+            xmin = 0.44 
+            xmax = 0.5 
+            text = "ə" 
+        intervals [8]:
+            xmin = 0.5 
+            xmax = 0.56 
+            text = "m:" 
+        intervals [9]:
+            xmin = 0.56 
+            xmax = 0.66 
+            text = "l" 
+        intervals [10]:
+            xmin = 0.66 
+            xmax = 0.73 
+            text = "ə" 
+        intervals [11]:
+            xmin = 0.73 
+            xmax = 0.86 
+            text = "ʁ" 
+        intervals [12]:
+            xmin = 0.86 
+            xmax = 0.9 
+            text = "ç" 
+        intervals [13]:
+            xmin = 0.9 
+            xmax = 0.99 
+            text = "ə" 
+        intervals [14]:
+            xmin = 0.99 
+            xmax = 1.111938 
+            text = "m" 

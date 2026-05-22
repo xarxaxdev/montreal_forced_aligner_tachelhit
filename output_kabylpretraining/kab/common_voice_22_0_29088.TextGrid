@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1.687563 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 1.687563 
+        intervals: size = 2 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.88 
+            text = "iqeddem-iyi-d" 
+        intervals [2]:
+            xmin = 0.88 
+            xmax = 1.687563 
+            text = "yelli-s" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 1.687563 
+        intervals: size = 14 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.04 
+            text = "i" 
+        intervals [2]:
+            xmin = 0.04 
+            xmax = 0.19 
+            text = "q" 
+        intervals [3]:
+            xmin = 0.19 
+            xmax = 0.27 
+            text = "ə" 
+        intervals [4]:
+            xmin = 0.27 
+            xmax = 0.4 
+            text = "d:" 
+        intervals [5]:
+            xmin = 0.4 
+            xmax = 0.5 
+            text = "m" 
+        intervals [6]:
+            xmin = 0.5 
+            xmax = 0.62 
+            text = "i" 
+        intervals [7]:
+            xmin = 0.62 
+            xmax = 0.72 
+            text = "j" 
+        intervals [8]:
+            xmin = 0.72 
+            xmax = 0.82 
+            text = "i" 
+        intervals [9]:
+            xmin = 0.82 
+            xmax = 0.88 
+            text = "ð" 
+        intervals [10]:
+            xmin = 0.88 
+            xmax = 1.01 
+            text = "j:" 
+        intervals [11]:
+            xmin = 1.01 
+            xmax = 1.08 
+            text = "ə" 
+        intervals [12]:
+            xmin = 1.08 
+            xmax = 1.21 
+            text = "l:" 
+        intervals [13]:
+            xmin = 1.21 
+            xmax = 1.36 
+            text = "i" 
+        intervals [14]:
+            xmin = 1.36 
+            xmax = 1.687563 
+            text = "s" 

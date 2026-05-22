@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1.405812 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 1.405812 
+        intervals: size = 5 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.47 
+            text = "ayen" 
+        intervals [2]:
+            xmin = 0.47 
+            xmax = 0.5 
+            text = "" 
+        intervals [3]:
+            xmin = 0.5 
+            xmax = 0.79 
+            text = "yufa" 
+        intervals [4]:
+            xmin = 0.79 
+            xmax = 0.82 
+            text = "ad" 
+        intervals [5]:
+            xmin = 0.82 
+            xmax = 1.405812 
+            text = "t-yečč" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 1.405812 
+        intervals: size = 11 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.47 
+            text = "a:" 
+        intervals [2]:
+            xmin = 0.47 
+            xmax = 0.5 
+            text = "" 
+        intervals [3]:
+            xmin = 0.5 
+            xmax = 0.51 
+            text = "j" 
+        intervals [4]:
+            xmin = 0.51 
+            xmax = 0.54 
+            text = "u" 
+        intervals [5]:
+            xmin = 0.54 
+            xmax = 0.61 
+            text = "f" 
+        intervals [6]:
+            xmin = 0.61 
+            xmax = 0.79 
+            text = "a" 
+        intervals [7]:
+            xmin = 0.79 
+            xmax = 0.82 
+            text = "a:" 
+        intervals [8]:
+            xmin = 0.82 
+            xmax = 0.94 
+            text = "θ" 
+        intervals [9]:
+            xmin = 0.94 
+            xmax = 1.08 
+            text = "j" 
+        intervals [10]:
+            xmin = 1.08 
+            xmax = 1.17 
+            text = "ə" 
+        intervals [11]:
+            xmin = 1.17 
+            xmax = 1.405812 
+            text = "tʃ:" 

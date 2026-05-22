@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1.125063 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 1.125063 
+        intervals: size = 2 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.43 
+            text = "tgerrez" 
+        intervals [2]:
+            xmin = 0.43 
+            xmax = 1.125063 
+            text = "tektawt-is" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 1.125063 
+        intervals: size = 14 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.01 
+            text = "θ" 
+        intervals [2]:
+            xmin = 0.01 
+            xmax = 0.07 
+            text = "ʝ" 
+        intervals [3]:
+            xmin = 0.07 
+            xmax = 0.12 
+            text = "ə" 
+        intervals [4]:
+            xmin = 0.12 
+            xmax = 0.21 
+            text = "r:" 
+        intervals [5]:
+            xmin = 0.21 
+            xmax = 0.25 
+            text = "ə" 
+        intervals [6]:
+            xmin = 0.25 
+            xmax = 0.43 
+            text = "z" 
+        intervals [7]:
+            xmin = 0.43 
+            xmax = 0.46 
+            text = "θ" 
+        intervals [8]:
+            xmin = 0.46 
+            xmax = 0.55 
+            text = "ç" 
+        intervals [9]:
+            xmin = 0.55 
+            xmax = 0.63 
+            text = "θ" 
+        intervals [10]:
+            xmin = 0.63 
+            xmax = 0.71 
+            text = "a" 
+        intervals [11]:
+            xmin = 0.71 
+            xmax = 0.76 
+            text = "w" 
+        intervals [12]:
+            xmin = 0.76 
+            xmax = 0.86 
+            text = "θ" 
+        intervals [13]:
+            xmin = 0.86 
+            xmax = 0.95 
+            text = "i" 
+        intervals [14]:
+            xmin = 0.95 
+            xmax = 1.125063 
+            text = "s" 

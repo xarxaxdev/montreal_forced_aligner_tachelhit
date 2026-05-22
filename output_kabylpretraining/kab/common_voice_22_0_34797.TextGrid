@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1.205812 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 1.205812 
+        intervals: size = 3 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.44 
+            text = "tezdi-d" 
+        intervals [2]:
+            xmin = 0.44 
+            xmax = 1.18 
+            text = "lqedd-is" 
+        intervals [3]:
+            xmin = 1.18 
+            xmax = 1.205812 
+            text = "" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 1.205812 
+        intervals: size = 13 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.04 
+            text = "θ" 
+        intervals [2]:
+            xmin = 0.04 
+            xmax = 0.09 
+            text = "ə" 
+        intervals [3]:
+            xmin = 0.09 
+            xmax = 0.17 
+            text = "z" 
+        intervals [4]:
+            xmin = 0.17 
+            xmax = 0.27 
+            text = "ð" 
+        intervals [5]:
+            xmin = 0.27 
+            xmax = 0.34 
+            text = "i" 
+        intervals [6]:
+            xmin = 0.34 
+            xmax = 0.44 
+            text = "ð" 
+        intervals [7]:
+            xmin = 0.44 
+            xmax = 0.55 
+            text = "l:" 
+        intervals [8]:
+            xmin = 0.55 
+            xmax = 0.66 
+            text = "q" 
+        intervals [9]:
+            xmin = 0.66 
+            xmax = 0.7 
+            text = "ə" 
+        intervals [10]:
+            xmin = 0.7 
+            xmax = 0.87 
+            text = "d:" 
+        intervals [11]:
+            xmin = 0.87 
+            xmax = 1.01 
+            text = "i" 
+        intervals [12]:
+            xmin = 1.01 
+            xmax = 1.18 
+            text = "s" 
+        intervals [13]:
+            xmin = 1.18 
+            xmax = 1.205812 
+            text = "" 

@@ -1,0 +1,88 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1.171062 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 1.171062 
+        intervals: size = 5 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.29 
+            text = "akken" 
+        intervals [2]:
+            xmin = 0.29 
+            xmax = 0.36 
+            text = "ad" 
+        intervals [3]:
+            xmin = 0.36 
+            xmax = 0.63 
+            text = "nerr" 
+        intervals [4]:
+            xmin = 0.63 
+            xmax = 1.03 
+            text = "lxir" 
+        intervals [5]:
+            xmin = 1.03 
+            xmax = 1.171062 
+            text = "" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 1.171062 
+        intervals: size = 12 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.07 
+            text = "a" 
+        intervals [2]:
+            xmin = 0.07 
+            xmax = 0.21 
+            text = "k:" 
+        intervals [3]:
+            xmin = 0.21 
+            xmax = 0.29 
+            text = "n" 
+        intervals [4]:
+            xmin = 0.29 
+            xmax = 0.36 
+            text = "a:" 
+        intervals [5]:
+            xmin = 0.36 
+            xmax = 0.43 
+            text = "n" 
+        intervals [6]:
+            xmin = 0.43 
+            xmax = 0.5 
+            text = "ə" 
+        intervals [7]:
+            xmin = 0.5 
+            xmax = 0.63 
+            text = "r:" 
+        intervals [8]:
+            xmin = 0.63 
+            xmax = 0.7 
+            text = "l:" 
+        intervals [9]:
+            xmin = 0.7 
+            xmax = 0.84 
+            text = "χ" 
+        intervals [10]:
+            xmin = 0.84 
+            xmax = 0.99 
+            text = "i" 
+        intervals [11]:
+            xmin = 0.99 
+            xmax = 1.03 
+            text = "r" 
+        intervals [12]:
+            xmin = 1.03 
+            xmax = 1.171062 
+            text = "" 

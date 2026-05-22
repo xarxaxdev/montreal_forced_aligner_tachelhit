@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1.599125 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 1.599125 
+        intervals: size = 3 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.48 
+            text = "nuweḍ" 
+        intervals [2]:
+            xmin = 0.48 
+            xmax = 0.62 
+            text = "s" 
+        intervals [3]:
+            xmin = 0.62 
+            xmax = 1.599125 
+            text = "iswi-nneɣ" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 1.599125 
+        intervals: size = 13 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.1 
+            text = "n:" 
+        intervals [2]:
+            xmin = 0.1 
+            xmax = 0.13 
+            text = "u" 
+        intervals [3]:
+            xmin = 0.13 
+            xmax = 0.36 
+            text = "w" 
+        intervals [4]:
+            xmin = 0.36 
+            xmax = 0.39 
+            text = "ə" 
+        intervals [5]:
+            xmin = 0.39 
+            xmax = 0.48 
+            text = "dˤ" 
+        intervals [6]:
+            xmin = 0.48 
+            xmax = 0.62 
+            text = "s" 
+        intervals [7]:
+            xmin = 0.62 
+            xmax = 0.66 
+            text = "i" 
+        intervals [8]:
+            xmin = 0.66 
+            xmax = 0.79 
+            text = "s" 
+        intervals [9]:
+            xmin = 0.79 
+            xmax = 0.87 
+            text = "w" 
+        intervals [10]:
+            xmin = 0.87 
+            xmax = 0.93 
+            text = "i" 
+        intervals [11]:
+            xmin = 0.93 
+            xmax = 1.1 
+            text = "n:" 
+        intervals [12]:
+            xmin = 1.1 
+            xmax = 1.16 
+            text = "ə" 
+        intervals [13]:
+            xmin = 1.16 
+            xmax = 1.599125 
+            text = "ʁ" 

@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1.09175 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 1.09175 
+        intervals: size = 4 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.14 
+            text = "d" 
+        intervals [2]:
+            xmin = 0.14 
+            xmax = 0.41 
+            text = "kečč" 
+        intervals [3]:
+            xmin = 0.41 
+            xmax = 0.44 
+            text = "i" 
+        intervals [4]:
+            xmin = 0.44 
+            xmax = 1.09175 
+            text = "iɣelḍen" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 1.09175 
+        intervals: size = 12 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.14 
+            text = "d:" 
+        intervals [2]:
+            xmin = 0.14 
+            xmax = 0.25 
+            text = "ç" 
+        intervals [3]:
+            xmin = 0.25 
+            xmax = 0.28 
+            text = "ə" 
+        intervals [4]:
+            xmin = 0.28 
+            xmax = 0.41 
+            text = "tʃ:" 
+        intervals [5]:
+            xmin = 0.41 
+            xmax = 0.44 
+            text = "i" 
+        intervals [6]:
+            xmin = 0.44 
+            xmax = 0.51 
+            text = "j" 
+        intervals [7]:
+            xmin = 0.51 
+            xmax = 0.62 
+            text = "ʁ" 
+        intervals [8]:
+            xmin = 0.62 
+            xmax = 0.66 
+            text = "ə" 
+        intervals [9]:
+            xmin = 0.66 
+            xmax = 0.7 
+            text = "l" 
+        intervals [10]:
+            xmin = 0.7 
+            xmax = 0.86 
+            text = "dˤ" 
+        intervals [11]:
+            xmin = 0.86 
+            xmax = 0.94 
+            text = "ə" 
+        intervals [12]:
+            xmin = 0.94 
+            xmax = 1.09175 
+            text = "n" 

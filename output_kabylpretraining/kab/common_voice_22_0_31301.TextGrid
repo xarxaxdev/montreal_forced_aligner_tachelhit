@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1.27325 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 1.27325 
+        intervals: size = 2 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.55 
+            text = "iqṛeḥ-iyi" 
+        intervals [2]:
+            xmin = 0.55 
+            xmax = 1.27325 
+            text = "wammas-iw" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 1.27325 
+        intervals: size = 14 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.03 
+            text = "i" 
+        intervals [2]:
+            xmin = 0.03 
+            xmax = 0.15 
+            text = "q" 
+        intervals [3]:
+            xmin = 0.15 
+            xmax = 0.25 
+            text = "rˤ" 
+        intervals [4]:
+            xmin = 0.25 
+            xmax = 0.29 
+            text = "ə" 
+        intervals [5]:
+            xmin = 0.29 
+            xmax = 0.36 
+            text = "ħ" 
+        intervals [6]:
+            xmin = 0.36 
+            xmax = 0.51 
+            text = "i" 
+        intervals [7]:
+            xmin = 0.51 
+            xmax = 0.55 
+            text = "j" 
+        intervals [8]:
+            xmin = 0.55 
+            xmax = 0.67 
+            text = "w" 
+        intervals [9]:
+            xmin = 0.67 
+            xmax = 0.72 
+            text = "a" 
+        intervals [10]:
+            xmin = 0.72 
+            xmax = 0.85 
+            text = "m:" 
+        intervals [11]:
+            xmin = 0.85 
+            xmax = 0.94 
+            text = "a" 
+        intervals [12]:
+            xmin = 0.94 
+            xmax = 1.08 
+            text = "s" 
+        intervals [13]:
+            xmin = 1.08 
+            xmax = 1.17 
+            text = "i" 
+        intervals [14]:
+            xmin = 1.17 
+            xmax = 1.27325 
+            text = "w" 
