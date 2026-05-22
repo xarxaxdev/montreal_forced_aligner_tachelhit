@@ -226,7 +226,7 @@ def main():
     pred_folder  = sys.argv[1] if len(sys.argv) > 1 else "output"
     print(f'Prediction_folder is {pred_folder}')
     global PLOT_PATH
-    PLOT_PATH = "./plots/{pred_folder}"
+    PLOT_PATH = f"./plots/{pred_folder}"
 
     for orig in [pred_folder,'output_verified']:
         data[orig] = {} 
@@ -235,7 +235,7 @@ def main():
             data[orig][iso] = []
             data_word[orig][iso] = []
             for i in range(SAMPLES_TESTING):
-                if i == 5 and iso == 'tzm':
+                if (i == 5 or i== 0) and iso == 'tzm':
                     continue
                 filepath = f'./{orig}/{iso}/common_voice_22_0_{i}.TextGrid'
                 data[orig][iso].append(load_intervals(filepath=filepath))
@@ -250,9 +250,10 @@ def main():
     for iso in ['shi','tzm']:
         histogramdata[iso]= {}
         histogramdata_nostop[iso]= {}
-        for i in range(SAMPLES_TESTING - int(iso=='tzm')): # we have one less sample in tzm
-            if(iso == 'tzm' and i == 5):
+        for i in range(SAMPLES_TESTING - 2*int(iso=='tzm')): # we have one less sample in tzm
+            if(iso == 'tzm' and (i == 5 or i == 0)):
                 i+=1
+                continue
 
             # Getting per-sentence metrics
             gold = data['output_verified'][iso][i]
@@ -291,7 +292,7 @@ def main():
     
 
 
-    with open("{PLOT_PATH}/per_sample/all.csv", "w") as f:
+    with open(f"{PLOT_PATH}/per_sample/all.csv", "w") as f:
         f.write(output)
     for iso in ['shi','tzm']:
         for cat in ['phon','word','word_nostop']:
@@ -313,7 +314,7 @@ def main():
         all_test = []
         all_pred = []
         offset = 0.
-        for i in range(SAMPLES_TESTING - int(iso=='tzm')): # we have one less sample in tzm
+        for i in range(SAMPLES_TESTING - 2*int(iso=='tzm')): # we have one less sample in tzm
             test = data['output_verified'][iso][i]
             test = [add_offset(j,offset) for j in test]
             all_test += test

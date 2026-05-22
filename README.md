@@ -113,6 +113,8 @@ pip install soundfile==0.13.1
 pip install torch==2.10.0 
 pip install torchaudio==2.10
 pip install torchcodec==0.10
+pip install tgt==1.5
+pip install chardet==7.4.3
 
 
 python prepare_paths.py # cleanup previous files; generate needed paths
