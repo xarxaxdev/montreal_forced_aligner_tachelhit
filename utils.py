@@ -181,15 +181,22 @@ def load_datasets_tzm():
 
     return data
 
-
+autogen_folders = ['dicts','corpus','output','output_kab','output_nokab','plots','plots/output','plots/output_kab','plots/output_nokab']
 
 def gen_project_folders():
-    for folder in ['dicts','corpus','corpus/kab','corpus/shi','corpus/tzm','corpus/zgh','output','output/kab_corpus','output/shi_corpus','output/tzm_corpus','output/zgh_corpus']:
-        cache_dir= os.path.join(get_curr_folder(),folder)
+    folders = [i for i in autogen_folders]
+    for iso in ['kab','shi','zgh','tzm']:
+        folders.append(f'corpus/{iso}')
+        folders.append(f'output/{iso}')
+        folders.append(f'output_kab/{iso}')
+        folders.append(f'output_nokab/{iso}')
+
+    for f in folders:
+        cache_dir= os.path.join(get_curr_folder(),f)
         Path(cache_dir).mkdir(parents=True, exist_ok=True)
 
 def clean_project_folders():
-    for folder in ['dicts','corpus','output']:
+    for folder in autogen_folders:
         path = os.path.join(get_curr_folder(),folder)
         for root, dirs, files in os.walk(path, topdown=False):
             for f in files:

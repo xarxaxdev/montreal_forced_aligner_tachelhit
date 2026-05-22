@@ -5,24 +5,28 @@ Master Thesis Project for Potsdam university: MFA is a method to generate timest
 # Run to setup the environment 
 
 ```
-conda create -n aligner -c conda-forge python=3.11 montreal-forced-aligner
+
+conda create -n aligner -c conda-forge python=3.11 montreal-forced-aligner pip -y # as advised by MFA docu
+# just enter until its completely created
 
 conda activate aligner
 
 
-# All these are run withing the new environment
+# All these are run within the new environment
+export THREADS=14 # change for whatever you like
+conda config --set default_threads $THREADS 
+conda env config vars set OMP_NUM_THREADS$THREADS
+conda env config vars set OPENBLAS_NUM_THREADS=$THREADS
+conda env config vars set MKL_NUM_THREADS=$THREADS
 
-conda config --set default_threads 14 # change for whatever you like
-conda env config vars set OMP_NUM_THREADS=14
-conda env config vars set OPENBLAS_NUM_THREADS=14
-conda env config vars set MKL_NUM_THREADS=14
-
+conda deactivate && conda activate aligner
 
 pip install datasets==3.6.0
 pip install soundfile==0.13.1
 pip install torch==2.10.0 
 pip install torchaudio==2.10
 pip install torchcodec==0.10
+
 ```
 
 
@@ -30,6 +34,8 @@ pip install torchcodec==0.10
 
 ```
 conda activate aligner # Activate your environment
+
+python prepare_paths.py # cleanup previous files; generate needed paths
 
 # We need to train individual languages in the order
 # kab > zgh > tzm/shi
@@ -39,7 +45,7 @@ python kab_build_dicts.py
 python zgh_build_dicts.py # we will consider shi/tzm as one
 python merge_dicts.py # generate all.dict 
 
-python kab_gen_corpus_acoustic_model.py 
+python kab_gen_corpus_acoustic_model.py # CAREFUL; THIS IS COMPUTATIONALLY HEAVY
 python zgh_gen_corpus_acoustic_model.py 
 python shi_gen_corpus_acoustic_model.py 
 python tzm_gen_corpus_acoustic_model.py 
@@ -82,5 +88,108 @@ mfa_align ./corpus/tzm ./dicts/zgh_all.dict ./output/zgh_model.zip ./output/tzm
 
 ```
 
+
+# FULL run for the disseration (training with/without kabyl)
+
+```
+
+conda create -n aligner -c conda-forge python=3.11 montreal-forced-aligner pip -y # as advised by MFA docu
+# just enter until its completely created
+
+conda activate aligner
+
+
+# All these are run within the new environment
+export THREADS=14 # change for whatever you like
+conda config --set default_threads $THREADS 
+conda env config vars set OMP_NUM_THREADS=$THREADS
+conda env config vars set OPENBLAS_NUM_THREADS=$THREADS
+conda env config vars set MKL_NUM_THREADS=$THREADS
+
+conda deactivate && conda activate aligner
+
+pip install datasets==3.6.0
+pip install soundfile==0.13.1
+pip install torch==2.10.0 
+pip install torchaudio==2.10
+pip install torchcodec==0.10
+
+
+python prepare_paths.py # cleanup previous files; generate needed paths
+
+# We need to train individual languages in the order
+# kab > zgh > tzm/shi
+
+# Generate unified vocabulary and all pronunciation dictionaries
+python kab_build_dicts.py  
+python zgh_build_dicts.py 
+python merge_dicts.py 
+
+python kab_gen_corpus_acoustic_model.py # CAREFUL; THIS IS COMPUTATIONALLY HEAVY
+python zgh_gen_corpus_acoustic_model.py 
+python shi_gen_corpus_acoustic_model.py 
+python tzm_gen_corpus_acoustic_model.py 
+
+# Useful alias
+alias mfa_train='mfa train  --clean --single_speaker -j 12 --overwrite'
+alias mfa_adapt='mfa adapt --clean --single_speaker -j 12 --overwrite'
+alias mfa_align='mfa align --clean --single_speaker -j 12 --overwrite'
+
+#####################################################
+########### TRAINING WITH KAB AS BASE ###############
+#####################################################
+
+# CAREFUL; FIRST STEP IS COMPUTATIONALLY HEAVY
+
+######### TRAINING #########
+# mfa train [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH OUTPUT_MODEL_PATH
+mfa_train --phone_groups_path ./phone_groups/kab_ortho.yaml --rules_path ./rules/zgh.yaml ./corpus/kab ./dicts/kab_all.dict ./output_kab/kab_model.zip --output_directory ./output_kab/kab
+
+######### ADJUSTING #########
+# train zgh model based on kabyl model
+# mfa adapt [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH ACOUSTIC_MODEL_PATH  OUTPUT_MODEL_PATH
+mfa_adapt ./corpus/zgh ./dicts/zgh_all.dict ./output_kab/kab_model.zip ./output_kab/zgh_model.zip --output_kab_directory ./output_kab/zgh
+
+######### ALIGNING #########
+# attempt align on shi corpus using zgh model
+# mfa align [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH ACOUSTIC_MODEL_PATH OUTPUT_DIRECTORY    
+mfa_align ./corpus/shi ./dicts/zgh_all.dict ./output_kab/zgh_model.zip ./output/shi
+
+# attempt align on tzm using zgh model
+# mfa align [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH ACOUSTIC_MODEL_PATH OUTPUT_DIRECTORY    
+mfa_align ./corpus/tzm ./dicts/zgh_all.dict ./output_kab/zgh_model.zip ./output/tzm
+
+
+#####################################################
+############TRAINING WITHOUT KAB AS BASE ############
+#####################################################
+
+
+######### TRAINING #########
+# mfa train [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH OUTPUT_MODEL_PATH
+mfa_train --phone_groups_path ./phone_groups/kab_ortho.yaml --rules_path ./rules/zgh.yaml ./corpus/zgh ./dicts/zgh_vocab.dict ./output_nokab/zgh_model.zip --output_directory ./output_nokab/zgh
+
+######### ALIGNING #########
+# attempt align on shi corpus using zgh model
+# mfa align [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH ACOUSTIC_MODEL_PATH OUTPUT_DIRECTORY    
+mfa_align ./corpus/shi ./dicts/zgh_vocab.dict ./output_nokab/zgh_model.zip ./output/shi
+
+# attempt align on tzm using zgh model
+# mfa align [OPTIONS] CORPUS_DIRECTORY DICTIONARY_PATH ACOUSTIC_MODEL_PATH OUTPUT_DIRECTORY    
+mfa_align ./corpus/tzm ./dicts/zgh_vocab.dict ./output_nokab/zgh_model.zip ./output/tzm
+
+
+#####################################################
+####################### PLOTTING ####################
+#####################################################
+
+python evaluate_alignments.py output_kab
+python evaluate_alignments.py output_nokab
+
+
+
+
+
+```
 
 

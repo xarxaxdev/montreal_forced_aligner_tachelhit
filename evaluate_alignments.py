@@ -3,6 +3,8 @@ import numpy as np
 import chardet
 from pprint import pprint
 
+import sys # passing folder argument
+
 from collections import defaultdict
 from utils import SAMPLES_TESTING
 import pandas as pd
@@ -14,6 +16,7 @@ from numpy import median as median
 from scipy.stats import skew, kurtosis
 
 MIN_SUPPORT = 8 # Min. Threshold of occurrances, to consider a pattern
+PLOT_PATH = ""
 
 def plot_histogram(data,filename):
     #pprint(data)
@@ -52,7 +55,7 @@ def plot_histogram(data,filename):
     )
 
 
-    plt.savefig(f"./plots/{filename}_histogram_onset_dif.png")
+    plt.savefig(f"{PLOT_PATH}/{filename}_histogram_onset_dif.png")
     plt.clf()   # clear figure
 
 def plot_barchart_persample(data):
@@ -81,7 +84,7 @@ def plot_barchart_persample(data):
     plt.title(f"Success % of seconds per sample (avg= {avg_pct:.1%}, var={var_pct})")
     plt.tight_layout()
     #plt.show()
-    plt.savefig(f"./plots/per_sample/{filename}_succes_per_sample.png")
+    plt.savefig(f"{PLOT_PATH}/per_sample/{filename}_succes_per_sample.png")
     plt.clf()   # clear figure
 
 
@@ -98,7 +101,7 @@ def plot_matrix_heatmap(matrix,title = 'no_title',label='nolabel',filename='no_f
     plt.title(title)
     plt.tight_layout()
     #plt.show()
-    plt.savefig(f"./plots/conf_mat/{filename}")
+    plt.savefig(f"{PLOT_PATH}/conf_mat/{filename}")
     plt.clf()   # clear figure
 
 
@@ -220,8 +223,12 @@ def main():
     # Read golden alignemnts + curr alignments
     data = {}
     data_word= {}
+    pred_folder  = sys.argv[1] if len(sys.argv) > 1 else "output"
+    print(f'Prediction_folder is {pred_folder}')
+    global PLOT_PATH
+    PLOT_PATH = "./plots/{pred_folder}"
 
-    for orig in ['output','output_verified']:
+    for orig in [pred_folder,'output_verified']:
         data[orig] = {} 
         data_word[orig] = {}
         for iso in ['shi','tzm']:
@@ -249,7 +256,7 @@ def main():
 
             # Getting per-sentence metrics
             gold = data['output_verified'][iso][i]
-            pred = data['output'][iso][i]
+            pred = data[pred_folder][iso][i]
             sample = f"common_voice_22_0_{i}"
             
 
@@ -265,7 +272,7 @@ def main():
             histogramdata[iso][i]= difs
 
             gold_nostop = [ x for x  in data_word['output_verified'][iso][i] if len(x['text']) > 2]
-            pred_nostop = [ x for x  in data_word['output'][iso][i] if len(x['text']) > 2]
+            pred_nostop = [ x for x  in data_word[pred_folder][iso][i] if len(x['text']) > 2]
             correct,total,difs = sentence_overlap(gold_nostop, pred_nostop)
             perc = round(correct/total,3)
             output += ",".join([f'{iso}_word_nostop',sample,f2s(total), f2s(correct), f2s(perc)]) + '\n'
@@ -284,7 +291,7 @@ def main():
     
 
 
-    with open("./plots/per_sample/all.csv", "w") as f:
+    with open("{PLOT_PATH}/per_sample/all.csv", "w") as f:
         f.write(output)
     for iso in ['shi','tzm']:
         for cat in ['phon','word','word_nostop']:
@@ -310,7 +317,7 @@ def main():
             test = data['output_verified'][iso][i]
             test = [add_offset(j,offset) for j in test]
             all_test += test
-            pred = data['output'][iso][i]
+            pred = data[pred_folder][iso][i]
             pred = [add_offset(j,offset) for j in pred]
             all_pred += pred
             # new offset is last interval's end
@@ -344,7 +351,7 @@ def main():
         conf = confusion_matrix(all_test, all_pred)
         conf = [(gold,pred,f2s(sum(conf[(gold,pred)])),f2s(len(conf[(gold,pred)])),f2s(mean(conf[(gold,pred)])),f2s(var(conf[(gold,pred)]))) for (gold,pred) in conf.keys()]
         conf = list(sorted(conf,key=lambda x: int(float(x[3])),reverse=True))#[:15]
-        with open(f"./plots/conf_mat/{iso}_unfiltered.csv", "w") as f:
+        with open(f"{PLOT_PATH}/conf_mat/{iso}_unfiltered.csv", "w") as f:
             output = "gold,pred,time_sec,support,mean, median,variance\n"
             output += '\n'.join([','.join(l) for l in conf])
             f.write(output)
