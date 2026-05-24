@@ -256,15 +256,17 @@ def main():
                 continue
 
             # Getting per-sentence metrics
+            sample = f"common_voice_22_0_{i}"
             gold = data['output_verified'][iso][i]
             pred = data[pred_folder][iso][i]
-            sample = f"common_voice_22_0_{i}"
-            
 
             correct,total,difs = sentence_overlap(gold, pred)
             perc = round(correct/total,3)
             output += ",".join([f'{iso}_phon',sample,f2s(total), f2s(correct), f2s(perc)]) + '\n'
             barchartdata.append((f'{iso}_phon',sample,total, correct, round(correct/total,3)))
+
+            gold = data_word['output_verified'][iso][i]
+            pred = data_word[pred_folder][iso][i]
 
             correct,total,difs = sentence_overlap(gold, pred)
             perc = round(correct/total,3)
