@@ -326,7 +326,6 @@ def main():
             # new offset is last interval's end
             offset = max(all_test[-1]['end'],all_pred[-1]['end'])
 
-
         for func_name in ["size","mean","median","var"]:
             conf = confusion_matrix(all_test, all_pred)
             for k in conf.keys():
@@ -338,7 +337,7 @@ def main():
             for drop_unk in False,True:
                 for normalize in ['row','col',False]:
                     df = prepare_matrix(conf, drop_unk=drop_unk,normalize=normalize)
-                    title = f"Confusion Matrix {iso.upper()} (Golden label X/Pred Y)"
+                    title = f"Confusion Matrix {iso.upper()} {func_name.upper() if func_name!= 'size' else 'AMOUNT'} (Golden label X/Pred Y)"
                     if normalize:
                         title += f" normalized by {normalize}"
                     label = "%(of seconds)" if normalize else 'time(seconds)'

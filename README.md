@@ -185,8 +185,7 @@ mfa_align ./corpus/tzm ./dicts/zgh_vocab.dict ./output_nokab/zgh_model.zip ./out
 ####################### PLOTTING ####################
 #####################################################
 
-python evaluate_alignments.py output_kab
-python evaluate_alignments.py output_nokab
+python evaluate_alignments.py output_kab && python evaluate_alignments.py output_nokab
 
 
 
