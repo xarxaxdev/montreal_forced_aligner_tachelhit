@@ -316,7 +316,7 @@ def main():
         all_test = []
         all_pred = []
         offset = 0.
-        for i in range(SAMPLES_TESTING - 2*int(iso=='tzm')): # we have one less sample in tzm
+        for i in range(SAMPLES_TESTING - 2*int(iso=='tzm')): 
             test = data['output_verified'][iso][i]
             test = [add_offset(j,offset) for j in test]
             all_test += test
