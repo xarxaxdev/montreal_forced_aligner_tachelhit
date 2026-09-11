@@ -196,7 +196,7 @@ for k in keys:
         if 'ⵯ' in k:
             # https://huggingface.co/datasets/fsicoli/common_voice_22_0/blob/main/transcript/zgh/validated.tsv 
             # many cases of ⴽⴽⵯ; this must be the correct way to write the geminate
-            tif2ipa[f'{k[0]}{k}']= f'{tif2ipa[k]}:'
+            tif2ipa[f'{k[0]}{k}']= f'{tif2ipa[k]}:' # "k:"
         else:
             tif2ipa[f'{k}{k}']= f'{tif2ipa[k]}:'
 

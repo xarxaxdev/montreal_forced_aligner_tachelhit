@@ -191,9 +191,9 @@ def gen_project_folders():
         folders.append(f'output_kab/{iso}')
         folders.append(f'output_nokab/{iso}')
     for i in ['per_sample','conf_mat']:
-        folders.apppend(f'plots/output/{i}')
-        folders.apppend(f'plots/output_kab/{i}')
-        folders.apppend(f'plots/output_nokab/{i}')
+        folders.append(f'plots/output/{i}')
+        folders.append(f'plots/output_kab/{i}')
+        folders.append(f'plots/output_nokab/{i}')
 
     for f in folders:
         cache_dir= os.path.join(get_curr_folder(),f)
